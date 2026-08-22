@@ -1,0 +1,5 @@
+import { ImageResponse } from "next/og";
+export const alt = "BRAKMASRA — Horror, Stories & Mystery";
+export const size = { width: 1200, height: 630 };
+export const contentType = "image/png";
+export default function Image() { return new ImageResponse(<div style={{ width: "100%", height: "100%", display: "flex", position: "relative", alignItems: "center", justifyContent: "center", flexDirection: "column", background: "radial-gradient(circle at 70% 20%, #3A0A0A 0%, #0D0D0D 38%, #050505 72%)", color: "#F2F2F0", border: "12px solid #3A0A0A" }}><div style={{ color: "#B0000B", fontSize: 26, letterSpacing: 12 }}>HORROR · STORIES · MYSTERY</div><div style={{ fontFamily: "serif", fontSize: 118, letterSpacing: 10, marginTop: 22 }}>BRAKMASRA</div><div style={{ display: "flex", alignItems: "center", width: 720, marginTop: 24 }}><div style={{ height: 1, flex: 1, background: "#7A0000" }} /><div style={{ width: 12, height: 12, transform: "rotate(45deg)", border: "1px solid #E01616", margin: "0 22px" }} /><div style={{ height: 1, flex: 1, background: "#7A0000" }} /></div></div>, size); }

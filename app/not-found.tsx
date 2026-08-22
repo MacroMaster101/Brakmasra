@@ -1,0 +1,2 @@
+import Link from "next/link";
+export default function NotFound() { return <div className="not-found"><span className="eyebrow">404 · Signal lost</span><h1>Lost in the dark</h1><p>The page you were looking for has vanished.</p><div className="button-row"><Link className="button button-primary" href="/">Return home</Link><Link className="button button-secondary" href="/videos">Watch videos</Link><Link className="button button-secondary" href="/shop">Shop merch</Link></div></div>; }

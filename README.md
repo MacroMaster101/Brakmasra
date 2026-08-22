@@ -6,7 +6,7 @@ Official creator hub and merch-store foundation for the BRAKMASRA YouTube channe
 
 - Home, videos, video detail, shorts, playlists, about, contact, shop, product, cart, checkout, admin, 404, sitemap, robots, and generated social card routes
 - Verified fallback channel snapshot for `@Brakmasra`; optional server-side YouTube Data API refresh with caching
-- Product/variant-ready PostgreSQL schema, deliberately empty merch catalog, local cart, and guarded checkout adapter boundary
+- Product/variant-ready Supabase PostgreSQL schema with RLS, deliberately empty merch catalog, local cart, and guarded checkout adapter boundary
 - Contact/newsletter endpoints with validation, honeypots, origin checks, size limits, and basic rate limiting
 - CSP and modern security headers, semantic navigation, keyboard focus, reduced-motion handling, responsive layouts, and JSON-LD
 - Vitest tests for public-data and cart helpers
@@ -46,7 +46,8 @@ See `.env.example` for every key. Important groups:
 
 - `NEXT_PUBLIC_SITE_URL`: canonical production origin
 - `YOUTUBE_API_KEY`, `YOUTUBE_CHANNEL_ID`: server-only channel refresh
-- `DATABASE_URL`: PostgreSQL connection
+- `SUPABASE_URL`, `SUPABASE_SECRET_KEY`: server-only Supabase Data API access
+- `DATABASE_URL`: Supabase PostgreSQL pooled/direct connection for migrations and transactions
 - `SESSION_SECRET`, `ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH`: admin authentication adapter
 - `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`: payment adapter
 - `EMAIL_*`: contact/newsletter delivery
@@ -60,7 +61,9 @@ Never expose `YOUTUBE_API_KEY`, database, session, Stripe secret, webhook, or em
 
 ## Database and merch
 
-Apply `db/migrations/0001_initial.sql` to PostgreSQL using your migration runner. Products are not seeded because no verified merch catalog, photography, prices, inventory, shipping rules, or tax nexus was supplied. Add real product records and images before enabling checkout.
+Create a Supabase project, then apply `db/migrations/0001_initial.sql` followed by `db/migrations/0002_supabase_rls.sql` using the Supabase SQL editor or CLI. The second migration enables RLS on every public table, removes browser-role access, and grants the server role access. Add `SUPABASE_URL` and the project secret key to `.env.local`; never expose that key through a `NEXT_PUBLIC_` variable. Keep `DATABASE_URL` for migrations and future transactional checkout operations.
+
+The contact and newsletter endpoints now persist validated submissions through the server-only Supabase client. Products are not seeded because no verified merch catalog, photography, prices, inventory, shipping rules, or tax nexus was supplied. Add real product records and images before enabling checkout.
 
 ## Payments and checkout
 

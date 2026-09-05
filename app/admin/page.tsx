@@ -1,5 +1,25 @@
 import type { Metadata } from "next";
-import { Boxes, Database, KeyRound, Mail, Settings, ShieldCheck } from "lucide-react";
-import { hasSupabaseConfig } from "@/lib/supabase";
+import { KeyRound } from "lucide-react";
+
 export const metadata: Metadata = { title: "Admin", robots: { index: false, follow: false } };
-export default function AdminPage() { const configured = Boolean(hasSupabaseConfig() && process.env.SESSION_SECRET && process.env.ADMIN_EMAIL && process.env.ADMIN_PASSWORD_HASH); return <div className="admin-page"><div className="admin-shell"><span className="eyebrow">Restricted system</span><h1>BRAKMASRA Admin</h1>{configured ? <div className="notice warning"><ShieldCheck /><div><h2>Authentication adapter required</h2><p>Secrets are present, but the production session provider must be connected before access is granted.</p></div></div> : <div className="notice"><KeyRound /><div><h2>Admin is locked</h2><p>Supabase and authentication credentials have not been configured. No default password exists.</p></div></div>}<div className="admin-grid"><article><Boxes /><h2>Catalog</h2><p>Products, categories, variants, collections, and inventory.</p></article><article><Database /><h2>Orders</h2><p>Payments, fulfillment, discounts, and audit-safe status changes.</p></article><article><Mail /><h2>Community</h2><p>Newsletter consent records and contact messages.</p></article><article><Settings /><h2>Site settings</h2><p>YouTube, social links, hero, announcements, and featured content.</p></article></div><div className="panel checklist"><h2>Activation checklist</h2><ol><li>Apply both Supabase SQL migrations.</li><li>Configure a secure session provider and MFA.</li><li>Create the first admin with a strong password hash.</li><li>Connect audit logging and a durable rate limiter.</li><li>Complete an external security review.</li></ol></div></div></div>; }
+
+// Deliberately minimal: an unauthenticated visitor learns only that the area is
+// restricted. No configuration state or system map
+// is disclosed here.
+export default function AdminPage() {
+  return (
+    <div className="admin-page">
+      <div className="admin-shell">
+        <span className="eyebrow">Restricted</span>
+        <h1>Admin</h1>
+        <div className="notice">
+          <KeyRound />
+          <div>
+            <h2>Sign-in required</h2>
+            <p>This area is restricted to BRAKMASRA staff.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -3,6 +3,7 @@ import "./globals.css";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { CartProvider } from "@/components/cart-provider";
+import { BackToTop } from "@/components/back-to-top";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
@@ -19,5 +20,5 @@ export const metadata: Metadata = {
 export const viewport: Viewport = { colorScheme: "dark", themeColor: "#050505", width: "device-width", initialScale: 1 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body><CartProvider><Header /><main id="content">{children}</main><Footer /></CartProvider></body></html>;
+  return <html lang="en"><body><CartProvider><Header /><main id="content">{children}</main><Footer /><BackToTop /></CartProvider></body></html>;
 }

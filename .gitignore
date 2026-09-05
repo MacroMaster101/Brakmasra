@@ -2,16 +2,37 @@
 /node_modules
 /.next
 /out
+/build
 /coverage
 
-# secrets
+# secrets and local env
 .env
 .env.*
 !.env.example
 
+# AI assistant tooling (local only — keep out of the public repo)
+/.claude
+CLAUDE.md
+CLAUDE.local.md
+.cursor/
+.cursorrules
+.cursorignore
+.aider*
+.windsurfrules
+.continue/
+.github/copilot-instructions.md
+.codeium/
+.roo/
+.clinerules
+
 # tooling and OS
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 .DS_Store
 Thumbs.db
 *.tsbuildinfo
 .vercel
+.idea/
+.vscode/

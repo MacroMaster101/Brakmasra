@@ -1,42 +1,53 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { Menu, Search, ShoppingBag, X } from "lucide-react";
+import { Menu, ShoppingBag, UserRound, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { BrandMark } from "@/components/icons";
 import { useCart } from "@/components/cart-provider";
+import { authNav, primaryNav } from "@/data/navigation";
 
-const nav = [
-  ["Home", "/"], ["Videos", "/videos"], ["Shorts", "/shorts"], ["Playlists", "/playlists"],
-  ["About", "/about"], ["Shop", "/shop"], ["Contact", "/contact"],
-];
-
-export function Header() {
+export function Header({ commerceEnabled }: { commerceEnabled: boolean }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const { count } = useCart();
+  const isActive = (href: string) => pathname === href || (href !== "/" && pathname.startsWith(`${href}/`));
 
   return (
     <header className="site-header">
       <a className="skip-link" href="#content">Skip to content</a>
       <div className="nav-shell">
         <Link className="brand" href="/" aria-label="BRAKMASRA home">
-          <BrandMark />
+          <span className="brand-image"><Image src="/images/brakmasra-logo-reference.png" alt="" width={42} height={42} loading="eager" /></span>
           <span>BRAKMASRA</span>
         </Link>
         <nav className={`nav-links ${open ? "is-open" : ""}`} aria-label="Primary">
           <button className="mobile-close" onClick={() => setOpen(false)} aria-label="Close menu"><X /></button>
-          {nav.map(([label, href]) => (
-            <Link key={href} href={href} onClick={() => setOpen(false)} aria-current={pathname === href ? "page" : undefined}>{label}</Link>
+          {primaryNav.map(({ label, href }) => (
+            <Link key={href} href={href} onClick={() => setOpen(false)} aria-current={isActive(href) ? "page" : undefined}>{label}</Link>
           ))}
-          <a className="button button-primary mobile-subscribe" href="https://www.youtube.com/@Brakmasra?sub_confirmation=1" target="_blank" rel="noreferrer">Subscribe</a>
+          <Link
+            className="mobile-auth-link"
+            href={authNav.href}
+            onClick={() => setOpen(false)}
+            aria-current={isActive(authNav.href) ? "page" : undefined}
+          >
+            <UserRound />
+            {authNav.label}
+          </Link>
         </nav>
         <div className="nav-actions">
-          <Link className="icon-button" href="/videos#search" aria-label="Search videos"><Search /></Link>
-          <a className="button button-primary desktop-subscribe" href="https://www.youtube.com/@Brakmasra?sub_confirmation=1" target="_blank" rel="noreferrer">Subscribe</a>
-          <Link className="icon-button cart-link" href="/cart" aria-label={`Cart with ${count} items`}><ShoppingBag />{count > 0 && <span>{count}</span>}</Link>
-          <button className="icon-button mobile-menu" onClick={() => setOpen(true)} aria-label="Open menu"><Menu /></button>
+          <Link
+            className="nav-login-link"
+            href={authNav.href}
+            aria-current={isActive(authNav.href) ? "page" : undefined}
+          >
+            <UserRound />
+            <span>{authNav.label}</span>
+          </Link>
+          <Link className="icon-button cart-link" href="/cart" aria-label={commerceEnabled ? `Cart with ${count} items` : "Ordering coming soon"}><ShoppingBag />{commerceEnabled && count > 0 && <span>{count}</span>}</Link>
+          <button className="icon-button mobile-menu" onClick={() => setOpen(true)} aria-label="Open menu" aria-expanded={open}><Menu /></button>
         </div>
       </div>
       {open && <button className="nav-scrim" onClick={() => setOpen(false)} aria-label="Close menu overlay" />}

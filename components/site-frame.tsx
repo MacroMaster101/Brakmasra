@@ -7,6 +7,8 @@ import { CartProvider } from "@/components/cart-provider";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { InitialLoader } from "@/components/initial-loader";
+import { LanguageProvider } from "@/components/language-provider";
+import { ScrollRestoration } from "@/components/scroll-restoration";
 
 const focusedAuthRoutes = new Set([
   "/forgot-password",
@@ -20,12 +22,15 @@ export function SiteFrame({ children, launchMode }: Readonly<{ children: React.R
   const isFocusedAuthPage = focusedAuthRoutes.has(pathname);
 
   return (
-    <CartProvider>
-      <InitialLoader />
-      {!isFocusedAuthPage && <Header commerceEnabled={!launchMode} />}
-      <main id="content">{children}</main>
-      {!isFocusedAuthPage && <Footer />}
-      {!isFocusedAuthPage && <BackToTop />}
-    </CartProvider>
+    <LanguageProvider>
+      <CartProvider>
+        <ScrollRestoration />
+        <InitialLoader />
+        {!isFocusedAuthPage && <Header commerceEnabled={!launchMode} />}
+        <main id="content">{children}</main>
+        {!isFocusedAuthPage && <Footer />}
+        {!isFocusedAuthPage && <BackToTop />}
+      </CartProvider>
+    </LanguageProvider>
   );
 }

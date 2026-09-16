@@ -4,6 +4,26 @@ type Result = { allowed: boolean; remaining: number };
 type Bucket = { count: number; resetAt: number };
 
 const buckets = new Map<string, Bucket>();
+const MAX_MEMORY_BUCKETS = 10_000;
+const MEMORY_SWEEP_INTERVAL_MS = 60_000;
+let nextMemorySweepAt = 0;
+
+function pruneMemoryBuckets(now: number) {
+  for (const [key, bucket] of buckets) {
+    if (bucket.resetAt <= now) buckets.delete(key);
+  }
+  nextMemorySweepAt = now + MEMORY_SWEEP_INTERVAL_MS;
+}
+
+function makeMemoryRoom(now: number) {
+  if (now >= nextMemorySweepAt || buckets.size >= MAX_MEMORY_BUCKETS) {
+    pruneMemoryBuckets(now);
+  }
+
+  if (buckets.size < MAX_MEMORY_BUCKETS) return;
+  const oldestKey = buckets.keys().next().value;
+  if (typeof oldestKey === "string") buckets.delete(oldestKey);
+}
 
 /**
  * Process-local fallback. Bounds a single instance only — used when Supabase is
@@ -13,6 +33,8 @@ function memoryLimit(key: string, limit: number, windowMs: number): Result {
   const now = Date.now();
   const current = buckets.get(key);
   if (!current || current.resetAt <= now) {
+    if (current) buckets.delete(key);
+    makeMemoryRoom(now);
     buckets.set(key, { count: 1, resetAt: now + windowMs });
     return { allowed: true, remaining: limit - 1 };
   }

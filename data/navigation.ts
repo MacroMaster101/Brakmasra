@@ -10,7 +10,32 @@ export const primaryNav: NavLink[] = [
 export const authNav: NavLink = { label: "Log in", href: "/login" };
 
 export const footerColumns: { title: string; links: NavLink[] }[] = [
-  { title: "Store", links: [{ label: "Shop", href: "/shop" }, { label: "Cart", href: "/cart" }] },
-  { title: "Help", links: [{ label: "Order support", href: "/contact" }] },
-  { title: "Brand", links: [{ label: "Our story", href: "/about" }] },
+  {
+    title: "Store",
+    links: [
+      { label: "All Products", href: "/shop" },
+      { label: "Cart", href: "/cart" },
+    ],
+  },
+  {
+    title: "Brand",
+    links: [
+      { label: "Our story", href: "/about" },
+      { label: "Archive", href: "/about" },
+    ],
+  },
+  {
+    title: "Support",
+    links: [
+      { label: "Order support", href: "/contact" },
+      { label: "Contact", href: "/contact" },
+    ],
+  },
+  {
+    title: "Explore",
+    links: [
+      { label: "Home", href: "/" },
+      { label: "Collection", href: "/shop" },
+    ],
+  },
 ];

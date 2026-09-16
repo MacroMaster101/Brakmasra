@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import nextConfig from "@/next.config";
+import { createContentSecurityPolicy } from "@/lib/security-headers";
 
 async function headerMap() {
   const rules = (await nextConfig.headers?.()) ?? [];
@@ -7,12 +8,21 @@ async function headerMap() {
 }
 
 describe("security headers", () => {
-  it("keeps the CSP locked to this origin with no YouTube hosts", async () => {
-    const csp = (await headerMap()).get("Content-Security-Policy") ?? "";
+  it("uses a nonce-based production CSP without unsafe inline scripts", () => {
+    const csp = createContentSecurityPolicy("test-nonce", "production");
     expect(csp).toContain("default-src 'self'");
     expect(csp).toContain("frame-ancestors 'none'");
     expect(csp).toContain("img-src 'self' data:;");
+    expect(csp).toContain("script-src 'self' 'nonce-test-nonce' 'strict-dynamic'");
+    expect(csp).not.toContain("'unsafe-inline'");
+    expect(csp).not.toContain("'unsafe-eval'");
     expect(csp).not.toMatch(/youtube|ytimg|yt3|googleapis/);
+  });
+
+  it("permits only the development runtime exceptions in development", () => {
+    const csp = createContentSecurityPolicy("test-nonce", "development");
+    expect(csp).toContain("'unsafe-eval'");
+    expect(csp).toContain("style-src 'self' 'unsafe-inline'");
   });
 
   it("keeps the hardening headers", async () => {

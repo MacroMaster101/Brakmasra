@@ -18,6 +18,11 @@ export default async function AccountPage({ searchParams }: AccountPageProps) {
   if (!authEnabled) return <StoreComingSoon area="account" />;
 
   const params = await searchParams;
+  const noticeMessage = authDemoMode
+    ? "Local demo session. No Supabase user or cookie was created."
+    : params.password === "updated"
+      ? "Your password has been updated."
+      : "Your account is ready.";
   let displayName = "Preview member";
   let email = "preview@brakmasra.local";
   let joined = "Local preview";
@@ -54,7 +59,7 @@ export default async function AccountPage({ searchParams }: AccountPageProps) {
 
         {(authDemoMode || params.welcome === "1" || params.password === "updated") && (
           <p className="account-notice" role="status">
-            {authDemoMode ? "Local demo session. No Supabase user or cookie was created." : params.password === "updated" ? "Your password has been updated." : "Your account is ready."}
+            {noticeMessage}
           </p>
         )}
 

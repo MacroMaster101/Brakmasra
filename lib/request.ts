@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server";
 
 type HeaderReader = Pick<Headers, "get">;
+export type TrustedProxyProvider = "cloudflare" | "generic" | "none" | "vercel";
 
 function normalizeClientAddress(value: string | null) {
   const candidate = value?.split(",")[0]?.trim();
@@ -8,14 +9,37 @@ function normalizeClientAddress(value: string | null) {
   return candidate.toLowerCase();
 }
 
-export function clientAddress(headers: HeaderReader) {
-  // These headers must be overwritten by the production edge or reverse proxy.
-  // Provider-specific single-client headers are preferred over the proxy chain.
-  return normalizeClientAddress(headers.get("cf-connecting-ip"))
-    || normalizeClientAddress(headers.get("x-real-ip"))
-    || normalizeClientAddress(headers.get("x-vercel-forwarded-for"))
-    || normalizeClientAddress(headers.get("x-forwarded-for"))
-    || "unknown";
+export function trustedProxyProvider(environment = process.env): TrustedProxyProvider {
+  if (environment.VERCEL === "1") return "vercel";
+
+  const configured = environment.TRUSTED_PROXY_PROVIDER?.trim().toLowerCase();
+  if (configured === "cloudflare" || configured === "generic" || configured === "vercel") {
+    return configured;
+  }
+  return "none";
+}
+
+export function clientAddress(
+  headers: HeaderReader,
+  provider: TrustedProxyProvider = trustedProxyProvider(),
+) {
+  // Never mix provider headers: an upstream may preserve an unrelated header
+  // supplied by the client. An unknown deployment therefore fails closed to a
+  // shared bucket instead of trusting attacker-controlled forwarding data.
+  if (provider === "vercel") {
+    return normalizeClientAddress(headers.get("x-vercel-forwarded-for"))
+      || normalizeClientAddress(headers.get("x-forwarded-for"))
+      || "unknown";
+  }
+  if (provider === "cloudflare") {
+    return normalizeClientAddress(headers.get("cf-connecting-ip")) || "unknown";
+  }
+  if (provider === "generic") {
+    return normalizeClientAddress(headers.get("x-real-ip"))
+      || normalizeClientAddress(headers.get("x-forwarded-for"))
+      || "unknown";
+  }
+  return "unknown";
 }
 
 export function requestKey(request: NextRequest, scope: string) {

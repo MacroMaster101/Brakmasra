@@ -4,6 +4,7 @@ import { SiteFrame } from "@/components/site-frame";
 import { site } from "@/data/site";
 import { launchMode } from "@/lib/features";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
@@ -19,5 +20,5 @@ export const metadata: Metadata = {
 export const viewport: Viewport = { colorScheme: "dark", themeColor: "#050505", width: "device-width", initialScale: 1 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en" data-scroll-behavior="smooth"><body><div id="page-top-sentinel" aria-hidden="true" /><SiteFrame launchMode={launchMode}>{children}</SiteFrame><SpeedInsights /></body></html>;
+  return <html lang="en" data-scroll-behavior="smooth"><body><div id="page-top-sentinel" aria-hidden="true" /><SiteFrame launchMode={launchMode}>{children}</SiteFrame><SpeedInsights /><Analytics /></body></html>;
 }

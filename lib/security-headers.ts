@@ -3,7 +3,10 @@ const DEVELOPMENT = "development";
 export function createContentSecurityPolicy(nonce: string, nodeEnv = process.env.NODE_ENV) {
   const isDevelopment = nodeEnv === DEVELOPMENT;
   const scriptSources = ["'self'", `'nonce-${nonce}'`, "'strict-dynamic'"];
-  const styleSources = ["'self'", isDevelopment ? "'unsafe-inline'" : `'nonce-${nonce}'`];
+  // Next/Image and React apply responsive layout through style attributes. CSP
+  // nonces cannot be attached to style attributes, so keep styles compatible
+  // while scripts remain protected by a per-request nonce and strict-dynamic.
+  const styleSources = ["'self'", "'unsafe-inline'"];
 
   if (isDevelopment) scriptSources.push("'unsafe-eval'");
 

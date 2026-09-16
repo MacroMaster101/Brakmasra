@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { cartCount, cartKey, type CartLine } from "@/lib/cart";
+import { cartCount, cartKey, parseStoredCart, type CartLine } from "@/lib/cart";
 
 type CartContextValue = {
   lines: CartLine[];
@@ -21,12 +21,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let active = true;
-    let storedLines: CartLine[] = [];
+    let storedLines: CartLine[];
     try {
-      const stored = localStorage.getItem(cartKey);
-      if (stored) storedLines = JSON.parse(stored);
+      storedLines = parseStoredCart(localStorage.getItem(cartKey));
     } catch {
-      localStorage.removeItem(cartKey);
+      storedLines = [];
     }
     queueMicrotask(() => {
       if (!active) return;
@@ -37,7 +36,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (hydrated) localStorage.setItem(cartKey, JSON.stringify(lines));
+    if (!hydrated) return;
+    try {
+      localStorage.setItem(cartKey, JSON.stringify(lines));
+    } catch {
+      // Storage may be disabled or full; the in-memory cart remains usable.
+    }
   }, [hydrated, lines]);
 
   const value = useMemo<CartContextValue>(() => ({

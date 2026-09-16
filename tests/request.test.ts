@@ -1,24 +1,42 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 
-import { clientAddress, readJsonBody } from "@/lib/request";
+import { clientAddress, readJsonBody, trustedProxyProvider } from "@/lib/request";
+
+const originalEnvironment = { ...process.env };
+
+afterEach(() => {
+  process.env = { ...originalEnvironment };
+});
 
 describe("request security helpers", () => {
-  it("normalizes a valid proxy-provided client address", () => {
+  it("normalizes a valid header from the configured proxy", () => {
     const headers = new Headers({ "x-forwarded-for": "2001:DB8::1, 10.0.0.1" });
-    expect(clientAddress(headers)).toBe("2001:db8::1");
+    expect(clientAddress(headers, "generic")).toBe("2001:db8::1");
   });
 
   it("rejects malformed or oversized client identifiers", () => {
-    expect(clientAddress(new Headers({ "x-forwarded-for": "attacker-controlled" }))).toBe("unknown");
-    expect(clientAddress(new Headers({ "x-forwarded-for": "1".repeat(65) }))).toBe("unknown");
+    expect(clientAddress(new Headers({ "x-forwarded-for": "attacker-controlled" }), "generic")).toBe("unknown");
+    expect(clientAddress(new Headers({ "x-forwarded-for": "1".repeat(65) }), "generic")).toBe("unknown");
   });
 
-  it("prefers a provider client header over a forwarded chain", () => {
+  it("reads only headers belonging to the configured provider", () => {
     const headers = new Headers({
       "cf-connecting-ip": "203.0.113.8",
+      "x-vercel-forwarded-for": "192.0.2.10",
       "x-forwarded-for": "198.51.100.4",
     });
-    expect(clientAddress(headers)).toBe("203.0.113.8");
+    expect(clientAddress(headers, "cloudflare")).toBe("203.0.113.8");
+    expect(clientAddress(headers, "vercel")).toBe("192.0.2.10");
+    expect(clientAddress(headers, "none")).toBe("unknown");
+  });
+
+  it("detects Vercel and otherwise defaults to trusting no proxy", () => {
+    delete process.env.VERCEL;
+    delete process.env.TRUSTED_PROXY_PROVIDER;
+    expect(trustedProxyProvider()).toBe("none");
+
+    process.env.VERCEL = "1";
+    expect(trustedProxyProvider()).toBe("vercel");
   });
 
   it("parses only JSON bodies within the configured byte limit", async () => {

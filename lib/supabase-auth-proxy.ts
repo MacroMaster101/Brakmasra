@@ -3,8 +3,8 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { getAuthEnvironment } from "@/lib/auth";
 
-export async function refreshAuthSession(request: NextRequest) {
-  let response = NextResponse.next({ request });
+export async function refreshAuthSession(request: NextRequest, requestHeaders = request.headers) {
+  let response = NextResponse.next({ request: { headers: requestHeaders } });
 
   let environment: ReturnType<typeof getAuthEnvironment>;
   try {
@@ -20,7 +20,7 @@ export async function refreshAuthSession(request: NextRequest) {
       },
       setAll(cookiesToSet, headers) {
         cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
-        response = NextResponse.next({ request });
+        response = NextResponse.next({ request: { headers: requestHeaders } });
         cookiesToSet.forEach(({ name, options, value }) => {
           response.cookies.set(name, value, options);
         });

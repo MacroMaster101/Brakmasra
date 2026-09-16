@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -29,7 +30,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ProductPage({ params }: Props) {
-  const { slug } = await params;
+  const [{ slug }, requestHeaders] = await Promise.all([params, headers()]);
+  const nonce = requestHeaders.get("x-nonce") ?? undefined;
   const product = findProduct(slug);
   if (!product) notFound();
 
@@ -52,13 +54,25 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <div className="page-shell page-top product-page">
-      {!product.preview && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />}
+      {!product.preview && (
+        <script
+          nonce={nonce}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
+        />
+      )}
       <Link className="text-link" href="/shop"><ArrowLeft />Back to shop</Link>
       <div className="product-detail">
         <div className="product-gallery">
           {product.images.map((src, index) => (
             <div key={src} className="product-detail-image">
-              <Image src={src} alt={index === 0 ? `${product.name} product photo` : `${product.name}, view ${index + 1}`} fill loading={index === 0 ? "eager" : "lazy"} sizes="(max-width: 900px) 100vw, 56vw" />
+              <Image
+                src={src}
+                alt={index === 0 ? `${product.name} product photo` : `${product.name}, view ${index + 1}`}
+                fill
+                loading={index === 0 ? "eager" : "lazy"}
+                sizes="(max-width: 900px) 100vw, 56vw"
+              />
             </div>
           ))}
         </div>

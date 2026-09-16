@@ -175,7 +175,13 @@ export function CheckoutLoadingState({ embedded = false }: { embedded?: boolean 
   return (
     <LoadingStatus className="checkout-page loading-page" label="Loading checkout">
       <div className="checkout-shell">
-        <header className="loading-checkout-header"><div className="loading-block loading-icon" /><div><Line size="short" /><div className="loading-block loading-checkout-title" /></div></header>
+        <header className="loading-checkout-header">
+          <div className="loading-block loading-icon" />
+          <div>
+            <Line size="short" />
+            <div className="loading-block loading-checkout-title" />
+          </div>
+        </header>
         {form}
       </div>
     </LoadingStatus>

@@ -11,13 +11,10 @@ export function InitialLoader() {
 
   useEffect(() => {
     const startedAt = performance.now();
-    const previousOverflow = document.body.style.overflow;
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let exitTimer: ReturnType<typeof setTimeout> | undefined;
     let removeTimer: ReturnType<typeof setTimeout> | undefined;
     let hasStartedExit = false;
-
-    document.body.style.overflow = "hidden";
 
     const beginExit = () => {
       if (hasStartedExit) return;
@@ -28,7 +25,6 @@ export function InitialLoader() {
       exitTimer = setTimeout(() => {
         setPhase("exiting");
         removeTimer = setTimeout(() => {
-          document.body.style.overflow = previousOverflow;
           setPhase("hidden");
         }, reduceMotion ? 20 : exitDuration);
       }, remaining);
@@ -44,7 +40,6 @@ export function InitialLoader() {
       clearTimeout(safetyTimer);
       if (exitTimer) clearTimeout(exitTimer);
       if (removeTimer) clearTimeout(removeTimer);
-      document.body.style.overflow = previousOverflow;
     };
   }, []);
 

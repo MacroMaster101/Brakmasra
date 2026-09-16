@@ -87,7 +87,9 @@ export async function googleAuthAction(formData: FormData) {
     });
 
     if (!error && data.url) providerUrl = data.url;
-  } catch {}
+  } catch {
+    // Provider errors are reported through the generic failure redirect below.
+  }
 
   if (!providerUrl) {
     redirect(googleFailureUrl(returnTo, "google-unavailable", next));

@@ -1,121 +1,128 @@
-# BRAKMASRA
+<div align="center">
+  <img src="public/images/brakmasra-logo-reference.png" alt="BRAKMASRA Logo" width="148" />
 
-Official BRAKMASRA merchandise storefront built with Next.js 16, React 19, TypeScript, Supabase, Drizzle, and Vitest.
+  # 🌟 BRAKMASRA 🌟
 
-The public launch configuration is deliberately safe: visitors can browse the site and upcoming collection, while member access, cart, checkout, and purchasing show branded coming-soon states. The completed authentication and commerce foundations remain behind explicit feature flags for later activation.
+  **The Official BRAKMASRA Merchandise Storefront**
 
-## Included
+  [![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+  [![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+  [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+  [![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
+  [![Drizzle](https://img.shields.io/badge/Drizzle_ORM-C5F74F?style=for-the-badge&logo=drizzle&logoColor=black)](https://orm.drizzle.team/)
+  [![Vitest](https://img.shields.io/badge/Vitest-729B1B?style=for-the-badge&logo=vitest&logoColor=white)](https://vitest.dev/)
+</div>
 
-- Responsive home, shop, product, about, contact, account, cart, checkout, authentication, admin, 404, sitemap, robots, manifest, and social-card routes
-- Public coming-soon states for unfinished account and purchasing journeys
-- Supabase PostgreSQL schema and migrations with row-level security
-- Server-validated contact and newsletter endpoints with honeypots, origin checks, payload limits, and rate limiting
-- Supabase email/password and Google authentication foundation, disabled by default
-- Local cart and guarded checkout adapter boundary, disabled by default
-- Content security policy, security headers, accessible focus states, responsive layouts, and reduced-motion support
-- Route loading states plus a first-visit loading experience
+<br />
 
-## Local setup
+Welcome to the **BRAKMASRA** source repository! 🚀 This is a high-performance, dark-luxury e-commerce platform built natively on Next.js 16.
 
-Requirements: Node.js 20.9 or newer and npm.
+> 🔒 **Public Launch State**: The site is currently configured in a safe launch mode (`BRAKMASRA_LAUNCH_MODE=on`). Visitors can browse the upcoming collection, but member access, cart, checkout, and purchasing are locked behind branded "coming soon" gates. The fully completed authentication and commerce foundations remain safely behind feature flags until you are ready to drop!
+
+---
+
+## ✨ Features Included
+
+- 📱 **Fully Responsive:** Beautifully crafted pages for Home, Shop, Product, About, Contact, Account, Cart, Checkout, Auth, and Admin.
+- 🚧 **Launch Gates:** Polished "coming soon" overlays for unfinished purchasing journeys to build hype safely.
+- 🗄️ **Secure Data:** Supabase PostgreSQL schema & Drizzle migrations, fortified with Row-Level Security (RLS).
+- 🛡️ **Hardened APIs:** Server-validated endpoints with Zod, honeypots, strict origin checks, and robust rate limiting.
+- 🔐 **Authentication Ready:** Complete Supabase Email/Password and Google OAuth foundations (currently disabled for safety).
+- 🛒 **Commerce Core:** Local cart state and a guarded checkout adapter boundary.
+- ♿ **Accessibility & SEO:** Content Security Policy (CSP), security headers, accessible focus states, reduced-motion support, sitemap, robots.txt, and dynamic social cards.
+- ⚡ **Sleek UX:** Silky smooth route loading states and an immersive first-visit loader.
+
+---
+
+## 🛠️ Local Development
+
+Get up and running in seconds. Requirements: **Node.js 20.9+** & **npm**.
 
 ```bash
+# 1. Install dependencies
 npm install
+
+# 2. Setup your local environment
 copy .env.example .env
+
+# 3. Spin up the dev server
 npm run dev
 ```
 
-Open `http://localhost:3000`.
+🌐 Open [http://localhost:3000](http://localhost:3000) and enjoy the vibes.
 
-## Launch gate
+---
 
-The safe production defaults are:
+## 🚦 Launch Gate System
+
+Your production environment comes with a built-in safety net:
 
 ```env
 BRAKMASRA_LAUNCH_MODE=on
 AUTH_DEMO_MODE=
 ```
 
-Keep `BRAKMASRA_LAUNCH_MODE=on` for the public coming-soon release. It is a server-only, fail-safe gate: `on` or a missing value shows launch-status pages for authentication, account, cart, checkout, and purchasing. Set it to `off` to restore every completed implementation.
+- **`BRAKMASRA_LAUNCH_MODE=on`**: Enables the public "coming-soon" release. It is a server-only fail-safe that blocks access to authentication, cart, checkout, and purchasing.
+- **`BRAKMASRA_LAUNCH_MODE=off`**: Flips the switch! Unlocks the complete e-commerce experience.
+- **`AUTH_DEMO_MODE=on`**: For local testing only! With launch mode off, it creates a fake member session without hitting Supabase. (Automatically disabled in production).
 
-For a local account preview, set `BRAKMASRA_LAUNCH_MODE=off` and `AUTH_DEMO_MODE=on`. This creates a fake member session without calling Supabase. Demo mode only works in development and is ignored when `NODE_ENV=production`.
+---
 
-The checkout API also fails closed while commerce is disabled, so a direct request cannot start an unfinished payment flow.
+## 🔑 Environment Variables
 
-## Environment
+Check `.env.example` to see exactly what you need. **Never commit your `.env` file!**
 
-Copy `.env.example` and provide only the values used by the selected deployment:
+🔑 **Required for Production:**
+- `NEXT_PUBLIC_SITE_URL`: Your exact domain (e.g., `https://brakmasra.com`)
+- `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`
+- `DATABASE_URL`: Server-only PostgreSQL pooler URL for Drizzle
+- `BRAKMASRA_LAUNCH_MODE`: Controls the launch gate.
 
-- `NEXT_PUBLIC_SITE_URL`: exact canonical production origin, such as `https://brakmasra.com`
-- `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`: Supabase project access
-- `DATABASE_URL`: server-only Supabase PostgreSQL pooler URL for Drizzle tooling
-- `BRAKMASRA_LAUNCH_MODE`: server-only gate for all unfinished public routes
-- `AUTH_DEMO_MODE`: development-only fake member session
-- Stripe, email, social, and analytics values are reserved for their corresponding integrations
+> ⚠️ **SECURITY WARNING:** Never expose database URLs, Supabase secret keys, Stripe secrets, or email credentials through a `NEXT_PUBLIC_` variable!
 
-Never expose database, Supabase secret, Stripe secret, webhook, or email credentials through a `NEXT_PUBLIC_` variable.
+---
 
-## Supabase and Drizzle
+## 🗃️ Database (Supabase + Drizzle)
 
-Supabase CLI owns the production migration history in `supabase/migrations/`. Link the project and apply pending migrations:
+The Supabase CLI manages migration history in `supabase/migrations/`. 
 
 ```bash
+# Link your project & push migrations
 supabase link --project-ref YOUR_PROJECT_REF
-supabase migration list
 supabase db push
 ```
 
-Drizzle provides typed schema tooling through `db/schema.ts` and `drizzle.config.ts`. `DATABASE_URL` is required only for Drizzle commands such as `npm run db:studio`.
-
-The contact and newsletter endpoints use the server-only Supabase client. Without valid Supabase variables, the public pages still render and those forms return a controlled unavailable response.
-
-## Authentication activation
-
-Before enabling authentication:
-
-1. Configure the deployed URL as the Supabase Auth Site URL.
-2. Add local and production `/auth/confirm` URLs to the allowed redirect list.
-3. Configure custom SMTP for confirmation and password-reset messages.
-4. Configure the Google OAuth client and enable Google in Supabase.
-5. Test sign-up, confirmation, login, logout, password recovery, and session refresh on the production domain.
-6. Set `BRAKMASRA_LAUNCH_MODE=off` and redeploy only after the commerce checklist is also complete.
-
-## Commerce activation
-
-Before enabling commerce:
-
-1. Replace the launch catalogue with verified database records and final photography.
-2. Verify prices, variants, inventory, shipping, tax, returns, privacy, and terms.
-3. Connect a payment provider with server-created sessions and signed webhooks.
-4. Reload every price and stock value on the server before payment.
-5. Add idempotency and transactional inventory updates.
-6. Complete a real sandbox order and refund test.
-7. Set `BRAKMASRA_LAUNCH_MODE=off` and redeploy only after the authentication checklist is also complete.
-
-Raw payment card data must never pass through this application.
-
-## Deployment checklist
-
-1. Set the exact production `NEXT_PUBLIC_SITE_URL`.
-2. Keep `BRAKMASRA_LAUNCH_MODE=on` and `AUTH_DEMO_MODE` empty for the coming-soon release.
-3. Add Supabase variables if contact and newsletter capture should be live.
-4. Run the migrations already included in `supabase/migrations/`.
-5. Add approved privacy text before collecting newsletter subscriptions.
-6. Run the complete quality gate below.
-7. Deploy the build output on Vercel or another Next.js-compatible Node platform.
-8. Verify `/`, `/shop`, a product page, `/login`, `/cart`, `/checkout`, `/robots.txt`, and `/sitemap.xml` on the production domain.
-
-## Quality gate
-
+We use **Drizzle ORM** for incredible type-safe schema tooling (`db/schema.ts`). Need to view the DB locally? Just run:
 ```bash
-npm run lint
-npm run typecheck
-npm test
-npm run build
+npm run db:studio
 ```
 
-The ignored `.env`, `.env.backup`, `.next`, `node_modules`, and TypeScript build-info files are local-only and must not be committed.
+---
 
-## Visual assets
+## 🚀 Deployment Checklist
 
-The hero, account artwork, and product photography in `public/images/` were created for this storefront. `public/images/brakmasra-logo-reference.png` is the supplied brand artwork and can be replaced with the final transparent logo without changing the page structure.
+Before going live on **Vercel**, ensure you have:
+1. [x] Set the exact `NEXT_PUBLIC_SITE_URL`.
+2. [x] Set `BRAKMASRA_LAUNCH_MODE=on` for the hype phase.
+3. [x] Added all Supabase variables in your Vercel settings so contact & newsletter forms work.
+4. [x] Pushed all migrations to your live Supabase database.
+5. [x] Verified all routes (`/`, `/shop`, `/login`, etc.) are behaving securely.
+
+---
+
+## 🧪 Quality Gate
+
+Run this command suite before committing to ensure pristine code quality:
+
+```bash
+npm run lint       # ESLint check
+npm run typecheck  # TypeScript validation
+npm test           # Vitest unit tests
+npm run build      # Next.js production build
+```
+
+---
+
+## 🎨 Visual Assets
+
+All bespoke hero images, account artwork, and product photography live in `public/images/`. The official brand mark is `brakmasra-logo-reference.png`!

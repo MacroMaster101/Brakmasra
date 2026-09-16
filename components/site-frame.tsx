@@ -6,7 +6,6 @@ import { BackToTop } from "@/components/back-to-top";
 import { CartProvider } from "@/components/cart-provider";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
-import { InitialLoader } from "@/components/initial-loader";
 import { LanguageProvider } from "@/components/language-provider";
 import { ScrollRestoration } from "@/components/scroll-restoration";
 
@@ -25,7 +24,6 @@ export function SiteFrame({ children, launchMode }: Readonly<{ children: React.R
     <LanguageProvider>
       <CartProvider>
         <ScrollRestoration />
-        <InitialLoader />
         {!isFocusedAuthPage && <Header commerceEnabled={!launchMode} />}
         <main id="content">{children}</main>
         {!isFocusedAuthPage && <Footer />}

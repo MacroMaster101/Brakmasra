@@ -50,7 +50,7 @@ export function Header({ commerceEnabled }: { commerceEnabled: boolean }) {
           <span>BRAKMASRA</span>
         </Link>
         <nav className={`nav-links ${open ? "is-open" : ""}`} aria-label="Primary">
-          <button className="mobile-close" onClick={() => setOpen(false)} aria-label="Close menu"><X /></button>
+          <button type="button" className="mobile-close" onClick={() => setOpen(false)} aria-label="Close menu"><X /></button>
           {primaryNav.map(({ label, href }) => (
             <Link
               key={href}
@@ -97,10 +97,10 @@ export function Header({ commerceEnabled }: { commerceEnabled: boolean }) {
             <ShoppingBag />
             {commerceEnabled && count > 0 && <span>{count}</span>}
           </Link>
-          <button className="icon-button mobile-menu" onClick={() => setOpen(true)} aria-label="Open menu" aria-expanded={open}><Menu /></button>
+          <button type="button" className="icon-button mobile-menu" onClick={() => setOpen(true)} aria-label="Open menu" aria-expanded={open}><Menu /></button>
         </div>
       </div>
-      {open && <button className="nav-scrim" onClick={() => setOpen(false)} aria-label="Close menu overlay" />}
+      {open && <button type="button" className="nav-scrim" onClick={() => setOpen(false)} aria-label="Close menu overlay" />}
     </header>
   );
 }

@@ -96,7 +96,7 @@ export const translations = {
     aboutPillStandardTitle: "The Archive Standard",
     aboutPillStandardDesc: "Continuous rolling camera. Zero actors. Pure atmospheric tension.",
     aboutStoryP1: "BRAKMASRA began without scripts or studios. It started with three investigators, a camera, and empty roads in the dead of night where mist cuts off the rest of the world.",
-    aboutStoryP2: "We venture into locations steeped in decades of silence to understand what lingers when the living depart. When a sudden cold draft drops the room temperature or a faint whisper triggers the microphones, we document it in its raw state — letting the silence and acoustics speak for themselves.",
+    aboutStoryP2: "We venture into locations steeped in decades of silence to understand what lingers when the living depart. When a sudden cold draft drops the room temperature or a faint whisper triggers the microphones, we document it in its raw state, letting the silence and acoustics speak for themselves.",
     aboutStoryP3: "That same uncompromising discipline shapes our visual identity and every piece carrying our mark: weathered, stark, and built for people who walk the long road after midnight.",
     aboutBrowseLink: "Browse the collection in the shop",
     aboutChannelHeading: "Official Broadcast Channel",

@@ -1,6 +1,29 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { ExternalLink, Map, MoonStar, Radio } from "lucide-react";
-import { channel } from "@/data/channel";
-export const metadata: Metadata = { title: "About", description: "About BRAKMASRA and its mysterious explorations." };
-export default function AboutPage() { return <div className="page-shell page-top"><header className="page-hero"><span className="eyebrow">Into the unknown</span><h1>About BRAKMASRA</h1></header><div className="about-layout"><div className="creator-portrait"><Image src={channel.avatar} alt="BRAKMASRA channel avatar" width={900} height={900} priority /></div><div className="prose"><h2>Mystery has a destination</h2><p>{channel.description}</p><p>The channel’s public introduction also welcomes Sinhala-speaking viewers to join its adventures through dark, mysterious places and witness unusual encounters.</p><a className="button button-primary" href={channel.url} target="_blank" rel="noreferrer">Visit the official channel <ExternalLink /></a></div></div><div className="values-grid"><article><Map /><h2>Road trips</h2><p>Mysterious journeys into unfamiliar places.</p></article><article><MoonStar /><h2>Ghost hunts</h2><p>Night investigations and reported paranormal locations.</p></article><article><Radio /><h2>Exploration</h2><p>Abandoned sites, hidden spaces, and encounters with the unknown.</p></article></div></div>; }
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
+import { Reveal } from "@/components/reveal";
+
+export const metadata: Metadata = { title: "About", description: "The story behind BRAKMASRA and its official merch store.", alternates: { canonical: "/about" } };
+
+export default function AboutPage() {
+  return (
+    <div className="page-shell page-top about-page">
+      <header className="page-hero about-hero"><span className="eyebrow">The story behind the mark</span><h1>We go where the road gets quiet.</h1><p>BRAKMASRA turns nocturnal exploration into objects you can carry.</p></header>
+
+      <div className="about-collage">
+        <Reveal className="about-wide"><Image src="/images/brakmasra-hero.png" alt="Moonlit abandoned manor surrounded by tropical forest and fog" fill loading="eager" sizes="(max-width: 767px) 100vw, 68vw" /></Reveal>
+        <Reveal className="about-mark" delay={1}><Image src="/images/brakmasra-logo-reference.png" alt="Original BRAKMASRA haunting artwork" fill sizes="(max-width: 767px) 100vw, 32vw" /></Reveal>
+      </div>
+
+      <section className="about-story">
+        <Reveal><h2>Curiosity came first.</h2></Reveal>
+        <Reveal delay={1}><div><p>BRAKMASRA began with late drives, forgotten buildings, and places shaped by paranormal stories. We document the atmosphere without sanding away what makes it unsettling.</p><p>The store extends that same visual world into restrained apparel and accessories. Every release should feel like part of the journey, not a logo placed on a blank product.</p><Link className="text-link" href="/shop">Explore the collection <ArrowUpRight /></Link></div></Reveal>
+      </section>
+
+      <section className="about-belief">
+        <Reveal><p>We make for people who still take the long road after dark.</p></Reveal>
+      </section>
+    </div>
+  );
+}

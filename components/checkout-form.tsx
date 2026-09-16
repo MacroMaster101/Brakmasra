@@ -2,14 +2,16 @@
 
 import { useState, type FormEvent } from "react";
 import { useCart } from "@/components/cart-provider";
+import { CheckoutLoadingState } from "@/components/loading-states";
 
 export function CheckoutForm() {
-  const { lines } = useCart();
+  const { hydrated, lines } = useCart();
   const [status, setStatus] = useState("");
   async function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); setStatus("Creating secure checkout…");
+    event.preventDefault(); setStatus("Creating secure checkout...");
     const response = await fetch("/api/checkout", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ lines: lines.map(({ productId, size, color, quantity }) => ({ productId, size, color, quantity })) }) });
     const result = await response.json(); setStatus(result.message);
   }
+  if (!hydrated) return <CheckoutLoadingState embedded />;
   return <form className="checkout-form panel" onSubmit={submit}><h2>Secure checkout</h2><p>Payment details are handled entirely by our payment provider. BRAKMASRA never stores your card details.</p><button className="button button-primary full" disabled={!lines.length} type="submit">Continue to payment</button><p className="form-status" aria-live="polite">{status}</p></form>;
 }

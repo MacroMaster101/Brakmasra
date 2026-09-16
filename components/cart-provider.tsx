@@ -6,6 +6,7 @@ import { cartCount, cartKey, type CartLine } from "@/lib/cart";
 type CartContextValue = {
   lines: CartLine[];
   count: number;
+  hydrated: boolean;
   add: (line: CartLine) => void;
   update: (index: number, quantity: number) => void;
   remove: (index: number) => void;
@@ -42,6 +43,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const value = useMemo<CartContextValue>(() => ({
     lines,
     count: cartCount(lines),
+    hydrated,
     add: (line) => setLines((current) => {
       const index = current.findIndex((item) => item.productId === line.productId && item.size === line.size && item.color === line.color);
       if (index < 0) return [...current, line];
@@ -50,7 +52,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     update: (index, quantity) => setLines((current) => current.map((line, itemIndex) => itemIndex === index ? { ...line, quantity: Math.max(1, Math.min(10, quantity)) } : line)),
     remove: (index) => setLines((current) => current.filter((_, itemIndex) => itemIndex !== index)),
     clear: () => setLines([]),
-  }), [lines]);
+  }), [hydrated, lines]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

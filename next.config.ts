@@ -10,10 +10,10 @@ const csp = [
   "object-src 'none'",
   `script-src 'self' 'unsafe-inline'${isDevelopment ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: https://i.ytimg.com https://yt3.googleusercontent.com",
+  "img-src 'self' data:",
   "font-src 'self' data:",
-  `connect-src 'self' https://www.googleapis.com${isDevelopment ? " ws: wss:" : ""}`,
-  "frame-src https://www.youtube-nocookie.com",
+  `connect-src 'self'${isDevelopment ? " ws: wss:" : ""}`,
+  "frame-src 'none'",
   "media-src 'self'",
   ...(isDevelopment ? [] : ["upgrade-insecure-requests"]),
 ].join("; ");
@@ -22,10 +22,6 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   turbopack: { root: process.cwd() },
   images: {
-    remotePatterns: [
-      { protocol: "https", hostname: "i.ytimg.com" },
-      { protocol: "https", hostname: "yt3.googleusercontent.com" },
-    ],
     formats: ["image/avif", "image/webp"],
   },
   async headers() {

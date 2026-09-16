@@ -1,1 +1,5 @@
-export default function Loading() { return <div className="page-shell page-top" aria-label="Loading"><div className="skeleton hero-skeleton" /><div className="skeleton-grid"><div className="skeleton" /><div className="skeleton" /><div className="skeleton" /></div></div>; }
+import { HomeLoadingState } from "@/components/loading-states";
+
+export default function Loading() {
+  return <HomeLoadingState />;
+}

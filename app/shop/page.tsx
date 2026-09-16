@@ -1,5 +1,16 @@
 import type { Metadata } from "next";
-import { Search, SlidersHorizontal, ShoppingBag } from "lucide-react";
+import { ShopCatalog } from "@/components/shop-catalog";
 import { products } from "@/data/products";
-export const metadata: Metadata = { title: "Official Merch", description: "Shop official BRAKMASRA merchandise and verified limited drops." };
-export default function ShopPage() { return <div className="page-shell page-top"><header className="page-hero"><span className="eyebrow">Wear the mark</span><h1>Official merch</h1><p>Verified products and limited drops from BRAKMASRA.</p></header><div className="shop-tools"><label className="search-field"><Search /><span className="sr-only">Search products</span><input placeholder="Search products…" disabled={!products.length} /></label><button className="button button-secondary" disabled={!products.length}><SlidersHorizontal />Filters</button></div>{products.length ? <div className="card-grid" /> : <div className="empty-state"><ShoppingBag /><h2>The store is not open yet</h2><p>Official BRAKMASRA merch is not available yet. Check back soon — the first drop is on the way.</p></div>}</div>; }
+import { commerceEnabled } from "@/lib/features";
+
+export const metadata: Metadata = { title: "Official Merch", description: "Shop official BRAKMASRA merchandise and verified limited drops.", alternates: { canonical: "/shop" } };
+
+export default function ShopPage() {
+  return (
+    <div className="page-shell page-top shop-page">
+      <header className="page-hero"><span className="eyebrow">Upcoming collection</span><h1>Carry the unknown.</h1><p>Dark apparel and objects shaped by the places we explore.</p></header>
+      <div className="catalog-note"><strong>Launch status</strong><span>Ordering is not open yet. Final prices, sizes, and availability will be announced before release.</span></div>
+      <ShopCatalog products={products} commerceEnabled={commerceEnabled} />
+    </div>
+  );
+}

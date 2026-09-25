@@ -1,9 +1,8 @@
 "use server";
 
-import { createHash } from "node:crypto";
 import { revalidatePath } from "next/cache";
-import { headers } from "next/headers";
 
+import { audit, controlRoomLimit, viewerWith } from "@/app/admin/action-helpers";
 import { firstIssue, formText } from "@/lib/account-validation";
 import { findAccountByEmail, getAccountById, type AccountSummary } from "@/lib/control-room";
 import {
@@ -15,11 +14,8 @@ import {
   roleFromChoice,
   type RoleChoice,
 } from "@/lib/control-room-validation";
-import { authDemoMode, authEnabled } from "@/lib/features";
-import { getCurrentMember, type Member } from "@/lib/member";
-import { rateLimit } from "@/lib/rate-limit";
-import { clientAddress } from "@/lib/request";
-import { can, type Permission } from "@/lib/roles";
+import { authDemoMode } from "@/lib/features";
+import { idSchema } from "@/lib/store-admin-validation";
 import { getSupabaseServerClient } from "@/lib/supabase";
 
 export type FoundAccount = AccountSummary & { choices: RoleChoice[] };
@@ -37,33 +33,6 @@ const demoSaved: ControlRoomActionState = { status: "success", message: "Preview
 const tooManyAttempts: ControlRoomActionState = { status: "error", message: "Too many attempts. Wait a few minutes and try again." };
 const notConfigured: ControlRoomActionState = { status: "error", message: "Control Room data is not connected yet." };
 const roleNotSaved: ControlRoomActionState = { status: "error", message: "The role could not be updated. Please try again." };
-
-/** The verified viewer, only if their server-side role grants `permission`. */
-async function viewerWith(permission: Permission): Promise<Member | null> {
-  if (!authEnabled) return null;
-  const member = await getCurrentMember();
-  if (!member || !can(member.role, "control_room") || !can(member.role, permission)) return null;
-  return member;
-}
-
-async function controlRoomLimit(scope: string, limit: number, windowMs: number, viewerId: string) {
-  const viewerKey = createHash("sha256").update(viewerId).digest("hex").slice(0, 24);
-  return rateLimit(`control:${scope}:${clientAddress(await headers())}:${viewerKey}`, limit, windowMs);
-}
-
-async function audit(action: string, entityType: string, entityId: string, metadata: Record<string, unknown>) {
-  const supabase = getSupabaseServerClient();
-  if (!supabase) return;
-  try {
-    // actor_id points at a legacy table, not auth users, so the actor goes in metadata.
-    const { error } = await supabase
-      .from("admin_audit_logs")
-      .insert({ actor_id: null, action, entity_type: entityType, entity_id: entityId, metadata });
-    if (error) console.error(`Control Room audit log insert failed for ${action}`);
-  } catch {
-    console.error(`Control Room audit log insert failed for ${action}`);
-  }
-}
 
 export async function updateMessageStatusAction(
   _previousState: ControlRoomActionState,
@@ -101,9 +70,7 @@ export async function updateMessageStatusAction(
     return { status: "error", message: "The message could not be updated. Please try again." };
   }
 
-  await audit("message.status", "contact_message", id, {
-    actor_id: viewer.id,
-    actor_email: viewer.email,
+  await audit(viewer, "message.status", "contact_message", id, {
     from: previous,
     to: status,
   });
@@ -177,9 +144,7 @@ export async function changeRoleAction(
     return roleNotSaved;
   }
 
-  await audit("role.change", "user", target.id, {
-    actor_id: viewer.id,
-    actor_email: viewer.email,
+  await audit(viewer, "role.change", "user", target.id, {
     target_email: target.email,
     from: target.role,
     to: requested,
@@ -187,4 +152,65 @@ export async function changeRoleAction(
   revalidatePath("/admin/team");
   revalidatePath("/admin");
   return { status: "success", message: "Role updated. It applies on their next page load.", account: account(requested) };
+}
+
+export async function deleteMessageAction(
+  _previousState: ControlRoomActionState,
+  formData: FormData,
+): Promise<ControlRoomActionState> {
+  const viewer = await viewerWith("manage_messages");
+  if (!viewer) return notAvailable;
+  if (authDemoMode) return demoSaved;
+
+  const parsed = idSchema.safeParse({ id: formText(formData.get("id")) });
+  if (!parsed.success) return { status: "error", message: firstIssue(parsed) };
+
+  const attempt = await controlRoomLimit("message-delete", 60, 10 * 60_000, viewer.id);
+  if (!attempt.allowed) return tooManyAttempts;
+
+  const supabase = getSupabaseServerClient();
+  if (!supabase) return notConfigured;
+
+  try {
+    const { error } = await supabase.from("contact_messages").delete().eq("id", parsed.data.id);
+    if (error) return { status: "error", message: "The message could not be deleted. Please try again." };
+  } catch {
+    return { status: "error", message: "The message could not be deleted. Please try again." };
+  }
+
+  await audit(viewer, "message.delete", "contact_message", parsed.data.id);
+  revalidatePath("/admin/messages");
+  revalidatePath("/admin");
+  return { status: "success", message: "Message deleted." };
+}
+
+export async function deleteSubscriberAction(
+  _previousState: ControlRoomActionState,
+  formData: FormData,
+): Promise<ControlRoomActionState> {
+  const viewer = await viewerWith("manage_newsletter");
+  if (!viewer) return notAvailable;
+  if (authDemoMode) return demoSaved;
+
+  const parsed = idSchema.safeParse({ id: formText(formData.get("id")) });
+  if (!parsed.success) return { status: "error", message: firstIssue(parsed) };
+
+  const attempt = await controlRoomLimit("subscriber-delete", 60, 10 * 60_000, viewer.id);
+  if (!attempt.allowed) return tooManyAttempts;
+
+  const supabase = getSupabaseServerClient();
+  if (!supabase) return notConfigured;
+
+  try {
+    const { error } = await supabase.from("newsletter_subscribers").delete().eq("id", parsed.data.id);
+    if (error) return { status: "error", message: "The subscriber could not be removed. Please try again." };
+  } catch {
+    return { status: "error", message: "The subscriber could not be removed. Please try again." };
+  }
+
+  // The address is not logged, so a removal really removes it.
+  await audit(viewer, "subscriber.delete", "newsletter_subscriber", parsed.data.id);
+  revalidatePath("/admin/subscribers");
+  revalidatePath("/admin");
+  return { status: "success", message: "Subscriber removed." };
 }

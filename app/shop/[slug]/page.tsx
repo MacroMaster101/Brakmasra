@@ -2,20 +2,15 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { ProductDetails } from "@/components/product-details";
-import { products } from "@/data/products";
 import { getSiteUrl } from "@/lib/auth";
-import { findProduct } from "@/lib/catalog";
 import { commerceEnabled } from "@/lib/features";
 import { pageMetadata } from "@/lib/seo";
+import { getCatalogProduct } from "@/lib/store";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export function generateStaticParams() {
-  return products.map((product) => ({ slug: product.slug }));
-}
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const product = findProduct((await params).slug);
+  const product = await getCatalogProduct((await params).slug);
   if (!product) return { title: "Product not found" };
   return {
     ...pageMetadata({ title: product.name, description: product.description, path: `/shop/${product.slug}`, images: product.images.slice(0, 1) }),
@@ -26,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ProductPage({ params }: Props) {
   const [{ slug }, requestHeaders] = await Promise.all([params, headers()]);
   const nonce = requestHeaders.get("x-nonce") ?? undefined;
-  const product = findProduct(slug);
+  const product = await getCatalogProduct(slug);
   if (!product) notFound();
 
   const siteUrl = getSiteUrl();

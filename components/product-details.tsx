@@ -10,6 +10,7 @@ import { useLanguage } from "@/components/language-provider";
 import type { Product } from "@/data/products";
 import { formatMoney } from "@/lib/cart";
 import { productCopy } from "@/lib/catalog";
+import { isRemoteImage } from "@/lib/store-mapping";
 
 export function ProductDetails({ product, commerceEnabled }: { product: Product; commerceEnabled: boolean }) {
   const { t, lang } = useLanguage();
@@ -29,6 +30,7 @@ export function ProductDetails({ product, commerceEnabled }: { product: Product;
             <div key={src} className="product-detail-image">
               <Image
                 src={src}
+                unoptimized={isRemoteImage(src)}
                 alt={index === 0 ? t.productPhotoAlt(product.name) : t.productViewAlt(product.name, index + 1)}
                 fill
                 loading={index === 0 ? "eager" : "lazy"}

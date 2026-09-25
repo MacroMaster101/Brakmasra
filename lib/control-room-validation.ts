@@ -7,8 +7,11 @@ import { assignableRoles, can, MEMBER_ROLES, type MemberRole, type Permission } 
 
 export const CONTROL_ROOM_SECTIONS = [
   { key: "overview", href: "/admin", permission: "control_room" },
-  { key: "messages", href: "/admin/messages", permission: "view_messages" },
+  { key: "products", href: "/admin/products", permission: "view_catalog" },
+  { key: "collections", href: "/admin/collections", permission: "view_catalog" },
+  { key: "discounts", href: "/admin/discounts", permission: "view_catalog" },
   { key: "orders", href: "/admin/orders", permission: "view_orders" },
+  { key: "messages", href: "/admin/messages", permission: "view_messages" },
   { key: "subscribers", href: "/admin/subscribers", permission: "view_newsletter" },
   { key: "team", href: "/admin/team", permission: "manage_team" },
   { key: "site", href: "/admin/site", permission: "manage_site" },

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { PackageOpen } from "lucide-react";
 
 import { EmptyState, SectionGate, SectionPanel, StatusPill } from "@/components/control-room/shared";
@@ -10,7 +11,7 @@ import type { SectionData } from "@/lib/control-room-validation";
 import { formatDate, type TextKey } from "@/lib/i18n";
 import type { OrderStatus } from "@/lib/orders";
 
-const statusLabels: Record<OrderStatus, TextKey> = {
+export const orderStatusLabels: Record<OrderStatus, TextKey> = {
   pending: "accountOrderStatusPending",
   paid: "accountOrderStatusPaid",
   fulfilled: "accountOrderStatusFulfilled",
@@ -40,7 +41,11 @@ export function ControlRoomOrders({ orders }: { orders: SectionData<AdminOrder[]
               <tbody>
                 {list.map((order) => (
                   <tr key={order.publicId}>
-                    <td data-label={t.accountOrderNumber} className="cr-mono">{order.publicId}</td>
+                    <td data-label={t.accountOrderNumber} className="cr-mono">
+                      <Link className="crs-row-link" href={`/admin/orders/${encodeURIComponent(order.publicId)}`}>
+                        <strong>{order.publicId}</strong>
+                      </Link>
+                    </td>
                     <td data-label={t.crCustomer}>
                       <a href={`mailto:${encodeURIComponent(order.customerEmail)}`}>{order.customerEmail}</a>
                     </td>
@@ -48,7 +53,7 @@ export function ControlRoomOrders({ orders }: { orders: SectionData<AdminOrder[]
                       <time dateTime={order.createdAt}>{formatDate(order.createdAt, lang)}</time>
                     </td>
                     <td data-label={t.accountOrderStatus}>
-                      <StatusPill tone={order.status}>{t[statusLabels[order.status]]}</StatusPill>
+                      <StatusPill tone={order.status}>{t[orderStatusLabels[order.status]]}</StatusPill>
                     </td>
                     <td data-label={t.accountOrderTotal} className="is-end">
                       <strong>{formatMoney(order.totalMinor, order.currency)}</strong>

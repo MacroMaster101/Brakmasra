@@ -19,9 +19,10 @@ const person = (n: number, role: MemberRole | null) => ({ id: id(n), role });
 
 describe("Control Room sections", () => {
   it("shows each role only the sections it may use", () => {
-    expect(controlRoomSections("web_dev")).toEqual(["overview", "messages", "orders", "subscribers", "team", "site"]);
-    expect(controlRoomSections("owner")).toEqual(["overview", "messages", "orders", "subscribers", "team"]);
-    expect(controlRoomSections("staff")).toEqual(["overview", "messages", "orders"]);
+    const shop = ["products", "collections", "discounts", "orders", "messages"];
+    expect(controlRoomSections("web_dev")).toEqual(["overview", ...shop, "subscribers", "team", "site"]);
+    expect(controlRoomSections("owner")).toEqual(["overview", ...shop, "subscribers", "team"]);
+    expect(controlRoomSections("staff")).toEqual(["overview", ...shop]);
   });
 
   it("gives supporters and regular members nothing", () => {
@@ -112,9 +113,20 @@ describe("Control Room server code", () => {
   it("re-checks the viewer's role from the session in every action", () => {
     const source = read("app/admin/actions.ts");
     const actions = source.split("export async function ").slice(1);
-    expect(actions).toHaveLength(3);
-    for (const action of actions) expect(action).toMatch(/const viewer = await viewerWith\("(view_messages|manage_team)"\);\s+if \(!viewer\) return notAvailable;/);
+    expect(actions).toHaveLength(5);
+    for (const action of actions) {
+      expect(action).toMatch(/^[^{]+\{\s+(?:\/\/[^\n]*\n\s+)?const viewer = await viewerWith\("(view_messages|manage_messages|manage_newsletter|manage_team)"\);\s+if \(!viewer\) return notAvailable;/);
+    }
     expect(source).toContain("canChangeRole(viewer, target, requested)");
+  });
+
+  it("checks the manage permission first in every store action", () => {
+    const actions = read("app/admin/store-actions.ts").split("export async function ").slice(1);
+    expect(actions.length).toBeGreaterThanOrEqual(12);
+    for (const action of actions) {
+      expect(action).toMatch(/^[^{]+\{\s+const checked = await guard\("(manage_catalog|manage_orders)"/);
+    }
+    expect(read("app/admin/subscribers/export/route.ts")).toContain('await viewerWith("manage_newsletter")');
   });
 
   it("gates every Control Room page on the server", () => {
@@ -125,6 +137,16 @@ describe("Control Room server code", () => {
       ["app/admin/orders/page.tsx", "view_orders"],
       ["app/admin/subscribers/page.tsx", "view_newsletter"],
       ["app/admin/team/page.tsx", "manage_team"],
+      ["app/admin/products/page.tsx", "view_catalog"],
+      ["app/admin/products/new/page.tsx", "manage_catalog"],
+      ["app/admin/products/[id]/page.tsx", "view_catalog"],
+      ["app/admin/collections/page.tsx", "view_catalog"],
+      ["app/admin/collections/new/page.tsx", "manage_catalog"],
+      ["app/admin/collections/[id]/page.tsx", "view_catalog"],
+      ["app/admin/discounts/page.tsx", "view_catalog"],
+      ["app/admin/discounts/new/page.tsx", "manage_catalog"],
+      ["app/admin/discounts/[id]/page.tsx", "view_catalog"],
+      ["app/admin/orders/[publicId]/page.tsx", "view_orders"],
       ["app/admin/site/page.tsx", "manage_site"],
     ];
     for (const [file, permission] of pages) {
@@ -133,8 +155,7 @@ describe("Control Room server code", () => {
   });
 
   it("logs role changes without pointing actor_id at auth users", () => {
-    const source = read("app/admin/actions.ts");
-    expect(source).toContain("actor_id: null");
-    expect(source).toContain('audit("role.change", "user", target.id');
+    expect(read("app/admin/action-helpers.ts")).toContain("actor_id: null");
+    expect(read("app/admin/actions.ts")).toContain('audit(viewer, "role.change", "user", target.id');
   });
 });

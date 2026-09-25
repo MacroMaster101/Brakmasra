@@ -7,6 +7,7 @@ import { AuthForm } from "@/components/auth-form";
 import { AuthComingSoon } from "@/components/coming-soon";
 import { AuthShell } from "@/components/auth-shell";
 import { GoogleAuthButton } from "@/components/google-auth-button";
+import { Translated } from "@/components/translated";
 import { authDemoMode, authEnabled } from "@/lib/features";
 import { createAuthClient } from "@/lib/supabase-auth";
 
@@ -26,18 +27,23 @@ export default async function SignupPage({ searchParams }: SignupPageProps) {
   if (data?.claims) redirect("/account");
 
   const notice = typeof params.notice === "string" ? params.notice : "";
-  const noticeMessage = notice === "google-rate-limited"
-    ? "Too many Google sign-up attempts. Wait a few minutes and try again."
+  const noticeKey = notice === "google-rate-limited"
+    ? "noticeGoogleSignupRateLimited"
     : notice === "google-unavailable"
-      ? "Google sign-up is unavailable right now. You can still use your email."
-      : "";
+      ? "noticeGoogleSignupUnavailable"
+      : null;
 
   return (
-    <AuthShell compact title="Create your account" description="Keep checkout details and future orders in one secure place.">
-      {noticeMessage && <p className="auth-page-notice" role="status">{noticeMessage}</p>}
+    <AuthShell compact titleKey="signupTitle" descriptionKey="signupDesc">
+      {noticeKey && <p className="auth-page-notice" role="status"><Translated k={noticeKey} /></p>}
       <GoogleAuthButton action={googleAuthAction} next="/account?welcome=1" returnTo="/signup" />
       <AuthForm action={signupAction} mode="signup" />
-      <p className="auth-switch">Already have an account? <Link href="/login">Sign in</Link></p>
+      <p className="auth-legal">
+        <Translated k="signupLegalPrefix" /> <Link href="/terms"><Translated k="legalTerms" /></Link>{" "}
+        <Translated k="signupLegalAnd" /> <Link href="/privacy"><Translated k="legalPrivacy" /></Link>
+        <Translated k="signupLegalSuffix" />
+      </p>
+      <p className="auth-switch"><Translated k="signupHaveAccount" /> <Link href="/login"><Translated k="signupSignIn" /></Link></p>
     </AuthShell>
   );
 }

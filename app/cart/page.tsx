@@ -9,11 +9,6 @@ export default function CartPage() {
   if (!commerceEnabled) return <StoreComingSoon area="cart" />;
   return (
     <div className="page-shell page-top">
-      <header className="page-hero compact">
-        <span className="eyebrow">Your selection</span>
-        <h1>Cart</h1>
-        <p>Review the pieces you are carrying forward.</p>
-      </header>
       <CartView />
     </div>
   );

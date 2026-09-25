@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { useFormStatus } from "react-dom";
 
+import { useLanguage } from "@/components/language-provider";
+
 type GoogleAuthButtonProps = {
   action: (formData: FormData) => Promise<void>;
   next: string;
@@ -10,17 +12,20 @@ type GoogleAuthButtonProps = {
 };
 
 function GoogleSubmitButton() {
+  const { t } = useLanguage();
   const { pending } = useFormStatus();
 
   return (
     <button className="google-auth-button" type="submit" disabled={pending}>
       <Image className="google-mark" src="/images/google-g.svg" alt="" width={18} height={18} />
-      <span>{pending ? "Opening Google" : "Continue with Google"}</span>
+      <span>{pending ? t.authGoogleOpening : t.authGoogleContinue}</span>
     </button>
   );
 }
 
 export function GoogleAuthButton({ action, next, returnTo }: GoogleAuthButtonProps) {
+  const { t } = useLanguage();
+
   return (
     <>
       <form className="auth-social" action={action}>
@@ -29,7 +34,7 @@ export function GoogleAuthButton({ action, next, returnTo }: GoogleAuthButtonPro
         <GoogleSubmitButton />
       </form>
       <div className="auth-divider" aria-hidden="true">
-        <span>or continue with email</span>
+        <span>{t.authEmailDivider}</span>
       </div>
     </>
   );

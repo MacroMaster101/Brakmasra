@@ -19,7 +19,7 @@ export default async function ResetPasswordPage() {
   if (!data?.claims) redirect("/forgot-password");
 
   return (
-    <AuthShell title="Choose a new password" description="Use at least eight characters that you have not used here before.">
+    <AuthShell titleKey="resetTitle" descriptionKey="resetDesc">
       <AuthForm action={resetPasswordAction} mode="reset" />
     </AuthShell>
   );

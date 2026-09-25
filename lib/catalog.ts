@@ -1,5 +1,6 @@
-import { products as catalog, type Product } from "@/data/products";
+import { products as catalog, type Product, type ProductCopy } from "@/data/products";
 import type { CartLine } from "@/lib/cart";
+import type { Language } from "@/lib/i18n";
 
 export const MAX_LINE_QUANTITY = 10;
 
@@ -10,7 +11,15 @@ export function findProduct(slug: string, list: Product[] = catalog): Product | 
 export function searchProducts(query: string, list: Product[] = catalog): Product[] {
   const needle = query.trim().toLowerCase();
   if (!needle) return list;
-  return list.filter((product) => `${product.name} ${product.description}`.toLowerCase().includes(needle));
+  return list.filter((product) =>
+    `${product.name} ${product.description} ${product.si?.description ?? ""}`.toLowerCase().includes(needle),
+  );
+}
+
+/** Description, fabric, and care text in the requested language, falling back to English. */
+export function productCopy(product: Product, lang: Language): ProductCopy {
+  const localized = lang === "si" ? product.si : undefined;
+  return localized ?? { description: product.description, fabric: product.fabric, care: product.care };
 }
 
 export type VariantChoice = { size: string; color: string; quantity: number };

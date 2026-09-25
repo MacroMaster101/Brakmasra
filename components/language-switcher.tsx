@@ -9,19 +9,20 @@ export function LanguageSwitcher({
   className?: string;
   showLabels?: boolean;
 }) {
-  const { lang, setLang } = useLanguage();
+  const { lang, setLang, t } = useLanguage();
 
   return (
     <div
       className={`lang-switcher ${className}`}
       role="group"
-      aria-label="Language selection"
+      aria-label={t.languageSelection}
     >
       <button
         type="button"
         className={`lang-btn ${lang === "en" ? "is-active" : ""}`}
         onClick={() => setLang("en")}
         aria-pressed={lang === "en"}
+        lang="en"
         title="Switch to English"
       >
         <span>{showLabels ? "English" : "EN"}</span>
@@ -34,7 +35,8 @@ export function LanguageSwitcher({
         className={`lang-btn ${lang === "si" ? "is-active" : ""}`}
         onClick={() => setLang("si")}
         aria-pressed={lang === "si"}
-        title="සිංහල භාෂාවට මාරු වන්න (Switch to Sinhala)"
+        lang="si"
+        title="සිංහල භාෂාවට මාරු වන්න"
       >
         <span>{showLabels ? "සිංහල" : "සිං"}</span>
       </button>

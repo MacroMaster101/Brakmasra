@@ -56,7 +56,7 @@ export function ShopCatalog({
       <div className="shop-tools">
         <label className="search-field">
           <Search />
-          <span className="sr-only">Search products</span>
+          <span className="sr-only">{t.shopSearchLabel}</span>
           <input
             type="search"
             value={query}
@@ -64,7 +64,7 @@ export function ShopCatalog({
             placeholder={t.shopSearchPlaceholder}
           />
         </label>
-        <div className="category-filter" aria-label="Filter by category">
+        <div className="category-filter" role="group" aria-label={t.shopFilterLabel}>
           {categories.map((item) => (
             <button
               key={item}

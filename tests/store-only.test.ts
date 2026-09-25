@@ -16,7 +16,8 @@ function walk(path: string): string[] {
 
 describe("store-only site", () => {
   it("has no YouTube integration or video links left in source", () => {
-    const allowed = new Set(["app/about/page.tsx", "components/footer.tsx"]);
+    // data/legal.ts names YouTube as a third-party site in the terms; it is copy, not an integration.
+    const allowed = new Set(["app/about/page.tsx", "components/footer.tsx", "data/legal.ts"]);
     const offenders = scanned
       .flatMap(walk)
       .filter((file) => !allowed.has(file) && banned.test(readFileSync(join(root, file), "utf8")));

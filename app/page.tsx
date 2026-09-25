@@ -15,6 +15,8 @@ export default async function Home() {
     name: site.name,
     url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
     description: site.description,
+    email: site.supportEmail,
+    contactPoint: { "@type": "ContactPoint", contactType: "customer support", email: site.supportEmail, availableLanguage: ["English", "Sinhala"] },
     ...(socialLinks.length ? { sameAs: socialLinks.map((link) => link.href) } : {}),
   };
 

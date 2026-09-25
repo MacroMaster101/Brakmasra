@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { useLanguage } from "@/components/language-provider";
 import { readResponseMessage } from "@/lib/client-response";
+import { localizeServerMessage } from "@/lib/i18n";
 
 export function NewsletterForm() {
   const { t, lang } = useLanguage();
@@ -22,19 +23,10 @@ export function NewsletterForm() {
         headers: { "content-type": "application/json" },
         body: JSON.stringify(Object.fromEntries(data)),
       });
-      const message = await readResponseMessage(response, "Signup could not be completed. Please try again.");
-      setStatus(
-        lang === "si" && response.ok
-          ? "ඔබ සාර්ථකව ලියාපදිංචි විය. ස්තූතියි!"
-          : message,
-      );
+      setStatus(localizeServerMessage(await readResponseMessage(response, t.newsletterFailed), lang));
       if (response.ok) form.reset();
     } catch {
-      setStatus(
-        lang === "si"
-          ? "දැනට ලියාපදිංචි විය නොහැක. කරුණාකර නැවත උත්සාහ කරන්න."
-          : "Unable to send right now. Please try again.",
-      );
+      setStatus(t.contactSendError);
     } finally {
       setPending(false);
     }
@@ -56,9 +48,7 @@ export function NewsletterForm() {
       <input className="honeypot" name="company" tabIndex={-1} autoComplete="off" aria-hidden="true" />
       <label className="consent">
         <input type="checkbox" name="consent" value="true" required />{" "}
-        {lang === "si"
-          ? "BRAKMASRA වෙතින් පණිවිඩ ලබා ගැනීමට එකඟ වන අතර ඕනෑම වේලාවක ඉවත් විය හැක."
-          : "I agree to receive BRAKMASRA updates and can unsubscribe anytime."}
+        <span>{t.newsletterConsent}</span>
       </label>
       <button className="button button-primary" type="submit" disabled={pending}>
         {pending ? t.contactBtnSending : t.homeNewsletterBtn}

@@ -1,5 +1,12 @@
 export type ProductCategory = "Apparel" | "Headwear";
 
+/** Customer-facing copy that changes with the page language. */
+export type ProductCopy = {
+  description: string;
+  fabric: string;
+  care: string[];
+};
+
 export type Product = {
   id: string;
   slug: string;
@@ -16,6 +23,8 @@ export type Product = {
   category?: ProductCategory;
   badge?: "NEW" | "LIMITED" | "BEST SELLER" | "SALE";
   preview?: boolean;
+  /** Sinhala copy; the English fields above remain the canonical record. */
+  si?: ProductCopy;
 };
 
 /**
@@ -40,6 +49,11 @@ export const products: Product[] = [
     category: "Apparel",
     badge: "NEW",
     preview: true,
+    si: {
+      description: "උරහිසෙන් පහළට වැටෙන ලිහිල් හැඩයක් සහ කාලයෙන් ගෙවී ගිය වනාන්තර සලකුණක් සහිත, සේදූ කළු පැහැති ඝන කපු ටී-ෂර්ට් එකක්.",
+      fabric: "ඝන කපු ජර්සි රෙදි",
+      care: ["ඇතුළත පිටතට හරවා සීතල ජලයෙන් සෝදන්න", "වැලක එල්ලා වියළන්න", "මුද්‍රණය මත ස්ත්‍රික්ක නොකරන්න"],
+    },
   },
   {
     id: "c76f064b-462f-4db2-92c7-eaa660df20b8",
@@ -57,6 +71,11 @@ export const products: Product[] = [
     category: "Apparel",
     badge: "LIMITED",
     preview: true,
+    si: {
+      description: "ඝන ලොම් ඇතුළතක්, එකම පැහැයේ මැහුම් සහ අස්ථි-සුදු ගවේෂණ සලකුණක් සහිත, සේදූ කළු පැහැති විශාල හැඩයේ හුඩියක්.",
+      fabric: "ඝන කපු-මිශ්‍ර ලොම් රෙදි",
+      care: ["ඇතුළත පිටතට හරවා සීතල ජලයෙන් සෝදන්න", "වැලක එල්ලා වියළන්න", "තද පැහැති ඇඳුම් සමඟ පමණක් සෝදන්න"],
+    },
   },
   {
     id: "58027f89-5dc8-42fc-81b5-588b1955f91e",
@@ -74,5 +93,10 @@ export const products: Product[] = [
     category: "Headwear",
     badge: "NEW",
     preview: true,
+    si: {
+      description: "කාලයෙන් ගෙවී ගිය පෙනුමක්, එම්බ්‍රොයිඩර් කළ වනාන්තර සලකුණ සහ සීරුමාරු කළ හැකි පිටුපස පටියක් සහිත, හැඩය රැඳෙන පැනල් පහේ තොප්පියක්.",
+      fabric: "මෘදු කළ කපු ට්විල් රෙදි",
+      care: ["අපිරිසිදු තැන් පමණක් පිරිසිදු කරන්න", "වාතයට වියළන්න", "රෙදි සෝදන යන්ත්‍රයේ නොසෝදන්න"],
+    },
   },
 ];

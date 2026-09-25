@@ -7,8 +7,10 @@ import { AuthForm } from "@/components/auth-form";
 import { AuthComingSoon } from "@/components/coming-soon";
 import { AuthShell } from "@/components/auth-shell";
 import { GoogleAuthButton } from "@/components/google-auth-button";
+import { Translated } from "@/components/translated";
 import { safeRedirectPath } from "@/lib/auth";
 import { authDemoMode, authEnabled } from "@/lib/features";
+import type { TextKey } from "@/lib/i18n";
 import { createAuthClient } from "@/lib/supabase-auth";
 
 export const metadata: Metadata = { title: "Sign in", robots: { index: false, follow: false } };
@@ -30,22 +32,25 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
   const notice = typeof params.notice === "string" ? params.notice : "";
   const signedOut = params.signedOut === "1";
-  const noticeMessage = {
-    "confirmation-failed": "That confirmation link is invalid or has expired.",
-    "google-rate-limited": "Too many Google sign-in attempts. Wait a few minutes and try again.",
-    "google-unavailable": "Google sign-in is unavailable right now. You can still use your email.",
-  }[notice];
+  const noticeKeys: Record<string, TextKey | undefined> = {
+    "confirmation-failed": "noticeConfirmationFailed",
+    "google-rate-limited": "noticeGoogleLoginRateLimited",
+    "google-unavailable": "noticeGoogleLoginUnavailable",
+  };
+  const noticeKey = signedOut
+    ? "loginSignedOut"
+    : Object.hasOwn(noticeKeys, notice) ? noticeKeys[notice] : undefined;
 
   return (
-    <AuthShell title="Welcome back" description="Sign in to manage your account and order details.">
-      {(noticeMessage || signedOut) && (
+    <AuthShell titleKey="loginTitle" descriptionKey="loginDesc">
+      {noticeKey && (
         <p className={`auth-page-notice${signedOut ? " is-success" : ""}`} role="status">
-          {signedOut ? "You have been signed out." : noticeMessage}
+          <Translated k={noticeKey} />
         </p>
       )}
       <GoogleAuthButton action={googleAuthAction} next={next} returnTo="/login" />
       <AuthForm action={loginAction} mode="login" next={next} />
-      <p className="auth-switch">New here? <Link href="/signup">Create an account</Link></p>
+      <p className="auth-switch"><Translated k="loginNewHere" /> <Link href="/signup"><Translated k="loginCreateAccount" /></Link></p>
     </AuthShell>
   );
 }

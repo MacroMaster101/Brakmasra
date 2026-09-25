@@ -5,6 +5,8 @@ export const site = {
   description:
     "Official BRAKMASRA merchandise: dark apparel and accessories inspired by mysterious journeys and haunted places, released in limited drops.",
   summary: "Dark apparel and accessories from BRAKMASRA, released in limited, verified drops.",
+  /** Public customer-support inbox (Spacemail). */
+  supportEmail: "support@brakmasra.com",
 };
 
 export type SocialLink = { label: string; handle: string; href: string };

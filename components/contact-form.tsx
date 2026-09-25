@@ -1,9 +1,18 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { contactTopics } from "@/lib/contact-topics";
+import { contactTopics, type ContactTopic } from "@/lib/contact-topics";
 import { useLanguage } from "@/components/language-provider";
 import { readResponseMessage } from "@/lib/client-response";
+import { localizeServerMessage, type TextKey } from "@/lib/i18n";
+
+// The submitted value stays the English topic the API validates; only the
+// visible label follows the page language.
+const topicLabels: Record<ContactTopic, TextKey> = {
+  "General inquiry": "contactTopicGeneral",
+  "Order support": "contactTopicOrders",
+  "Business inquiry": "contactTopicBiz",
+};
 
 export function ContactForm() {
   const { t, lang } = useLanguage();
@@ -23,19 +32,11 @@ export function ContactForm() {
         headers: { "content-type": "application/json" },
         body: JSON.stringify(Object.fromEntries(data)),
       });
-      const message = await readResponseMessage(response, t.contactSuccessTitle);
-      setStatus(
-        lang === "si" && response.ok
-          ? t.contactSuccessDesc
-          : message,
-      );
+      const fallback = response.ok ? t.contactSuccessTitle : t.contactSendError;
+      setStatus(localizeServerMessage(await readResponseMessage(response, fallback), lang));
       if (response.ok) form.reset();
     } catch {
-      setStatus(
-        lang === "si"
-          ? "දැනට පණිවිඩය යැවීමට නොහැක. කරුණාකර සුළු මොහොතකින් නැවත උත්සාහ කරන්න."
-          : "Unable to send right now. Please try again.",
-      );
+      setStatus(t.contactSendError);
     } finally {
       setPending(false);
     }
@@ -61,7 +62,7 @@ export function ContactForm() {
           </option>
           {contactTopics.map((topic) => (
             <option key={topic} value={topic}>
-              {topic}
+              {t[topicLabels[topic]]}
             </option>
           ))}
         </select>
@@ -73,9 +74,7 @@ export function ContactForm() {
       <input className="honeypot" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" />
       <label className="consent">
         <input type="checkbox" name="consent" value="true" required />{" "}
-        {lang === "si"
-          ? "මගේ විමසීමට පිළිතුරු දීමට මෙම තොරතුරු භාවිතා කිරීමට මම එකඟ වෙමි."
-          : "I consent to BRAKMASRA using this information to reply to my inquiry."}
+        <span>{t.contactConsent}</span>
       </label>
       <button className="button button-primary" type="submit" disabled={pending}>
         {pending ? t.contactBtnSending : t.contactBtnSend}

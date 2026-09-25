@@ -7,8 +7,9 @@ describe("sitemap", () => {
     expect(paths.slice(0, 4)).toEqual(["/", "/shop", "/about", "/contact"]);
   });
 
-  it("adds only product pages after the static pages", () => {
+  it("follows them with the legal pages, then only product pages", () => {
     const paths = sitemap().map((entry) => new URL(entry.url).pathname);
-    for (const path of paths.slice(4)) expect(path).toMatch(/^\/shop\/[^/]+$/);
+    expect(paths.slice(4, 6)).toEqual(["/privacy", "/terms"]);
+    for (const path of paths.slice(6)) expect(path).toMatch(/^\/shop\/[^/]+$/);
   });
 });

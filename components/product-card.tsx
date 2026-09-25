@@ -39,7 +39,7 @@ export function ProductCard({ product, commerceEnabled, className = "", priority
         {image && (
           <Image
             src={image}
-            alt={`${product.name} product photo`}
+            alt={t.productPhotoAlt(product.name)}
             fill
             loading={priority ? "eager" : "lazy"}
             sizes="(max-width: 767px) calc(100vw - 2rem), (max-width: 1023px) 50vw, 33vw"

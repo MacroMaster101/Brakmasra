@@ -1,6 +1,12 @@
+import { avatarImageSources } from "@/lib/avatar";
+
 const DEVELOPMENT = "development";
 
-export function createContentSecurityPolicy(nonce: string, nodeEnv = process.env.NODE_ENV) {
+export function createContentSecurityPolicy(
+  nonce: string,
+  nodeEnv = process.env.NODE_ENV,
+  supabaseUrl = process.env.SUPABASE_URL,
+) {
   const isDevelopment = nodeEnv === DEVELOPMENT;
   const scriptSources = ["'self'", `'nonce-${nonce}'`, "'strict-dynamic'"];
   // Next/Image and React apply responsive layout through style attributes. CSP
@@ -18,7 +24,8 @@ export function createContentSecurityPolicy(nonce: string, nodeEnv = process.env
     "object-src 'none'",
     `script-src ${scriptSources.join(" ")}`,
     `style-src ${styleSources.join(" ")}`,
-    "img-src 'self' data:",
+    // blob: previews a chosen photo before upload; the rest serve profile photos.
+    ["img-src 'self' data: blob:", ...avatarImageSources(supabaseUrl)].join(" "),
     "font-src 'self' data:",
     `connect-src 'self'${isDevelopment ? " ws: wss:" : ""}`,
     "frame-src 'none'",

@@ -1,16 +1,22 @@
+"use client";
+
 import Image from "next/image";
 
+import { useLanguage } from "@/components/language-provider";
+import type { TextKey } from "@/lib/i18n";
+
 const productPlaceholders = ["first", "second", "third"];
-const detailRows = ["first", "second", "third"];
 
 function LoadingStatus({ label, children, className = "" }: {
   children: React.ReactNode;
   className?: string;
-  label: string;
+  label: TextKey;
 }) {
+  const { t } = useLanguage();
+
   return (
     <section className={className} role="status" aria-busy="true" aria-live="polite">
-      <span className="sr-only">{label}</span>
+      <span className="sr-only">{t[label]}</span>
       <div aria-hidden="true">{children}</div>
     </section>
   );
@@ -34,7 +40,7 @@ function ProductPlaceholder() {
 
 export function HomeLoadingState() {
   return (
-    <LoadingStatus className="loading-home" label="Loading the BRAKMASRA store">
+    <LoadingStatus className="loading-home" label="loadingStore">
       <Image className="loading-home-image" src="/images/brakmasra-hero.png" alt="" fill sizes="100vw" />
       <div className="loading-home-scrim" />
       <div className="page-shell loading-home-inner">
@@ -55,7 +61,7 @@ export function HomeLoadingState() {
 
 export function ShopLoadingState() {
   return (
-    <LoadingStatus className="page-shell page-top shop-page loading-page" label="Loading the collection">
+    <LoadingStatus className="page-shell page-top shop-page loading-page" label="loadingCollection">
       <header className="loading-page-hero">
         <Line size="short" />
         <div className="loading-block loading-title" />
@@ -76,7 +82,7 @@ export function ShopLoadingState() {
 
 export function ProductLoadingState({ comingSoon = false }: { comingSoon?: boolean }) {
   return (
-    <LoadingStatus className="page-shell page-top product-page loading-page" label="Loading product details">
+    <LoadingStatus className="page-shell page-top product-page loading-page" label="loadingProduct">
       <Line size="short" />
       <div className="loading-product-detail">
         <div className="loading-block loading-product-portrait" />
@@ -90,34 +96,6 @@ export function ProductLoadingState({ comingSoon = false }: { comingSoon?: boole
           <div className="loading-spec-grid">
             <div className="loading-block loading-spec" />
             <div className="loading-block loading-spec" />
-          </div>
-        </div>
-      </div>
-    </LoadingStatus>
-  );
-}
-
-export function AccountLoadingState() {
-  return (
-    <LoadingStatus className="account-page loading-page" label="Loading your account">
-      <div className="page-shell account-shell">
-        <header className="loading-account-header">
-          <div><Line size="short" /><div className="loading-block loading-account-title" /><Line size="medium" /></div>
-          <div className="loading-block loading-button" />
-        </header>
-        <div className="loading-account-grid">
-          <div className="loading-account-card">
-            <div className="loading-block loading-icon" />
-            <div className="loading-account-details">
-              <Line size="medium" />
-              {detailRows.map((item) => <div className="loading-detail-row" key={item}><Line size="short" /><Line size="medium" /></div>)}
-            </div>
-          </div>
-          <div className="loading-account-card is-orders">
-            <div className="loading-block loading-icon" />
-            <div className="loading-block loading-account-order-title" />
-            <Line size="long" />
-            <div className="loading-block loading-button" />
           </div>
         </div>
       </div>
@@ -147,11 +125,11 @@ export function CartLoadingState({ embedded = false }: { embedded?: boolean }) {
   );
 
   if (embedded) {
-    return <LoadingStatus className="loading-data-section" label="Loading your cart">{content}</LoadingStatus>;
+    return <LoadingStatus className="loading-data-section" label="loadingCart">{content}</LoadingStatus>;
   }
 
   return (
-    <LoadingStatus className="page-shell page-top loading-page" label="Loading your cart">
+    <LoadingStatus className="page-shell page-top loading-page" label="loadingCart">
       <header className="loading-page-hero is-compact"><Line size="short" /><div className="loading-block loading-title is-compact" /><Line size="long" /></header>
       {content}
     </LoadingStatus>
@@ -169,11 +147,11 @@ export function CheckoutLoadingState({ embedded = false }: { embedded?: boolean 
   );
 
   if (embedded) {
-    return <LoadingStatus className="loading-data-section" label="Loading checkout details">{form}</LoadingStatus>;
+    return <LoadingStatus className="loading-data-section" label="loadingCheckoutDetails">{form}</LoadingStatus>;
   }
 
   return (
-    <LoadingStatus className="checkout-page loading-page" label="Loading checkout">
+    <LoadingStatus className="checkout-page loading-page" label="loadingCheckout">
       <div className="checkout-shell">
         <header className="loading-checkout-header">
           <div className="loading-block loading-icon" />
@@ -190,7 +168,7 @@ export function CheckoutLoadingState({ embedded = false }: { embedded?: boolean 
 
 export function AuthLoadingState() {
   return (
-    <LoadingStatus className="auth-page loading-auth" label="Loading secure account access">
+    <LoadingStatus className="auth-page loading-auth" label="loadingAuth">
       <div className="auth-shell">
         <div className="auth-art">
           <Image src="/images/auth-manor.png" alt="" fill sizes="(max-width: 767px) 100vw, 48vw" />
@@ -215,7 +193,7 @@ export function AuthLoadingState() {
 
 export function AuthComingSoonLoadingState() {
   return (
-    <LoadingStatus className="auth-page loading-auth" label="Loading member access details">
+    <LoadingStatus className="auth-page loading-auth" label="loadingMemberAccess">
       <div className="auth-shell">
         <div className="auth-art">
           <Image src="/images/auth-manor.png" alt="" fill sizes="(max-width: 767px) 100vw, 48vw" />
@@ -238,7 +216,7 @@ export function AuthComingSoonLoadingState() {
 
 export function LaunchLoadingState() {
   return (
-    <LoadingStatus className="launch-page loading-page" label="Loading launch details">
+    <LoadingStatus className="launch-page loading-page" label="loadingLaunch">
       <div className="page-shell launch-layout">
         <div className="launch-copy loading-launch-copy">
           <Line size="short" />

@@ -1,7 +1,9 @@
 "use client";
 
+import { Mail } from "lucide-react";
 import { ContactForm } from "@/components/contact-form";
 import { useLanguage } from "@/components/language-provider";
+import { site } from "@/data/site";
 
 export function ContactView() {
   const { t } = useLanguage();
@@ -27,6 +29,14 @@ export function ContactView() {
               <p>{t.contactOptBizDesc}</p>
             </article>
           </div>
+          <a className="contact-email" href={`mailto:${site.supportEmail}`}>
+            <Mail aria-hidden="true" />
+            <span>
+              <strong>{t.contactEmailTitle}</strong>
+              <small>{t.contactEmailDesc}</small>
+              <span>{site.supportEmail}</span>
+            </span>
+          </a>
           <p className="muted">{t.contactSafetyNote}</p>
         </div>
         <ContactForm />

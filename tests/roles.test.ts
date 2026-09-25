@@ -40,6 +40,18 @@ describe("member roles", () => {
     expect(can(null, "control_room")).toBe(false);
   });
 
+  it("lets staff view the shop while only Owner and Web Dev change it", () => {
+    for (const permission of ["view_catalog", "view_orders"] as const) {
+      expect(can("staff", permission)).toBe(true);
+    }
+    for (const permission of ["manage_catalog", "manage_orders", "manage_messages", "manage_newsletter"] as const) {
+      expect(can("staff", permission)).toBe(false);
+      expect(can("owner", permission)).toBe(true);
+      expect(can("web_dev", permission)).toBe(true);
+      expect(can("supporter", permission)).toBe(false);
+    }
+  });
+
   it("only lets higher roles change lower ones", () => {
     expect(assignableRoles("web_dev", null)).toEqual(["owner", "staff", "supporter", null]);
     expect(assignableRoles("web_dev", "owner")).toEqual(["owner", "staff", "supporter", null]);

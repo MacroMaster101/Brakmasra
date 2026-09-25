@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { HomeView } from "@/components/home-view";
-import { products } from "@/data/products";
 import { socialLinks } from "@/data/site";
 import { commerceEnabled } from "@/lib/features";
 import { homeJsonLd, pageMetadata } from "@/lib/seo";
+import { getCatalog } from "@/lib/store";
 
 export const metadata: Metadata = pageMetadata({ path: "/" });
 
 export default async function Home() {
-  const nonce = (await headers()).get("x-nonce") ?? undefined;
+  const [requestHeaders, products] = await Promise.all([headers(), getCatalog()]);
+  const nonce = requestHeaders.get("x-nonce") ?? undefined;
   const jsonLd = homeJsonLd(socialLinks.map((link) => link.href));
 
   return (

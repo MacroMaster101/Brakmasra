@@ -37,6 +37,13 @@ export const products = pgTable("products", {
   fabric: text("fabric"),
   care: jsonb("care").$type<string[]>().notNull().default(sql`'[]'::jsonb`),
   status: text("status").$type<"draft" | "active" | "archived">().notNull().default("draft"),
+  category: text("category").$type<"Apparel" | "Headwear">(),
+  badge: text("badge").$type<"NEW" | "LIMITED" | "BEST SELLER" | "SALE">(),
+  comingSoon: boolean("coming_soon").notNull().default(false),
+  position: integer("position").notNull().default(0),
+  siDescription: text("si_description"),
+  siFabric: text("si_fabric"),
+  siCare: jsonb("si_care").$type<string[]>().notNull().default(sql`'[]'::jsonb`),
   ...timestamps(),
 });
 
@@ -90,6 +97,8 @@ export const orders = pgTable("orders", {
   shippingAddress: jsonb("shipping_address").$type<Record<string, unknown>>(),
   paymentProvider: text("payment_provider"),
   paymentSessionId: text("payment_session_id").unique(),
+  trackingNumber: text("tracking_number"),
+  adminNote: text("admin_note"),
   ...timestamps(),
 });
 
@@ -112,6 +121,7 @@ export const discounts = pgTable("discounts", {
   endsAt: timestamp("ends_at", { withTimezone: true }),
   usageLimit: integer("usage_limit"),
   active: boolean("active").notNull().default(false),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
 export const newsletterSubscribers = pgTable("newsletter_subscribers", {

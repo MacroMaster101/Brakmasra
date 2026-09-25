@@ -31,19 +31,25 @@ export function isStaff(role: MemberRole | null): role is StaffRole {
 }
 
 export const PERMISSIONS = [
-  "control_room",   // open the Control Room
-  "view_messages",  // read contact form messages
-  "view_orders",    // read all orders
-  "view_newsletter",// read drop-alert subscribers
-  "manage_team",    // change other people's roles
-  "manage_site",    // site-wide settings and developer tools
+  "control_room",      // open the Control Room
+  "view_messages",     // read contact form messages and set their status
+  "manage_messages",   // delete contact form messages
+  "view_orders",       // read all orders
+  "manage_orders",     // change order status, tracking, and notes
+  "view_catalog",      // read products, collections, and discount codes
+  "manage_catalog",    // add, edit, and delete products, collections, and discount codes
+  "view_newsletter",   // read drop-alert subscribers
+  "manage_newsletter", // export and remove subscribers
+  "manage_team",       // change other people's roles
+  "manage_site",       // site-wide settings and developer tools
 ] as const;
 export type Permission = (typeof PERMISSIONS)[number];
 
 export const ROLE_PERMISSIONS: Record<MemberRole, readonly Permission[]> = {
   web_dev: PERMISSIONS,
-  owner: ["control_room", "view_messages", "view_orders", "view_newsletter", "manage_team"],
-  staff: ["control_room", "view_messages", "view_orders"],
+  owner: PERMISSIONS.filter((permission) => permission !== "manage_site"),
+  // Staff see the shop and its orders but only Owner and Web Dev change them.
+  staff: ["control_room", "view_messages", "view_orders", "view_catalog"],
   supporter: [],
 };
 

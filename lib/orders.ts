@@ -1,9 +1,10 @@
 import "server-only";
 
+import { ORDER_STATUS_VALUES, type OrderStatusValue } from "@/lib/order-status";
 import { getSupabaseServerClient } from "@/lib/supabase";
 
-export const ORDER_STATUSES = ["pending", "paid", "fulfilled", "cancelled", "refunded"] as const;
-export type OrderStatus = (typeof ORDER_STATUSES)[number];
+export const ORDER_STATUSES = ORDER_STATUS_VALUES;
+export type OrderStatus = OrderStatusValue;
 
 /** What the account orders list shows; safe to pass to client components. */
 export type MemberOrder = {

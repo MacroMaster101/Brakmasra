@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { Product } from "@/data/products";
 import { formatMoney } from "@/lib/cart";
 import { useLanguage } from "@/components/language-provider";
+import { isRemoteImage } from "@/lib/store-mapping";
 
 type ProductCardProps = {
   className?: string;
@@ -39,6 +40,7 @@ export function ProductCard({ product, commerceEnabled, className = "", priority
         {image && (
           <Image
             src={image}
+            unoptimized={isRemoteImage(image)}
             alt={t.productPhotoAlt(product.name)}
             fill
             loading={priority ? "eager" : "lazy"}

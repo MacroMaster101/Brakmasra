@@ -4,8 +4,9 @@ import Link from "next/link";
 import { useActionState } from "react";
 import { Inbox } from "lucide-react";
 
-import { updateMessageStatusAction, type ControlRoomActionState } from "@/app/admin/actions";
+import { deleteMessageAction, updateMessageStatusAction, type ControlRoomActionState } from "@/app/admin/actions";
 import { ActionStatus, EmptyState, SectionGate, SectionPanel, StatusPill } from "@/components/control-room/shared";
+import { DeleteForm } from "@/components/control-room/store-shared";
 import { useLanguage } from "@/components/language-provider";
 import { contactTopics, type ContactTopic } from "@/lib/contact-topics";
 import type { ContactMessage } from "@/lib/control-room";
@@ -92,7 +93,11 @@ function MessageStatusForm({ id, status }: { id: string; status: MessageStatus }
   );
 }
 
-export function ControlRoomMessages({ filter, messages }: { filter: MessageFilter; messages: SectionData<ContactMessage[]> }) {
+export function ControlRoomMessages({ filter, messages, canDelete }: {
+  filter: MessageFilter;
+  messages: SectionData<ContactMessage[]>;
+  canDelete: boolean;
+}) {
   const { t, lang } = useLanguage();
 
   return (
@@ -127,7 +132,10 @@ export function ControlRoomMessages({ filter, messages }: { filter: MessageFilte
                       </div>
                     </dl>
                     <MessageBody message={message.message} />
-                    <MessageStatusForm id={message.id} status={message.status} />
+                    <div className="crs-message-actions">
+                      <MessageStatusForm id={message.id} status={message.status} />
+                      {canDelete && <DeleteForm action={deleteMessageAction} id={message.id} confirm="crsDeleteMessageConfirm" compact />}
+                    </div>
                   </li>
                 );
               })}

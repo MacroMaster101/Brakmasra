@@ -8,12 +8,14 @@ const messageSources = [
   "app/account/actions.ts",
   "app/account/avatar-actions.ts",
   "app/admin/actions.ts",
+  "app/admin/store-actions.ts",
   "app/api/checkout/route.ts",
   "app/api/contact/route.ts",
   "app/api/newsletter/route.ts",
   "app/auth/actions.ts",
   "lib/account-validation.ts",
   "lib/control-room-validation.ts",
+  "lib/store-admin-validation.ts",
 ];
 
 /** Every string literal a route or action can hand back to a form as feedback. */

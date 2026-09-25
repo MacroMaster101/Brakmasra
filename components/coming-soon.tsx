@@ -1,21 +1,24 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, BellRing, LockKeyhole, ShoppingBag } from "lucide-react";
 
 import { AuthShell } from "@/components/auth-shell";
+import { useLanguage } from "@/components/language-provider";
+import type { TextKey } from "@/lib/i18n";
 
 export function AuthComingSoon() {
+  const { t } = useLanguage();
+
   return (
-    <AuthShell
-      title="Members open soon."
-      description="Sign-in, saved details, and order history will arrive with the first live drop."
-    >
+    <AuthShell titleKey="authSoonTitle" descriptionKey="authSoonDesc">
       <div className="auth-coming-soon">
-        <div className="launch-status"><LockKeyhole aria-hidden="true" /><span>Access is currently closed</span></div>
-        <p>No account is needed to browse the upcoming collection or join the drop list.</p>
+        <div className="launch-status"><LockKeyhole aria-hidden="true" /><span>{t.comingSoonClosedStatus}</span></div>
+        <p>{t.comingSoonNoAccountNeeded}</p>
         <div className="launch-actions">
-          <Link className="button button-primary" href="/shop">Explore the collection <ArrowRight /></Link>
-          <Link className="button button-secondary" href="/#drop-alerts">Get drop alerts <BellRing /></Link>
+          <Link className="button button-primary" href="/shop">{t.homeExploreBtn} <ArrowRight /></Link>
+          <Link className="button button-secondary" href="/#drop-alerts">{t.homeNewsletterBtn} <BellRing /></Link>
         </div>
       </div>
     </AuthShell>
@@ -26,25 +29,26 @@ type StoreComingSoonProps = {
   area: "account" | "cart" | "checkout";
 };
 
-const storeCopy = {
+const storeCopy: Record<StoreComingSoonProps["area"], { eyebrow: TextKey; title: TextKey; description: TextKey }> = {
   account: {
-    eyebrow: "Member access",
-    title: "Your account opens soon.",
-    description: "Profiles, saved details, and order history will be ready when the first live drop opens.",
+    eyebrow: "comingSoonAccountEyebrow",
+    title: "comingSoonAccountTitle",
+    description: "comingSoonAccountDesc",
   },
   cart: {
-    eyebrow: "First drop incoming",
-    title: "The cart opens soon.",
-    description: "Browse the launch collection now. You will be able to select sizes and reserve pieces when ordering goes live.",
+    eyebrow: "comingSoonCartEyebrow",
+    title: "comingSoonCartTitle",
+    description: "comingSoonCartDesc",
   },
   checkout: {
-    eyebrow: "Secure ordering",
-    title: "Checkout opens soon.",
-    description: "Payments are intentionally closed while the first drop is prepared and final availability is confirmed.",
+    eyebrow: "comingSoonCheckoutEyebrow",
+    title: "comingSoonCheckoutTitle",
+    description: "comingSoonCheckoutDesc",
   },
-} as const;
+};
 
 export function StoreComingSoon({ area }: StoreComingSoonProps) {
+  const { t } = useLanguage();
   const copy = storeCopy[area];
   const Icon = area === "account" ? LockKeyhole : ShoppingBag;
 
@@ -52,14 +56,14 @@ export function StoreComingSoon({ area }: StoreComingSoonProps) {
     <section className="launch-page">
       <div className="page-shell launch-layout">
         <div className="launch-copy">
-          <span className="eyebrow">{copy.eyebrow}</span>
-          <h1>{copy.title}</h1>
-          <p>{copy.description}</p>
+          <span className="eyebrow">{t[copy.eyebrow]}</span>
+          <h1>{t[copy.title]}</h1>
+          <p>{t[copy.description]}</p>
           <div className="launch-actions">
-            <Link className="button button-primary" href="/shop">Explore the collection <ArrowRight /></Link>
-            <Link className="button button-secondary" href="/#drop-alerts">Get drop alerts <BellRing /></Link>
+            <Link className="button button-primary" href="/shop">{t.homeExploreBtn} <ArrowRight /></Link>
+            <Link className="button button-secondary" href="/#drop-alerts">{t.homeNewsletterBtn} <BellRing /></Link>
           </div>
-          <p className="launch-footnote"><Icon aria-hidden="true" /> No payment or account information is being collected here yet.</p>
+          <p className="launch-footnote"><Icon aria-hidden="true" /> {t.comingSoonFootnote}</p>
         </div>
 
         <div className="launch-visual" aria-hidden="true">
@@ -68,7 +72,7 @@ export function StoreComingSoon({ area }: StoreComingSoonProps) {
           <div className="launch-visual-mark">
             <Image src="/images/brakmasra-logo-reference.png" alt="" width={104} height={104} />
             <span>BRAKMASRA</span>
-            <small>First drop coming soon</small>
+            <small>{t.homeNoticeTitle}</small>
           </div>
         </div>
       </div>
@@ -77,16 +81,18 @@ export function StoreComingSoon({ area }: StoreComingSoonProps) {
 }
 
 export function ProductComingSoon() {
+  const { t } = useLanguage();
+
   return (
     <div className="product-launch-state">
       <div>
-        <span className="eyebrow">Coming soon</span>
-        <h2>Ordering is not open yet.</h2>
-        <p>This piece is planned for the first BRAKMASRA drop. Final price, sizing, and availability will be confirmed before release.</p>
+        <span className="eyebrow">{t.shopComingSoon}</span>
+        <h2>{t.productNotOpenTitle}</h2>
+        <p>{t.productNotOpenDesc}</p>
       </div>
       <div className="launch-actions">
-        <Link className="button button-primary" href="/#drop-alerts">Get drop alerts <BellRing /></Link>
-        <Link className="button button-secondary" href="/shop">Back to collection</Link>
+        <Link className="button button-primary" href="/#drop-alerts">{t.homeNewsletterBtn} <BellRing /></Link>
+        <Link className="button button-secondary" href="/shop">{t.productBackToCollection}</Link>
       </div>
     </div>
   );

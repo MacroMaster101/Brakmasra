@@ -2,35 +2,22 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Menu, ShoppingBag, UserRound, X } from "lucide-react";
+import { LogIn, Menu, ShoppingBag, Sparkles, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useCart } from "@/components/cart-provider";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useLanguage } from "@/components/language-provider";
-import { authNav, primaryNav } from "@/data/navigation";
+import { MemberMenu, MobileAccountPanel } from "@/components/member-menu";
+import { authNav, joinNav, primaryNav } from "@/data/navigation";
+import type { MemberSummary } from "@/lib/member";
 
-export function Header({ commerceEnabled }: { commerceEnabled: boolean }) {
+export function Header({ commerceEnabled, member }: { commerceEnabled: boolean; member: MemberSummary | null }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const { count } = useCart();
   const { t } = useLanguage();
   const isActive = (href: string) => pathname === href || (href !== "/" && pathname.startsWith(`${href}/`));
-
-  const getNavLabel = (href: string, fallback: string) => {
-    switch (href) {
-      case "/":
-        return t.navHome;
-      case "/shop":
-        return t.navShop;
-      case "/about":
-        return t.navAbout;
-      case "/contact":
-        return t.navContact;
-      default:
-        return fallback;
-    }
-  };
 
   return (
     <header className="site-header">
@@ -39,7 +26,7 @@ export function Header({ commerceEnabled }: { commerceEnabled: boolean }) {
         <Link
           className="brand"
           href="/"
-          aria-label="BRAKMASRA home"
+          aria-label={t.brandHomeLabel}
           onClick={() => {
             if (pathname === "/") {
               window.scrollTo({ top: 0, behavior: "smooth" });
@@ -49,9 +36,9 @@ export function Header({ commerceEnabled }: { commerceEnabled: boolean }) {
           <span className="brand-image"><Image src="/images/brakmasra-logo-reference.png" alt="" width={42} height={42} loading="eager" /></span>
           <span>BRAKMASRA</span>
         </Link>
-        <nav className={`nav-links ${open ? "is-open" : ""}`} aria-label="Primary">
-          <button type="button" className="mobile-close" onClick={() => setOpen(false)} aria-label="Close menu"><X /></button>
-          {primaryNav.map(({ label, href }) => (
+        <nav className={`nav-links ${open ? "is-open" : ""}`} aria-label={t.navPrimaryLabel}>
+          <button type="button" className="mobile-close" onClick={() => setOpen(false)} aria-label={t.navCloseMenu}><X /></button>
+          {primaryNav.map(({ labelKey, href }) => (
             <Link
               key={href}
               href={href}
@@ -63,44 +50,45 @@ export function Header({ commerceEnabled }: { commerceEnabled: boolean }) {
               }}
               aria-current={isActive(href) ? "page" : undefined}
             >
-              {getNavLabel(href, label)}
+              {t[labelKey]}
             </Link>
           ))}
-          <Link
-            className="mobile-auth-link"
-            href={authNav.href}
-            onClick={() => setOpen(false)}
-            aria-current={isActive(authNav.href) ? "page" : undefined}
-          >
-            <UserRound />
-            {t.navLogin}
-          </Link>
+          <MobileAccountPanel member={member} onNavigate={() => setOpen(false)} />
           <div className="mobile-lang-wrap">
             <LanguageSwitcher showLabels />
           </div>
         </nav>
         <div className="nav-actions">
-          <LanguageSwitcher className="nav-lang-desktop" />
-          <Link
-            className="nav-login-link"
-            href={authNav.href}
-            aria-current={isActive(authNav.href) ? "page" : undefined}
-          >
-            <UserRound />
-            <span>{t.navLogin}</span>
-          </Link>
           <Link
             className="icon-button cart-link"
             href="/cart"
-            aria-label={commerceEnabled ? `${t.navCart} with ${count} items` : t.navCart}
+            aria-label={commerceEnabled ? t.navCartWithItems(count) : t.navCart}
           >
             <ShoppingBag />
             {commerceEnabled && count > 0 && <span>{count}</span>}
           </Link>
-          <button type="button" className="icon-button mobile-menu" onClick={() => setOpen(true)} aria-label="Open menu" aria-expanded={open}><Menu /></button>
+          <LanguageSwitcher className="nav-lang-desktop" />
+          <span className="nav-divider" aria-hidden="true" />
+          <div className="nav-auth">
+            {member ? (
+              <MemberMenu member={member} />
+            ) : (
+              <>
+                <Link className="nav-login" href={authNav.href} aria-current={isActive(authNav.href) ? "page" : undefined}>
+                  <LogIn aria-hidden="true" />
+                  <span>{t[authNav.labelKey]}</span>
+                </Link>
+                <Link className="nav-join" href={joinNav.href} aria-current={isActive(joinNav.href) ? "page" : undefined}>
+                  <Sparkles aria-hidden="true" />
+                  <span>{t[joinNav.labelKey]}</span>
+                </Link>
+              </>
+            )}
+          </div>
+          <button type="button" className="icon-button mobile-menu" onClick={() => setOpen(true)} aria-label={t.navOpenMenu} aria-expanded={open}><Menu /></button>
         </div>
       </div>
-      {open && <button type="button" className="nav-scrim" onClick={() => setOpen(false)} aria-label="Close menu overlay" />}
+      {open && <button type="button" className="nav-scrim" onClick={() => setOpen(false)} aria-label={t.navCloseMenu} />}
     </header>
   );
 }

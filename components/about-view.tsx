@@ -7,7 +7,7 @@ import { Reveal } from "@/components/reveal";
 import { useLanguage } from "@/components/language-provider";
 
 export function AboutView({ channelUrl }: { channelUrl: string }) {
-  const { t, lang } = useLanguage();
+  const { t } = useLanguage();
 
   return (
     <div className="page-shell page-top about-page">
@@ -25,12 +25,12 @@ export function AboutView({ channelUrl }: { channelUrl: string }) {
             target="_blank"
             rel="noopener noreferrer"
             className="about-hero-btn-channel"
-            title="Watch the official @Brakmasra channel"
+            title={t.aboutChannelLinkTitle}
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
             </svg>
-            <span>{lang === "si" ? "නාලිකාව නරඹන්න" : "Watch on Channel"}</span>
+            <span>{t.aboutWatchChannelBtn}</span>
             <ArrowUpRight />
           </a>
         </div>
@@ -40,7 +40,7 @@ export function AboutView({ channelUrl }: { channelUrl: string }) {
       <Reveal className="about-visual">
         <Image
           src="/images/brakmasra-about-cinematic.jpg"
-          alt="Cinematic BRAKMASRA HAUNTING visual featuring the fully visible logo on the left and the moonlit Sri Lankan manor on the right"
+          alt={t.aboutVisualAlt}
           fill
           priority
           sizes="(max-width: 1420px) 100vw, 1420px"
@@ -88,7 +88,7 @@ export function AboutView({ channelUrl }: { channelUrl: string }) {
               </svg>
             </div>
             <div className="about-channel-title">
-              <span>{lang === "si" ? "නිල විකාශන නාලිකාව" : "Official Broadcast Channel"}</span>
+              <span>{t.aboutChannelHeading}</span>
               <h3>@Brakmasra</h3>
             </div>
           </div>
@@ -98,7 +98,7 @@ export function AboutView({ channelUrl }: { channelUrl: string }) {
             rel="noopener noreferrer"
             className="about-channel-btn"
           >
-            <span>{lang === "si" ? "නාලිකාව නරඹන්න" : "Watch on Channel"}</span>
+            <span>{t.aboutWatchChannelBtn}</span>
             <ArrowUpRight />
           </a>
         </div>
@@ -130,9 +130,7 @@ export function AboutView({ channelUrl }: { channelUrl: string }) {
 
         <div className="about-channel-footer">
           <p>
-            {lang === "si"
-              ? "නිල විකාශන මූලස්ථානය: @Brakmasra • ශ්‍රී ලංකාව පුරා පිහිටි ස්ථානවලදී වාර්තා කරන ලදී"
-              : "Official broadcast home: @Brakmasra • Documented on location across Sri Lanka"}
+            {t.aboutChannelFooter}
           </p>
           <a
             href={channelUrl}
@@ -140,7 +138,7 @@ export function AboutView({ channelUrl }: { channelUrl: string }) {
             rel="noopener noreferrer"
             className="text-link"
           >
-            {lang === "si" ? "@Brakmasra නිල නාලිකාව වෙත පිවිසෙන්න" : "Visit @Brakmasra Official Channel"}{" "}
+            {t.aboutVisitChannel}
             <ArrowRight />
           </a>
         </div>

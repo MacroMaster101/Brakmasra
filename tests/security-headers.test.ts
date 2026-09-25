@@ -9,7 +9,7 @@ async function headerMap() {
 
 describe("security headers", () => {
   it("uses a nonce-based production CSP without unsafe inline scripts", () => {
-    const csp = createContentSecurityPolicy("test-nonce", "production");
+    const csp = createContentSecurityPolicy("test-nonce", "production", undefined);
     const scriptDirective = csp
       .split(";")
       .map((directive) => directive.trim())
@@ -17,12 +17,20 @@ describe("security headers", () => {
 
     expect(csp).toContain("default-src 'self'");
     expect(csp).toContain("frame-ancestors 'none'");
-    expect(csp).toContain("img-src 'self' data:;");
+    expect(csp).toContain("img-src 'self' data: blob: https://*.googleusercontent.com;");
     expect(csp).toContain("script-src 'self' 'nonce-test-nonce' 'strict-dynamic'");
     expect(scriptDirective).not.toContain("'unsafe-inline'");
     expect(scriptDirective).not.toContain("'unsafe-eval'");
     expect(csp).toContain("style-src 'self' 'unsafe-inline'");
     expect(csp).not.toMatch(/youtube|ytimg|yt3|googleapis/);
+  });
+
+  it("allows profile photos only from this project's Supabase storage and Google", () => {
+    const csp = createContentSecurityPolicy("test-nonce", "production", "https://abcd.supabase.co");
+    expect(csp).toContain("img-src 'self' data: blob: https://abcd.supabase.co https://*.googleusercontent.com;");
+    expect(createContentSecurityPolicy("test-nonce", "production", "not a url")).toContain(
+      "img-src 'self' data: blob: https://*.googleusercontent.com;",
+    );
   });
 
   it("permits only the development runtime exceptions in development", () => {

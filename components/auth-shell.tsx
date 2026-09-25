@@ -1,23 +1,31 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { X } from "lucide-react";
 
+import { useLanguage } from "@/components/language-provider";
+import type { TextKey } from "@/lib/i18n";
+
 type AuthShellProps = {
   children: React.ReactNode;
   compact?: boolean;
-  description: string;
-  title: string;
+  /** Leave both keys out when the content renders its own heading per step. */
+  descriptionKey?: TextKey;
+  titleKey?: TextKey;
 };
 
-export function AuthShell({ children, compact = false, description, title }: AuthShellProps) {
+export function AuthShell({ children, compact = false, descriptionKey, titleKey }: AuthShellProps) {
+  const { t } = useLanguage();
+
   return (
     <section className="auth-page">
       <div className={`auth-shell${compact ? " is-compact" : ""}`}>
-        <Link className="auth-home-link" href="/" aria-label="BRAKMASRA home">
+        <Link className="auth-home-link" href="/" aria-label={t.brandHomeLabel}>
           <Image src="/images/brakmasra-logo-reference.png" alt="" width={34} height={34} />
           <span>BRAKMASRA</span>
         </Link>
-        <Link className="auth-close" href="/" aria-label="Close and return to home">
+        <Link className="auth-close" href="/" aria-label={t.authCloseLabel}>
           <X aria-hidden="true" />
         </Link>
 
@@ -30,18 +38,20 @@ export function AuthShell({ children, compact = false, description, title }: Aut
           />
           <div className="auth-art-scrim" />
           <div className="auth-art-copy">
-            <span>Members</span>
-            <h2>Your story stays with you.</h2>
-            <p>Keep orders, delivery details, and future drops in one secure place.</p>
+            <span>{t.authArtEyebrow}</span>
+            <h2>{t.authArtTitle}</h2>
+            <p>{t.authArtDesc}</p>
           </div>
         </div>
 
         <div className="auth-panel">
           <div className="auth-panel-inner">
-            <header className="auth-heading">
-              <h1>{title}</h1>
-              <p>{description}</p>
-            </header>
+            {titleKey && (
+              <header className="auth-heading">
+                <h1>{t[titleKey]}</h1>
+                {descriptionKey && <p>{t[descriptionKey]}</p>}
+              </header>
+            )}
             {children}
           </div>
         </div>

@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { ArrowUp } from "lucide-react";
+import { useLanguage } from "@/components/language-provider";
 
 /** Floating scroll-to-top control. Appears once the reader is past the fold. */
 export function BackToTop() {
+  const { t } = useLanguage();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -28,7 +30,7 @@ export function BackToTop() {
       type="button"
       onClick={toTop}
       className={`back-to-top${visible ? " is-visible" : ""}`}
-      aria-label="Back to top"
+      aria-label={t.backToTop}
       aria-hidden={!visible}
       tabIndex={visible ? 0 : -1}
     >

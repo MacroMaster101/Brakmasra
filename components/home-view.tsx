@@ -24,7 +24,7 @@ export function HomeView({
         <Image
           className="home-hero-image"
           src="/images/brakmasra-hero.png"
-          alt="Moonlit manor deep in a misty tropical forest"
+          alt={t.homeHeroImageAlt}
           fill
           loading="eager"
           sizes="100vw"
@@ -47,7 +47,7 @@ export function HomeView({
         </div>
       </section>
 
-      <aside className="preview-notice" aria-label="Collection launch status">
+      <aside className="preview-notice" aria-label={t.homeNoticeLabel}>
         <div className="page-shell">
           <span>{t.homeNoticeTitle}</span>
           <p>{t.homeNoticeDesc}</p>
@@ -88,7 +88,7 @@ export function HomeView({
           <Reveal className="manifesto-art">
             <Image
               src="/images/brakmasra-logo-reference.png"
-              alt="BRAKMASRA haunting artwork supplied as the brand reference"
+              alt={t.homeManifestoImageAlt}
               fill
               sizes="(max-width: 900px) 100vw, 42vw"
             />

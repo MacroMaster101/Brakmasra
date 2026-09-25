@@ -1,7 +1,8 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useSyncExternalStore } from "react";
-import { translations, type Language, type TranslationDictionary } from "@/lib/i18n";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { LANGUAGE_COOKIE, parseLanguage, translations, type Language, type TranslationDictionary } from "@/lib/i18n";
 
 type LanguageContextType = {
   lang: Language;
@@ -12,61 +13,78 @@ type LanguageContextType = {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
+// localStorage mirrors the cookie so other open tabs hear the change through
+// the storage event. The cookie is what the server reads to render the
+// correct language on the first paint.
 const STORAGE_KEY = "brakmasra_lang";
-const LANGUAGE_CHANGE_EVENT = "brakmasra:language-change";
-let inMemoryLanguage: Language = "en";
+const ONE_YEAR_SECONDS = 60 * 60 * 24 * 365;
 
-function readStoredLanguage(): Language {
+function persistLanguage(lang: Language) {
+  const secure = window.location.protocol === "https:" ? "; secure" : "";
+  document.cookie = `${LANGUAGE_COOKIE}=${lang}; path=/; max-age=${ONE_YEAR_SECONDS}; samesite=lax${secure}`;
   try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    inMemoryLanguage = saved === "si" ? "si" : "en";
-    return inMemoryLanguage;
+    localStorage.setItem(STORAGE_KEY, lang);
   } catch {
-    return inMemoryLanguage;
+    // The cookie alone is enough when storage is unavailable.
   }
 }
 
-function subscribeToLanguage(listener: () => void) {
-  window.addEventListener("storage", listener);
-  window.addEventListener(LANGUAGE_CHANGE_EVENT, listener);
-  return () => {
-    window.removeEventListener("storage", listener);
-    window.removeEventListener(LANGUAGE_CHANGE_EVENT, listener);
-  };
+function hasLanguageCookie() {
+  return document.cookie.split("; ").some((entry) => entry.startsWith(`${LANGUAGE_COOKIE}=`));
 }
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const lang = useSyncExternalStore<Language>(subscribeToLanguage, readStoredLanguage, () => "en");
-
-  useEffect(() => {
-    document.documentElement.lang = lang;
-  }, [lang]);
+export function LanguageProvider({
+  children,
+  initialLang,
+}: {
+  children: React.ReactNode;
+  /** The language the server rendered, read from the cookie. */
+  initialLang: Language;
+}) {
+  const router = useRouter();
+  const [chosenLang, setChosenLang] = useState<Language | null>(null);
+  const lang = chosenLang ?? initialLang;
 
   const setLang = useCallback((newLang: Language) => {
-    inMemoryLanguage = newLang;
-    try {
-      localStorage.setItem(STORAGE_KEY, newLang);
-    } catch {
-      // The in-page event still updates consumers when storage is unavailable.
-    }
+    persistLanguage(newLang);
     document.documentElement.lang = newLang;
-    window.dispatchEvent(new Event(LANGUAGE_CHANGE_EVENT));
+    setChosenLang(newLang);
+  }, []);
+
+  useEffect(() => {
+    // Visitors who chose a language before it was stored in a cookie: save it
+    // as a cookie and let the server render that language.
+    if (!hasLanguageCookie()) {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved === "si" || saved === "en") {
+          persistLanguage(saved);
+          if (saved !== initialLang) router.refresh();
+        }
+      } catch {
+        // Keep the server-rendered language.
+      }
+    }
+  }, [initialLang, router]);
+
+  useEffect(() => {
+    const onStorage = (event: StorageEvent) => {
+      if (event.key !== STORAGE_KEY || !event.newValue) return;
+      const next = parseLanguage(event.newValue);
+      document.documentElement.lang = next;
+      setChosenLang(next);
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
   }, []);
 
   const toggleLang = useCallback(() => {
     setLang(lang === "en" ? "si" : "en");
   }, [lang, setLang]);
 
-  const currentDict = translations[lang];
-
   const value = useMemo(
-    () => ({
-      lang,
-      setLang,
-      toggleLang,
-      t: currentDict,
-    }),
-    [lang, setLang, toggleLang, currentDict],
+    () => ({ lang, setLang, toggleLang, t: translations[lang] }),
+    [lang, setLang, toggleLang],
   );
 
   return (

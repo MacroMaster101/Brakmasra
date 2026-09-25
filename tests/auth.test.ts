@@ -24,7 +24,9 @@ describe("authentication helpers", () => {
 
   it("recognizes only server-controlled staff roles", () => {
     expect(isStaffRole("admin")).toBe(true);
-    expect(isStaffRole("support")).toBe(true);
+    expect(isStaffRole("staff")).toBe(true);
+    expect(isStaffRole("support")).toBe(false);
+    expect(isStaffRole("supporter")).toBe(false);
     expect(isStaffRole("editor")).toBe(false);
     expect(isStaffRole("customer")).toBe(false);
     expect(isStaffRole(null)).toBe(false);

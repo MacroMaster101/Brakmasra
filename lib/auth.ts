@@ -1,3 +1,5 @@
+import { isStaff, parseRole } from "@/lib/roles";
+
 export function getSiteUrl() {
   const value = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
   return new URL(value.startsWith("http") ? value : `https://${value}`).origin;
@@ -46,6 +48,7 @@ export function getAuthEnvironment() {
   return { publishableKey, url };
 }
 
+/** True for Web Dev, Owner, and Staff (and the legacy "admin" name). Supporters are not staff. */
 export function isStaffRole(value: unknown) {
-  return value === "admin" || value === "support";
+  return isStaff(parseRole(value));
 }

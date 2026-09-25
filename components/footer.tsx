@@ -3,8 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ShoppingBag } from "lucide-react";
+import { Mail, ShoppingBag } from "lucide-react";
 import { footerColumns } from "@/data/navigation";
+import { site } from "@/data/site";
 import { useLanguage } from "@/components/language-provider";
 
 export function Footer() {
@@ -13,44 +14,6 @@ export function Footer() {
   const year = new Date().getFullYear();
   // The CTA banner is ONLY shown on the home page, never on other pages
   const isHomePage = pathname === "/";
-
-  const getColTitle = (title: string) => {
-    switch (title) {
-      case "Store":
-        return t.footerColStore;
-      case "Brand":
-        return t.footerColBrand;
-      case "Support":
-        return t.footerColSupport;
-      case "Explore":
-        return t.footerColExplore;
-      default:
-        return title;
-    }
-  };
-
-  const getLinkLabel = (label: string) => {
-    switch (label) {
-      case "All Products":
-        return t.footerAllProducts;
-      case "Cart":
-        return t.footerCart;
-      case "Our story":
-        return t.footerOurStory;
-      case "Archive":
-        return t.footerArchive;
-      case "Order support":
-        return t.footerOrderSupport;
-      case "Contact":
-        return t.footerContact;
-      case "Home":
-        return t.footerHome;
-      case "Collection":
-        return t.footerCollection;
-      default:
-        return label;
-    }
-  };
 
   return (
     <footer className="site-footer">
@@ -75,18 +38,22 @@ export function Footer() {
           <div className="footer-intro">
             <Link href="/" className="footer-brand">
               <span className="brand-image">
-                <Image src="/images/brakmasra-logo-reference.png" alt="BRAKMASRA emblem" width={44} height={44} />
+                <Image src="/images/brakmasra-logo-reference.png" alt={t.footerEmblemAlt} width={44} height={44} />
               </span>
               <span>BRAKMASRA</span>
             </Link>
             <p>{t.brandSummary}</p>
+            <a className="footer-email" href={`mailto:${site.supportEmail}`} aria-label={`${t.footerEmailLabel}: ${site.supportEmail}`}>
+              <Mail aria-hidden="true" />
+              <span>{site.supportEmail}</span>
+            </a>
             <div className="footer-social">
               <a
                 href="https://www.youtube.com/@Brakmasra"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="footer-social-btn footer-social-red"
-                title="Watch BRAKMASRA on YouTube"
+                title={t.footerChannelTitle}
                 aria-label="YouTube"
               >
                 <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -103,7 +70,7 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="footer-social-btn footer-social-tt"
-                title="Follow BRAKMASRA on TikTok"
+                title={t.footerTikTokTitle}
                 aria-label="TikTok"
               >
                 <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -118,11 +85,11 @@ export function Footer() {
           </div>
 
           {footerColumns.map((column) => (
-            <nav key={column.title} className="footer-col" aria-label={column.title}>
-              <h2>{getColTitle(column.title)}</h2>
+            <nav key={column.title} className="footer-col" aria-label={t[column.titleKey]}>
+              <h2>{t[column.titleKey]}</h2>
               {column.links.map((link) => (
                 <Link key={link.label} href={link.href}>
-                  {getLinkLabel(link.label)}
+                  {t[link.labelKey]}
                 </Link>
               ))}
             </nav>
@@ -131,6 +98,10 @@ export function Footer() {
 
         <div className="footer-bottom">
           <span>© {year} {t.footerCopyright}</span>
+          <nav className="footer-legal" aria-label={`${t.legalPrivacy}, ${t.legalTerms}`}>
+            <Link href="/privacy">{t.legalPrivacy}</Link>
+            <Link href="/terms">{t.legalTerms}</Link>
+          </nav>
         </div>
       </div>
     </footer>

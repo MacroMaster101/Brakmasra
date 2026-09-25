@@ -1,44 +1,35 @@
 import type { Metadata } from "next";
-import { KeyRound } from "lucide-react";
-import { notFound } from "next/navigation";
 
-import { isStaffRole } from "@/lib/auth";
-import { authDemoMode, authEnabled } from "@/lib/features";
-import { createAuthClient } from "@/lib/supabase-auth";
+import { loadSection, noIndex, requireControlRoom } from "@/app/admin/access";
+import { ControlRoomOverview, type OverviewStats } from "@/components/control-room/overview";
+import { countActiveSubscribers, countNewMessages, listTeam, orderCounts } from "@/lib/control-room";
+import { can } from "@/lib/roles";
 
-export const metadata: Metadata = { title: "Admin", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Control Room", robots: noIndex };
 export const dynamic = "force-dynamic";
 
-// Deliberately minimal: an unauthenticated visitor learns only that the area is
-// restricted. No configuration state or system map
-// is disclosed here.
-export default async function AdminPage() {
-  if (!authEnabled || authDemoMode) notFound();
+export default async function ControlRoomOverviewPage() {
+  const viewer = await requireControlRoom("control_room", "/admin");
+  const { role } = viewer;
 
-  let role: unknown;
-  try {
-    const supabase = await createAuthClient();
-    const { data, error } = await supabase.auth.getClaims();
-    if (!error) role = data?.claims?.app_metadata?.role;
-  } catch {
-    // Authorization fails closed if authentication is unavailable.
-  }
+  // Only the numbers this role may see are loaded at all.
+  const stats = await loadSection<OverviewStats>(async () => {
+    const [newMessages, orders, activeSubscribers, team] = await Promise.all([
+      can(role, "view_messages") ? countNewMessages() : undefined,
+      can(role, "view_orders") ? orderCounts() : undefined,
+      can(role, "view_newsletter") ? countActiveSubscribers() : undefined,
+      can(role, "manage_team") ? listTeam() : undefined,
+    ]);
+    const values: OverviewStats = {};
+    if (newMessages !== undefined) values.newMessages = newMessages;
+    if (orders) {
+      values.totalOrders = orders.total;
+      values.paidOrders = orders.paid;
+    }
+    if (activeSubscribers !== undefined) values.activeSubscribers = activeSubscribers;
+    if (team !== undefined) values.roleHolders = team?.members.length ?? null;
+    return values;
+  });
 
-  if (!isStaffRole(role)) notFound();
-
-  return (
-    <div className="admin-page">
-      <div className="admin-shell">
-        <span className="eyebrow">Restricted</span>
-        <h1>Admin</h1>
-        <div className="notice">
-          <KeyRound />
-          <div>
-            <h2>Sign-in required</h2>
-            <p>This area is restricted to BRAKMASRA staff.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  return <ControlRoomOverview role={role} stats={stats} />;
 }

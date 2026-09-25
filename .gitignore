@@ -24,6 +24,15 @@ CLAUDE.local.md
 .codeium/
 .roo/
 .clinerules
+AGENTS.md
+GEMINI.md
+.gemini/
+.codex/
+.kiro/
+.freebuff/
+.superpowers/
+docs/superpowers/
+graphify-out/
 
 # tooling and OS
 *.log

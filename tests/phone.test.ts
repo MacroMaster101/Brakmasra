@@ -1,11 +1,17 @@
 import { describe, expect, it } from "vitest";
-import { DEFAULT_PHONE_COUNTRY, PHONE_COUNTRIES, findPhoneCountry, nationalNumber, normalizePhone } from "@/lib/phone";
+import { DEFAULT_PHONE_COUNTRY, FORM_PHONE_COUNTRIES, PHONE_COUNTRIES, findFormPhoneCountry, findPhoneCountry, nationalNumber, normalizePhone } from "@/lib/phone";
 
 describe("phone numbers", () => {
   it("defaults to Sri Lanka and lists it first", () => {
     expect(DEFAULT_PHONE_COUNTRY).toBe("LK");
     expect(PHONE_COUNTRIES[0].code).toBe("LK");
     expect(new Set(PHONE_COUNTRIES.map((country) => country.code)).size).toBe(PHONE_COUNTRIES.length);
+  });
+
+  it("offers only Sri Lanka in the forms for now", () => {
+    expect(FORM_PHONE_COUNTRIES.map((country) => country.code)).toEqual(["LK"]);
+    expect(findFormPhoneCountry("LK")?.dial).toBe("+94");
+    expect(findFormPhoneCountry("IN")).toBeUndefined();
   });
 
   it("accepts the ways people write a Sri Lankan mobile number", () => {

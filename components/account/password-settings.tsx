@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 
 import { updatePasswordAction, type AccountActionState } from "@/app/account/actions";
 import { FormStatus } from "@/components/account/form-status";
-import { PasswordInput } from "@/components/account/password-input";
 import { useAccountForm } from "@/components/account/use-account-form";
 import { CodeInput } from "@/components/code-input";
 import { useLanguage } from "@/components/language-provider";
+import { PasswordInput, PasswordRules } from "@/components/password-input";
 
 /**
  * Change password (members who have one) or set a first password (Google-only
@@ -20,6 +20,8 @@ export function PasswordSettings({ email, hasPassword }: { email: string; hasPas
   const formRef = useRef<HTMLFormElement>(null);
   // Cancelling the code step sets aside the state that opened it until the next submit.
   const [dismissed, setDismissed] = useState<AccountActionState | null>(null);
+  const [password, setPassword] = useState("");
+  const rulesId = useId();
   const active = state !== dismissed;
   const awaitingCode = active && (state.status === "reauth" || Boolean(state.codeRequired));
 
@@ -38,14 +40,22 @@ export function PasswordSettings({ email, hasPassword }: { email: string; hasPas
         <p>{description}</p>
       </header>
 
-      <form ref={formRef} className="account-form" action={formAction} onSubmit={onSubmit}>
+      <form ref={formRef} className="account-form" action={formAction} onSubmit={onSubmit} onReset={() => setPassword("")}>
         {/* Stays in the form during the code step, so the retry sends the same passwords. */}
         <div className="account-form-fields" hidden={awaitingCode}>
           {hasPassword && (
             <PasswordInput name="currentPassword" label={t.accountCurrentPassword} autoComplete="current-password" minLength={1} />
           )}
-          <PasswordInput name="password" label={t.authNewPassword} autoComplete="new-password" hint={t.authPasswordHint} />
-          <PasswordInput name="confirmPassword" label={t.authConfirmPassword} autoComplete="new-password" />
+          <PasswordInput
+            name="password"
+            label={t.authNewPassword}
+            autoComplete="new-password"
+            placeholder={t.authNewPasswordPlaceholder}
+            describedBy={rulesId}
+            onValueChange={setPassword}
+          />
+          <PasswordInput name="confirmPassword" label={t.authConfirmPassword} autoComplete="new-password" placeholder={t.authConfirmPasswordPlaceholder} />
+          <PasswordRules id={rulesId} password={password} />
         </div>
 
         {awaitingCode ? (

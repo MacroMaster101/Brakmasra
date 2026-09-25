@@ -1,4 +1,4 @@
-import { findPhoneCountry, normalizePhone } from "@/lib/phone";
+import { findFormPhoneCountry, normalizePhone } from "@/lib/phone";
 
 export type PhoneInput = { phone: string; phone_country: string };
 
@@ -19,7 +19,7 @@ export function parsePhoneInput(country: unknown, number: unknown): PhoneInputRe
   const raw = number.trim();
   if (!raw) return { ok: true, value: null };
   if (raw.length > MAX_RAW_LENGTH) return { ok: false };
-  if (typeof country !== "string" || !findPhoneCountry(country)) return { ok: false };
+  if (typeof country !== "string" || !findFormPhoneCountry(country)) return { ok: false };
 
   const phone = normalizePhone(country, raw);
   return phone ? { ok: true, value: { phone, phone_country: country } } : { ok: false };

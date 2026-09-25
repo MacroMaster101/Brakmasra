@@ -33,7 +33,7 @@ export function Header({ commerceEnabled, member }: { commerceEnabled: boolean; 
             }
           }}
         >
-          <span className="brand-image"><Image src="/images/brakmasra-logo-reference.png" alt="" width={42} height={42} loading="eager" /></span>
+          <span className="brand-image"><Image src="/images/logo.png" alt="" width={42} height={42} loading="eager" /></span>
           <span>BRAKMASRA</span>
         </Link>
         <nav className={`nav-links ${open ? "is-open" : ""}`} aria-label={t.navPrimaryLabel}>

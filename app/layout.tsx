@@ -5,9 +5,11 @@ import { connection } from "next/server";
 import "./globals.css";
 import { SiteFrame } from "@/components/site-frame";
 import { site } from "@/data/site";
+import { getSiteUrl } from "@/lib/auth";
 import { launchMode } from "@/lib/features";
 import { LANGUAGE_COOKIE, parseLanguage } from "@/lib/i18n";
 import { getCurrentMember, memberSummary } from "@/lib/member";
+import { defaultTitle, socialMetadata } from "@/lib/seo";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 
@@ -21,15 +23,12 @@ const notoSinhala = Noto_Sans_Sinhala({
   variable: "--font-sinhala",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
-  title: { default: "BRAKMASRA | Official Store", template: "%s | BRAKMASRA" },
+  metadataBase: new URL(getSiteUrl()),
+  title: { default: defaultTitle, template: `%s | ${site.name}` },
   description: site.description,
-  openGraph: { type: "website", siteName: "BRAKMASRA", title: "BRAKMASRA | Official Store", description: site.description, images: ["/opengraph-image"] },
-  twitter: { card: "summary_large_image", title: "BRAKMASRA | Official Store", images: ["/opengraph-image"] },
-  icons: { icon: "/icon.svg" },
+  applicationName: site.name,
+  ...socialMetadata(defaultTitle, site.description),
 };
 
 export const viewport: Viewport = { colorScheme: "dark", themeColor: "#050505", width: "device-width", initialScale: 1 };

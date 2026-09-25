@@ -24,7 +24,7 @@ export default function NotFound() {
       <Link className="not-found-brand" href="/" aria-label={t.brandHomeLabel}>
         <span className="not-found-brand-mark">
           <Image
-            src="/images/brakmasra-logo-reference.png"
+            src="/images/logo.png"
             alt=""
             width={48}
             height={48}

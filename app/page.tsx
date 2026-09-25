@@ -2,23 +2,15 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { HomeView } from "@/components/home-view";
 import { products } from "@/data/products";
-import { site, socialLinks } from "@/data/site";
+import { socialLinks } from "@/data/site";
 import { commerceEnabled } from "@/lib/features";
+import { homeJsonLd, pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = { alternates: { canonical: "/" } };
+export const metadata: Metadata = pageMetadata({ path: "/" });
 
 export default async function Home() {
   const nonce = (await headers()).get("x-nonce") ?? undefined;
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: site.name,
-    url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
-    description: site.description,
-    email: site.supportEmail,
-    contactPoint: { "@type": "ContactPoint", contactType: "customer support", email: site.supportEmail, availableLanguage: ["English", "Sinhala"] },
-    ...(socialLinks.length ? { sameAs: socialLinks.map((link) => link.href) } : {}),
-  };
+  const jsonLd = homeJsonLd(socialLinks.map((link) => link.href));
 
   return (
     <>

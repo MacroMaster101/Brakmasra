@@ -3,8 +3,10 @@ import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { ProductDetails } from "@/components/product-details";
 import { products } from "@/data/products";
+import { getSiteUrl } from "@/lib/auth";
 import { findProduct } from "@/lib/catalog";
 import { commerceEnabled } from "@/lib/features";
+import { pageMetadata } from "@/lib/seo";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -16,11 +18,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const product = findProduct((await params).slug);
   if (!product) return { title: "Product not found" };
   return {
-    title: product.name,
-    description: product.description,
-    alternates: { canonical: `/shop/${product.slug}` },
+    ...pageMetadata({ title: product.name, description: product.description, path: `/shop/${product.slug}`, images: product.images.slice(0, 1) }),
     robots: product.preview ? { index: false, follow: false } : undefined,
-    openGraph: { title: product.name, description: product.description, images: product.images.slice(0, 1) },
   };
 }
 
@@ -30,7 +29,7 @@ export default async function ProductPage({ params }: Props) {
   const product = findProduct(slug);
   if (!product) notFound();
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const siteUrl = getSiteUrl();
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",

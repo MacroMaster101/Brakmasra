@@ -38,7 +38,7 @@ export function Footer() {
           <div className="footer-intro">
             <Link href="/" className="footer-brand">
               <span className="brand-image">
-                <Image src="/images/brakmasra-logo-reference.png" alt={t.footerEmblemAlt} width={44} height={44} />
+                <Image src="/images/logo.png" alt={t.footerEmblemAlt} width={44} height={44} />
               </span>
               <span>BRAKMASRA</span>
             </Link>

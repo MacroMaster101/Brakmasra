@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="public/images/brakmasra-logo-reference.png" alt="BRAKMASRA Logo" width="148" />
+  <img src="public/images/logo.png" alt="BRAKMASRA Logo" width="148" />
 
   # 🌟 BRAKMASRA 🌟
 
@@ -125,4 +125,4 @@ npm run build      # Next.js production build
 
 ## 🎨 Visual Assets
 
-All bespoke hero images, account artwork, and product photography live in `public/images/`. The official brand mark is `brakmasra-logo-reference.png`!
+All bespoke hero images, account artwork, and product photography live in `public/images/`. The official brand mark is `logo.png`.

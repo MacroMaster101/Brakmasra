@@ -87,7 +87,7 @@ export function HomeView({
         <div className="page-shell manifesto-grid">
           <Reveal className="manifesto-art">
             <Image
-              src="/images/brakmasra-logo-reference.png"
+              src="/images/logo.png"
               alt={t.homeManifestoImageAlt}
               fill
               sizes="(max-width: 900px) 100vw, 42vw"

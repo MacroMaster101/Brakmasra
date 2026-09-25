@@ -70,7 +70,7 @@ export function StoreComingSoon({ area }: StoreComingSoonProps) {
           <Image src="/images/brakmasra-hero.png" alt="" fill sizes="(max-width: 900px) 100vw, 48vw" />
           <div className="launch-visual-scrim" />
           <div className="launch-visual-mark">
-            <Image src="/images/brakmasra-logo-reference.png" alt="" width={104} height={104} />
+            <Image src="/images/logo.png" alt="" width={104} height={104} />
             <span>BRAKMASRA</span>
             <small>{t.homeNoticeTitle}</small>
           </div>

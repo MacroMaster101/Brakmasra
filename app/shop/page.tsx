@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { ShopCatalog } from "@/components/shop-catalog";
 import { products } from "@/data/products";
 import { commerceEnabled } from "@/lib/features";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "Official Merch", description: "Shop official BRAKMASRA merchandise and verified limited drops.", alternates: { canonical: "/shop" } };
+export const metadata: Metadata = pageMetadata({ title: "Official Merch", description: "Shop official BRAKMASRA merchandise and verified limited drops.", path: "/shop" });
 
 export default function ShopPage() {
   return (

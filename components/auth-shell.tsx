@@ -22,7 +22,7 @@ export function AuthShell({ children, compact = false, descriptionKey, titleKey 
     <section className="auth-page">
       <div className={`auth-shell${compact ? " is-compact" : ""}`}>
         <Link className="auth-home-link" href="/" aria-label={t.brandHomeLabel}>
-          <Image src="/images/brakmasra-logo-reference.png" alt="" width={34} height={34} />
+          <Image src="/images/logo.png" alt="" width={34} height={34} />
           <span>BRAKMASRA</span>
         </Link>
         <Link className="auth-close" href="/" aria-label={t.authCloseLabel}>

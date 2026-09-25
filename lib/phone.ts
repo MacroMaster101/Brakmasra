@@ -38,8 +38,19 @@ export const PHONE_COUNTRIES: PhoneCountry[] = [
 
 export const DEFAULT_PHONE_COUNTRY = "LK";
 
+// Delivery is Sri Lanka only for now. Add codes from PHONE_COUNTRIES here to
+// offer them in the forms again; the field shows a picker once there are two.
+const ENABLED_PHONE_COUNTRY_CODES = ["LK"];
+
+/** Countries the signup and profile forms offer and accept. */
+export const FORM_PHONE_COUNTRIES = PHONE_COUNTRIES.filter((country) => ENABLED_PHONE_COUNTRY_CODES.includes(country.code));
+
 export function findPhoneCountry(code: string | null | undefined) {
   return PHONE_COUNTRIES.find((country) => country.code === code);
+}
+
+export function findFormPhoneCountry(code: string | null | undefined) {
+  return FORM_PHONE_COUNTRIES.find((country) => country.code === code);
 }
 
 /**

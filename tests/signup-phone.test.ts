@@ -16,10 +16,11 @@ describe("optional phone input", () => {
       ok: true,
       value: { phone: "+94771234567", phone_country: "LK" },
     });
-    expect(parsePhoneInput("GB", "07400 123456")).toEqual({
-      ok: true,
-      value: { phone: "+447400123456", phone_country: "GB" },
-    });
+  });
+
+  it("accepts Sri Lankan numbers only while delivery is Sri Lanka only", () => {
+    expect(parsePhoneInput("GB", "07400 123456")).toEqual({ ok: false });
+    expect(parsePhoneInput("IN", "98765 43210")).toEqual({ ok: false });
   });
 
   it("rejects numbers that do not fit the selected country", () => {

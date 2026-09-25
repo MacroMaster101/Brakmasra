@@ -4,7 +4,7 @@ import { ChevronDown } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 
 import { useLanguage } from "@/components/language-provider";
-import { DEFAULT_PHONE_COUNTRY, PHONE_COUNTRIES, findPhoneCountry } from "@/lib/phone";
+import { DEFAULT_PHONE_COUNTRY, FORM_PHONE_COUNTRIES, findFormPhoneCountry } from "@/lib/phone";
 
 type PhoneFieldProps = {
   /** Form field name for the ISO country code. */
@@ -35,9 +35,11 @@ export function PhoneField({
   const { t } = useLanguage();
   const id = useId();
   const selectRef = useRef<HTMLSelectElement>(null);
-  const initialCode = findPhoneCountry(defaultCountry)?.code ?? DEFAULT_PHONE_COUNTRY;
+  const initialCode = findFormPhoneCountry(defaultCountry)?.code ?? DEFAULT_PHONE_COUNTRY;
   const [code, setCode] = useState(initialCode);
-  const country = findPhoneCountry(code) ?? PHONE_COUNTRIES[0];
+  const country = findFormPhoneCountry(code) ?? FORM_PHONE_COUNTRIES[0];
+  // With a single country there is nothing to pick, so the prefix is fixed text.
+  const fixed = FORM_PHONE_COUNTRIES.length === 1;
   const numberId = `${id}-number`;
   const hintId = `${id}-hint`;
 
@@ -58,21 +60,28 @@ export function PhoneField({
         {optional && <span className="phone-field-optional"> ({t.authPhoneOptional})</span>}
       </label>
       <span className="phone-control">
-        <span className="phone-country">
-          <span className="phone-country-value" aria-hidden="true">{country.code} {country.dial}</span>
-          <ChevronDown aria-hidden="true" />
-          <select
-            ref={selectRef}
-            name={countryName}
-            defaultValue={initialCode}
-            onChange={(event) => setCode(event.target.value)}
-            aria-label={t.authCountryCode}
-          >
-            {PHONE_COUNTRIES.map((option) => (
-              <option key={option.code} value={option.code}>{option.name} ({option.dial})</option>
-            ))}
-          </select>
-        </span>
+        {fixed ? (
+          <span className="phone-country is-fixed" title={country.name}>
+            <input type="hidden" name={countryName} value={country.code} />
+            <span className="phone-country-value">{country.code} {country.dial}</span>
+          </span>
+        ) : (
+          <span className="phone-country">
+            <span className="phone-country-value" aria-hidden="true">{country.code} {country.dial}</span>
+            <ChevronDown aria-hidden="true" />
+            <select
+              ref={selectRef}
+              name={countryName}
+              defaultValue={initialCode}
+              onChange={(event) => setCode(event.target.value)}
+              aria-label={t.authCountryCode}
+            >
+              {FORM_PHONE_COUNTRIES.map((option) => (
+                <option key={option.code} value={option.code}>{option.name} ({option.dial})</option>
+              ))}
+            </select>
+          </span>
+        )}
         <input
           id={numberId}
           name={numberName}

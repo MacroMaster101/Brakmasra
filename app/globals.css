@@ -981,13 +981,17 @@ body:has(.not-found) .back-to-top { display: none; }
 .auth-divider { margin: 1.25rem 0 0; display: flex; align-items: center; gap: .85rem; color: var(--text-muted); font: 700 .64rem/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
 .auth-divider::before, .auth-divider::after { content: ""; height: 1px; flex: 1; background: rgba(241, 240, 236, .12); }
 .auth-social + .auth-divider + .auth-form { margin-top: 1.25rem; }
-.auth-field { display: grid; gap: .5rem; color: var(--text-secondary); font: 700 .68rem/1.3 var(--mono); letter-spacing: .04em; }
-.auth-field > input, .password-control input { min-height: 50px; background: #100f0f; color: var(--text); }
-.password-control { position: relative; display: block; }
-.password-control input { padding-right: 3.4rem; }
-.password-control button { position: absolute; inset: 0 0 0 auto; width: 48px; display: grid; place-items: center; border: 0; background: transparent; color: var(--text-secondary); cursor: pointer; }
+.auth-field { display: grid; gap: .5rem; color: #dcd9d3; font: 600 .82rem/1.3 var(--body); }
+.auth-field > input, .field-control input { min-height: 50px; background: #100f0f; color: var(--text); font: 400 1rem/1.4 var(--body); }
+/* Inputs with a leading icon; the icon brightens while its field has focus. */
+.field-control { position: relative; display: block; }
+.field-control input { padding-left: 2.6rem; }
+.field-icon { position: absolute; top: 50%; left: .9rem; width: 16px; height: 16px; color: var(--text-muted); stroke-width: 1.7; transform: translateY(-50%); pointer-events: none; transition: color .2s; }
+.field-control:focus-within .field-icon { color: var(--accent-bright); }
+.password-control input { padding-right: 2.9rem; }
+.password-control button { position: absolute; inset: 0 0 0 auto; width: 44px; display: grid; place-items: center; border: 0; background: transparent; color: var(--text-secondary); cursor: pointer; }
 .password-control button:hover { color: var(--text); }
-.password-control svg { width: 18px; height: 18px; stroke-width: 1.7; }
+.password-control button svg { width: 18px; height: 18px; stroke-width: 1.7; }
 .auth-help-link { justify-self: end; color: var(--text-secondary); font-size: .76rem; }
 .auth-field-hint { color: var(--text-muted); font-family: var(--body); font-size: .72rem; font-weight: 400; line-height: 1.45; letter-spacing: normal; }
 /* Phone field */
@@ -999,18 +1003,28 @@ body:has(.not-found) .back-to-top { display: none; }
 .phone-control:focus-within { outline: 1px solid var(--accent-bright); border-color: var(--accent-bright); }
 .phone-country { position: relative; flex: none; display: inline-flex; align-items: center; gap: .3rem; padding: 0 .65rem 0 .9rem; border-right: 1px solid var(--border-light); border-radius: var(--radius-control) 0 0 var(--radius-control); color: var(--text); white-space: nowrap; transition: background .2s; }
 .phone-country:hover, .phone-country:has(select:focus-visible) { background: rgba(241, 240, 236, .05); }
+/* Single-country mode: the prefix is plain text, not a picker. */
+.phone-country.is-fixed { padding-right: .85rem; color: var(--text-secondary); }
+.phone-country.is-fixed:hover { background: transparent; }
 .phone-country svg { width: 14px; height: 14px; color: var(--text-secondary); stroke-width: 1.8; }
 .phone-country select { position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; opacity: 0; cursor: pointer; appearance: none; color-scheme: dark; }
-.phone-control input { flex: 1; min-width: 0; padding-block: 0; border: 0; border-radius: 0; background: transparent; color: var(--text); }
+.phone-control input { flex: 1; min-width: 0; padding-block: 0; border: 0; border-radius: 0; background: transparent; color: var(--text); font: 400 1rem/1.4 var(--body); }
 .phone-control input:focus { outline: none; }
-/* Signup shows the password hint once, under both password fields. */
-.auth-form > .auth-password-hint { margin-top: -.5rem; }
+/* New-password checklist: one chip per rule, ticked as the password meets it. */
+.password-rules { display: flex; flex-wrap: wrap; gap: .4rem .6rem; margin: 0; padding: 0; list-style: none; color: var(--text-muted); font: 500 .7rem/1.3 var(--body); }
+.password-rules li { display: inline-flex; align-items: center; gap: .35rem; transition: color .2s; }
+.password-rules li.is-met { color: var(--text); }
+.password-rule-mark { width: 14px; height: 14px; display: grid; place-items: center; flex: none; border: 1px solid rgba(241, 240, 236, .28); border-radius: 50%; transition: background .2s, border-color .2s; }
+.password-rules li.is-met .password-rule-mark { border-color: #f1f0ec; background: #f1f0ec; color: #121111; }
+.password-rule-mark svg { width: 10px; height: 10px; stroke-width: 3; }
+/* Sits under both password fields; pull it up to the field above. */
+.auth-form > .password-rules { margin-top: -.35rem; }
 @media (min-width: 768px) and (max-height: 820px) {
   .phone-control { min-height: 46px; }
 }
 @media (min-width: 768px) {
   .auth-shell.is-compact .phone-control { min-height: 42px; }
-  .auth-shell.is-compact .auth-form > .auth-password-hint { margin-top: -.3rem; }
+  .auth-shell.is-compact .auth-form > .password-rules { margin-top: -.15rem; }
   .auth-shell.is-compact .auth-submit { min-height: 44px; }
   /* The compact heading size otherwise outranks the Sinhala one and wraps the title. */
   html[lang="si"] .auth-shell.is-compact .auth-heading h1 { font-size: clamp(1.8rem, 2.4vw, 2.2rem); }
@@ -1020,6 +1034,9 @@ body:has(.not-found) .back-to-top { display: none; }
   .auth-shell.is-compact .auth-form { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: .75rem; }
   .auth-shell.is-compact .auth-form > * { grid-column: 1 / -1; }
   .auth-shell.is-compact .auth-form > .auth-field-half { grid-column: auto; }
+  /* Half-width fields are narrow; a touch smaller text keeps placeholders whole. */
+  .auth-shell.is-compact .auth-field-half .field-control input { padding-left: 2.35rem; font-size: .9rem; }
+  .auth-shell.is-compact .auth-field-half .password-control input { padding-right: 2.6rem; }
 }
 /* Sinhala: the marker inherits the larger label size; keep it light and on one line with the label. */
 html[lang="si"] .phone-field-optional { font-weight: 400; line-height: 1.45; }
@@ -1074,7 +1091,7 @@ html[lang="si"] .code-input legend { font-size: .8rem; font-weight: 600; letter-
   .auth-shell.is-compact .auth-social + .auth-divider + .auth-form { gap: .6rem; margin-top: .7rem; }
   .auth-shell.is-compact .auth-field { gap: .3rem; }
   .auth-shell.is-compact .auth-field > input,
-  .auth-shell.is-compact .password-control input { min-height: 42px; padding-block: .6rem; }
+  .auth-shell.is-compact .field-control input { min-height: 42px; padding-block: .6rem; }
   .auth-shell.is-compact .auth-status { min-height: .85rem; }
   .auth-shell.is-compact .auth-switch { margin-top: .45rem; }
 }
@@ -1524,7 +1541,7 @@ body:not(:has(.home-hero)) .footer-cta { display: none; }
   .auth-divider { margin-top: .85rem; }
   .auth-form, .auth-social + .auth-divider + .auth-form { gap: .7rem; margin-top: .85rem; }
   .auth-field { gap: .35rem; }
-  .auth-field > input, .password-control input { min-height: 46px; padding-block: .7rem; }
+  .auth-field > input, .field-control input { min-height: 46px; padding-block: .7rem; }
   .auth-status { min-height: 1rem; }
   .auth-switch { margin-top: .65rem; }
   .auth-art-copy { bottom: 2rem; }

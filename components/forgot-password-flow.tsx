@@ -1,5 +1,6 @@
 "use client";
 
+import { Mail } from "lucide-react";
 import { startTransition, useActionState, useEffect, useState, type FormEvent } from "react";
 
 import type { AuthActionState } from "@/app/auth/actions";
@@ -67,7 +68,19 @@ export function ForgotPasswordFlow({ requestAction, verifyAction }: { requestAct
         <form className="auth-form" action={requestFormAction} onSubmit={submitRequest}>
           <label className="auth-field">
             <span>{t.authEmail}</span>
-            <input name="email" type="email" required maxLength={254} autoComplete="email" inputMode="email" defaultValue={email} />
+            <span className="field-control">
+              <Mail className="field-icon" aria-hidden="true" />
+              <input
+                name="email"
+                type="email"
+                required
+                maxLength={254}
+                autoComplete="email"
+                inputMode="email"
+                defaultValue={email}
+                placeholder={t.authEmailPlaceholder}
+              />
+            </span>
           </label>
           <button className="button button-primary auth-submit" type="submit" disabled={requesting}>
             {requesting ? t.authForgotPending : t.authForgotIdle}

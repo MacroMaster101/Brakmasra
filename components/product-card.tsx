@@ -12,9 +12,17 @@ type ProductCardProps = {
   commerceEnabled: boolean;
   priority?: boolean;
   product: Product;
+  /** Image `sizes` for layouts where the card is wider than a normal grid cell. */
+  sizes?: string;
 };
 
-export function ProductCard({ product, commerceEnabled, className = "", priority = false }: ProductCardProps) {
+export function ProductCard({
+  product,
+  commerceEnabled,
+  className = "",
+  priority = false,
+  sizes = "(max-width: 767px) calc(100vw - 2rem), (max-width: 1023px) 50vw, 33vw",
+}: ProductCardProps) {
   const { t } = useLanguage();
   const image = product.images[0];
   const soldOut = product.stock <= 0;
@@ -44,7 +52,7 @@ export function ProductCard({ product, commerceEnabled, className = "", priority
             alt={t.productPhotoAlt(product.name)}
             fill
             loading={priority ? "eager" : "lazy"}
-            sizes="(max-width: 767px) calc(100vw - 2rem), (max-width: 1023px) 50vw, 33vw"
+            sizes={sizes}
           />
         )}
       </div>

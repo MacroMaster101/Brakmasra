@@ -87,6 +87,7 @@ export const productSchema = z
     category: z.enum(["", ...PRODUCT_CATEGORIES], { message: invalid }).transform((value) => value || null),
     badge: z.enum(["", ...PRODUCT_BADGES], { message: invalid }).transform((value) => value || null),
     comingSoon: z.boolean(),
+    featured: z.boolean(),
     position: z.coerce.number({ message: invalid }).int(invalid).min(0, invalid).max(9999, invalid),
     price: z.string().transform((value, context) => {
       const minor = parseMoney(value);
@@ -134,6 +135,7 @@ export function productFormValues(formData: FormData) {
     category: text("category"),
     badge: text("badge"),
     comingSoon: formData.get("comingSoon") === "on",
+    featured: formData.get("featured") === "on",
     position: text("position") || "0",
     price: text("price"),
     description: text("description"),

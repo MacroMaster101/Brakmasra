@@ -3,10 +3,17 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Mail, ShoppingBag } from "lucide-react";
+import { ArrowUp, Mail, ShoppingBag } from "lucide-react";
 import { footerColumns } from "@/data/navigation";
-import { site } from "@/data/site";
+import { site, whatsappLink, withWhatsAppMessage } from "@/data/site";
 import { useLanguage } from "@/components/language-provider";
+import { WhatsAppIcon } from "@/components/whatsapp-icon";
+
+/** Scrolls to the top of the page, instantly for readers who prefer reduced motion. */
+function scrollToTop() {
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
+}
 
 export function Footer() {
   const pathname = usePathname();
@@ -43,44 +50,60 @@ export function Footer() {
               <span>BRAKMASRA</span>
             </Link>
             <p>{t.brandSummary}</p>
-            <a className="footer-email" href={`mailto:${site.supportEmail}`} aria-label={`${t.footerEmailLabel}: ${site.supportEmail}`}>
-              <Mail aria-hidden="true" />
-              <span>{site.supportEmail}</span>
-            </a>
-            <div className="footer-social">
-              <a
-                href="https://www.youtube.com/@Brakmasra"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="footer-social-btn footer-social-red"
-                title={t.footerChannelTitle}
-                aria-label="YouTube"
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    fill="currentColor"
-                    d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"
-                  />
-                  <polygon className="social-play-icon" points="9.545 15.568 9.545 8.432 15.818 12" />
-                </svg>
-                <span>YouTube</span>
+            {/* Email and social links form one block, so the email centers over the buttons. */}
+            <div className="footer-contact">
+              <a className="footer-email" href={`mailto:${site.supportEmail}`} aria-label={`${t.footerEmailLabel}: ${site.supportEmail}`}>
+                <Mail aria-hidden="true" />
+                <span>{site.supportEmail}</span>
               </a>
-              <a
-                href="https://www.tiktok.com/@Brakmasraofficial"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="footer-social-btn footer-social-tt"
-                title={t.footerTikTokTitle}
-                aria-label="TikTok"
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    fill="currentColor"
-                    d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 0 0-.79-.05A6.34 6.34 0 0 0 3 15.28 6.34 6.34 0 0 0 9.34 21.6a6.34 6.34 0 0 0 6.34-6.34V8.52a8.16 8.16 0 0 0 4.91 1.64V6.69z"
-                  />
-                </svg>
-                <span>TikTok</span>
-              </a>
+              <div className="footer-social">
+                <a
+                  href="https://www.youtube.com/@Brakmasra"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer-social-btn footer-social-red"
+                  title={t.footerChannelTitle}
+                  aria-label="YouTube"
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                      fill="currentColor"
+                      d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"
+                    />
+                    <polygon className="social-play-icon" points="9.545 15.568 9.545 8.432 15.818 12" />
+                  </svg>
+                  <span>YouTube</span>
+                </a>
+                <a
+                  href="https://www.tiktok.com/@Brakmasraofficial"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer-social-btn footer-social-tt"
+                  title={t.footerTikTokTitle}
+                  aria-label="TikTok"
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                      fill="currentColor"
+                      d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 0 0-.79-.05A6.34 6.34 0 0 0 3 15.28 6.34 6.34 0 0 0 9.34 21.6a6.34 6.34 0 0 0 6.34-6.34V8.52a8.16 8.16 0 0 0 4.91 1.64V6.69z"
+                    />
+                  </svg>
+                  <span>TikTok</span>
+                </a>
+                {whatsappLink && (
+                  <a
+                    href={withWhatsAppMessage(whatsappLink, t.whatsappMessage)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="footer-social-btn footer-social-wa"
+                    title={t.whatsappLabel}
+                    aria-label={t.whatsappLabel}
+                  >
+                    <WhatsAppIcon />
+                    <span>{t.whatsappShort}</span>
+                  </a>
+                )}
+              </div>
             </div>
           </div>
 
@@ -102,6 +125,11 @@ export function Footer() {
             <Link href="/privacy">{t.legalPrivacy}</Link>
             <Link href="/terms">{t.legalTerms}</Link>
           </nav>
+          {/* Narrow screens only: a way back up from the end of the long stacked footer. */}
+          <button type="button" className="footer-top-button" onClick={scrollToTop}>
+            <ArrowUp aria-hidden="true" />
+            {t.backToTop}
+          </button>
         </div>
       </div>
     </footer>

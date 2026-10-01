@@ -40,6 +40,7 @@ export const products = pgTable("products", {
   category: text("category").$type<"Apparel" | "Headwear">(),
   badge: text("badge").$type<"NEW" | "LIMITED" | "BEST SELLER" | "SALE">(),
   comingSoon: boolean("coming_soon").notNull().default(false),
+  featured: boolean("featured").notNull().default(false),
   position: integer("position").notNull().default(0),
   siDescription: text("si_description"),
   siFabric: text("si_fabric"),

@@ -41,7 +41,6 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   return (
     <html lang={lang} className={notoSinhala.variable} data-scroll-behavior="smooth">
       <body>
-        <div id="page-top-sentinel" aria-hidden="true" />
         <SiteFrame initialLang={lang} launchMode={launchMode} member={member}>{children}</SiteFrame>
         <SpeedInsights />
         <Analytics />

@@ -11,7 +11,7 @@ import { getSupabaseServerClient } from "@/lib/supabase";
 export const CATALOG_TAG = "catalog";
 
 export const PRODUCT_SELECT =
-  "id, slug, name, description, currency, price_minor, fabric, care, category, badge, coming_soon, si_description, si_fabric, si_care, position, status, updated_at, product_variants(id, sku, size, color, inventory, active), product_images(id, url, alt_text, position)";
+  "id, slug, name, description, currency, price_minor, fabric, care, category, badge, coming_soon, featured, si_description, si_fabric, si_care, position, status, updated_at, product_variants(id, sku, size, color, inventory, active), product_images(id, url, alt_text, position)";
 
 /**
  * Active products from the database; null when no database is configured.

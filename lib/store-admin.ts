@@ -25,6 +25,7 @@ export type AdminProduct = {
   category: string;
   badge: string;
   comingSoon: boolean;
+  featured: boolean;
   position: number;
   status: ProductStatus;
   siDescription: string;
@@ -35,7 +36,7 @@ export type AdminProduct = {
   images: AdminImage[];
 };
 
-export type AdminProductSummary = Pick<AdminProduct, "id" | "slug" | "name" | "status" | "priceMinor" | "currency" | "comingSoon" | "updatedAt"> & {
+export type AdminProductSummary = Pick<AdminProduct, "id" | "slug" | "name" | "status" | "priceMinor" | "currency" | "comingSoon" | "featured" | "updatedAt"> & {
   stock: number;
   image: string | null;
 };
@@ -114,6 +115,7 @@ function adminProduct(row: Row): AdminProduct {
     category: text(row.category),
     badge: text(row.badge),
     comingSoon: row.coming_soon === true,
+    featured: row.featured === true,
     position: num(row.position),
     status: status(row.status),
     siDescription: text(row.si_description),
@@ -155,6 +157,7 @@ export async function listAdminProducts(): Promise<AdminProductSummary[] | null>
       priceMinor: product.priceMinor,
       currency: product.currency,
       comingSoon: product.comingSoon,
+      featured: product.featured,
       updatedAt: product.updatedAt,
       stock: product.variants.filter((variant) => variant.active).reduce((total, variant) => total + variant.inventory, 0),
       image: product.images[0]?.url ?? null,

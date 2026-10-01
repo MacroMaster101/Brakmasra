@@ -77,6 +77,7 @@ export function HomeView({
                 product={product}
                 commerceEnabled={commerceEnabled}
                 priority={index === 0}
+                sizes={index === 0 ? "(max-width: 767px) calc(100vw - 2rem), (max-width: 1023px) 100vw, 66vw" : undefined}
               />
             </Reveal>
           ))}

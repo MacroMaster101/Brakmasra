@@ -29,13 +29,23 @@ const allowed: Record<string, string[]> = {
 // Types accepted by app/auth/confirm/route.ts.
 const confirmTypes = ["email", "email_change", "invite", "magiclink", "recovery", "signup"];
 
-const sections = [...config.matchAll(/\[auth\.email\.(?:template|notification)\.([a-z_]+)\][^[]*?content_path = "\.\/(supabase\/templates\/[a-z_]+\.html)"/g)]
-  .map(([, name, path]) => ({ name, html: readFileSync(join(root, path), "utf8"), path }));
+// The Supabase CLI reads template paths from the project root but notification
+// paths from the supabase/ folder, so each kind is written differently.
+const pathPrefix = { template: "./supabase/templates/", notification: "./templates/" };
+const sections = [...config.matchAll(/\[auth\.email\.(template|notification)\.([a-z_]+)\][^[]*?content_path = "([^"]+)"/g)]
+  .map(([, kind, name, contentPath]) => {
+    const prefix = pathPrefix[kind as keyof typeof pathPrefix];
+    const path = contentPath.startsWith(prefix) ? `supabase/templates/${contentPath.slice(prefix.length)}` : contentPath;
+    return { name, contentPath, prefix, html: existsSync(join(root, path)) ? readFileSync(join(root, path), "utf8") : "", path };
+  });
 
 describe("email templates", () => {
   it("registers every Supabase email", () => {
     expect(sections.map((section) => section.name).sort()).toEqual(Object.keys(allowed).sort());
-    for (const { path } of sections) expect(existsSync(join(root, path)), path).toBe(true);
+    for (const { contentPath, prefix, path } of sections) {
+      expect(contentPath.startsWith(prefix), contentPath).toBe(true);
+      expect(existsSync(join(root, path)), path).toBe(true);
+    }
   });
 
   it.each(sections.map((section) => [section.name, section] as const))("%s uses only its documented variables", (name, { html }) => {

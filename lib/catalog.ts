@@ -16,6 +16,15 @@ export function searchProducts(query: string, list: Product[] = catalog): Produc
   );
 }
 
+/** The home page shows at most this many products: one large card and five smaller ones. */
+export const HOME_PRODUCT_LIMIT = 6;
+
+/** Products picked for the home page, in shop order; the first ones in the shop when none are picked. */
+export function homeProducts(list: Product[]): Product[] {
+  const picked = list.filter((product) => product.featured);
+  return (picked.length ? picked : list).slice(0, HOME_PRODUCT_LIMIT);
+}
+
 /** Description, fabric, and care text in the requested language, falling back to English. */
 export function productCopy(product: Product, lang: Language): ProductCopy {
   const localized = lang === "si" ? product.si : undefined;

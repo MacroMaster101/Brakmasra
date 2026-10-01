@@ -77,6 +77,7 @@ describe("store form rules", () => {
     expect(parsed.data.slug).toBe("night-watch-cap");
     expect(parsed.data.price).toBe(490000);
     expect(parsed.data.comingSoon).toBe(false);
+    expect(parsed.data.featured).toBe(false);
     expect(parsed.data.care).toEqual(["Spot clean", "Air dry"]);
     expect(parsed.data.siDescription).toBeNull();
     expect(parsed.data.variants).toEqual([
@@ -154,6 +155,7 @@ describe("store catalog mapping", () => {
     category: "Apparel",
     badge: "NEW",
     coming_soon: true,
+    featured: true,
     si_description: "ටී-ෂර්ට්",
     si_fabric: null,
     si_care: ["සෝදන්න"],
@@ -178,6 +180,7 @@ describe("store catalog mapping", () => {
     expect(product.care).toEqual(["Cold wash"]);
     expect(product.images).toEqual(["/images/products/unknown-mark-tee.png", `${supabaseUrl}/storage/v1/object/public/product-images/a/2.webp`]);
     expect(product.preview).toBe(true);
+    expect(product.featured).toBe(true);
     expect(product.si).toEqual({ description: "ටී-ෂර්ට්", fabric: "Cotton", care: ["සෝදන්න"] });
   });
 

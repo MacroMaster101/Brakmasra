@@ -23,80 +23,114 @@ export type Product = {
   category?: ProductCategory;
   badge?: "NEW" | "LIMITED" | "BEST SELLER" | "SALE";
   preview?: boolean;
+  /** Picked in the Control Room to appear on the home page. */
+  featured?: boolean;
   /** Sinhala copy; the English fields above remain the canonical record. */
   si?: ProductCopy;
 };
 
-/**
- * Upcoming launch collection used by the public coming-soon storefront.
- * Replace these records with verified Supabase products, pricing, and live
- * inventory before commerce is enabled.
- */
-export const products: Product[] = [
-  {
-    id: "e84d8668-35d5-47fb-bd50-01f35da3ac83",
-    slug: "unknown-mark-tee",
-    name: "Unknown Mark Tee",
-    description: "Washed-black heavyweight tee with a distressed forest mark and relaxed drop-shoulder fit.",
+type TeeDetails = Pick<Product, "id" | "slug" | "name" | "description"> & {
+  color: string;
+  siDescription: string;
+};
+
+/** Every graphic tee shares its price, sizing, fabric, care, and stock. */
+function tee({ color, siDescription, ...details }: TeeDetails): Product {
+  return {
+    ...details,
     price: 690000,
     currency: "LKR",
-    images: ["/images/products/unknown-mark-tee.png"],
+    images: [`/images/products/${details.slug}.webp`],
     sizes: ["S", "M", "L", "XL", "2XL"],
-    colors: ["Washed black"],
-    fabric: "Heavyweight cotton jersey",
+    colors: [color],
+    fabric: "Cotton jersey",
     care: ["Cold wash inside out", "Line dry", "Do not iron the print"],
-    stock: 24,
+    stock: 25,
     category: "Apparel",
     badge: "NEW",
-    preview: true,
     si: {
-      description: "උරහිසෙන් පහළට වැටෙන ලිහිල් හැඩයක් සහ කාලයෙන් ගෙවී ගිය වනාන්තර සලකුණක් සහිත, සේදූ කළු පැහැති ඝන කපු ටී-ෂර්ට් එකක්.",
-      fabric: "ඝන කපු ජර්සි රෙදි",
+      description: siDescription,
+      fabric: "කපු ජර්සි රෙදි",
       care: ["ඇතුළත පිටතට හරවා සීතල ජලයෙන් සෝදන්න", "වැලක එල්ලා වියළන්න", "මුද්‍රණය මත ස්ත්‍රික්ක නොකරන්න"],
     },
-  },
-  {
-    id: "c76f064b-462f-4db2-92c7-eaa660df20b8",
-    slug: "after-dark-hoodie",
-    name: "After Dark Hoodie",
-    description: "Oversized washed-black pullover with dense fleece, tonal seams, and a bone-white expedition mark.",
-    price: 1250000,
-    currency: "LKR",
-    images: ["/images/products/after-dark-hoodie.png"],
-    sizes: ["S", "M", "L", "XL", "2XL"],
-    colors: ["Washed black"],
-    fabric: "Heavyweight cotton-blend fleece",
-    care: ["Cold wash inside out", "Line dry", "Wash with dark colors"],
-    stock: 18,
-    category: "Apparel",
-    badge: "LIMITED",
-    preview: true,
-    si: {
-      description: "ඝන ලොම් ඇතුළතක්, එකම පැහැයේ මැහුම් සහ අස්ථි-සුදු ගවේෂණ සලකුණක් සහිත, සේදූ කළු පැහැති විශාල හැඩයේ හුඩියක්.",
-      fabric: "ඝන කපු-මිශ්‍ර ලොම් රෙදි",
-      care: ["ඇතුළත පිටතට හරවා සීතල ජලයෙන් සෝදන්න", "වැලක එල්ලා වියළන්න", "තද පැහැති ඇඳුම් සමඟ පමණක් සෝදන්න"],
-    },
-  },
-  {
-    id: "58027f89-5dc8-42fc-81b5-588b1955f91e",
-    slug: "night-watch-cap",
-    name: "Night Watch Cap",
-    description: "Structured five-panel cap with weathered texture, embroidered forest mark, and adjustable back strap.",
-    price: 490000,
-    currency: "LKR",
-    images: ["/images/products/night-watch-cap.png"],
-    sizes: [],
-    colors: ["Washed black"],
-    fabric: "Brushed cotton twill",
-    care: ["Spot clean only", "Air dry", "Do not machine wash"],
-    stock: 30,
-    category: "Headwear",
-    badge: "NEW",
-    preview: true,
-    si: {
-      description: "කාලයෙන් ගෙවී ගිය පෙනුමක්, එම්බ්‍රොයිඩර් කළ වනාන්තර සලකුණ සහ සීරුමාරු කළ හැකි පිටුපස පටියක් සහිත, හැඩය රැඳෙන පැනල් පහේ තොප්පියක්.",
-      fabric: "මෘදු කළ කපු ට්විල් රෙදි",
-      care: ["අපිරිසිදු තැන් පමණක් පිරිසිදු කරන්න", "වාතයට වියළන්න", "රෙදි සෝදන යන්ත්‍රයේ නොසෝදන්න"],
-    },
-  },
+  };
+}
+
+/**
+ * The launch collection. The shop shows these until products exist in the
+ * database; the Control Room's import copies them there once.
+ */
+export const products: Product[] = [
+  tee({
+    id: "32149a77-c59f-4ee3-a45d-931fdd3ea0f0",
+    slug: "caged-freedom-tee",
+    name: "Caged Freedom Tee",
+    color: "Washed black",
+    description: "Oversized washed-black tee with a blindfolded, chain-bound nun, blackletter “Caged Freedom” artwork, and a verse about breaking the chains we cannot see.",
+    siDescription: "නොපෙනෙන දම්වැල් බිඳ දැමීම ගැන වදනක් සහිත, ඇස් බැඳි, දම්වැල්වලින් වෙළුණු කන්‍යා සොහොයුරියකගේ “Caged Freedom” චිත්‍රයක් ඇති, සේදූ කළු පැහැති ඕවර්සයිස් ටී-ෂර්ට් එකක්.",
+  }),
+  tee({
+    id: "d31e26d2-8125-49c4-bbb6-5cdacc1f401e",
+    slug: "look-for-the-light-tee",
+    name: "Look for the Light Tee",
+    color: "White",
+    description: "Oversized white tee with a fiery, cinematic survival-story collage and the line “When you’re lost in the darkness, look for the light.”",
+    siDescription: "“When you’re lost in the darkness, look for the light” යන වදන සහ ගිනිගත් සිනමාත්මක කොලාජ් චිත්‍රයක් සහිත සුදු ඕවර්සයිස් ටී-ෂර්ට් එකක්.",
+  }),
+  tee({
+    id: "df528a8d-1b81-46eb-a2f0-2dbae058b3a7",
+    slug: "silent-faith-tee",
+    name: "Silent Faith Tee",
+    color: "Washed black",
+    description: "Oversized washed-black tee with a hushing marble statue, glowing pink eyes, “Faith” and rose tattoos, and a Latin verse beneath.",
+    siDescription: "රෝස පැහැයෙන් දිලෙන දෑස්, “Faith” සහ රෝස මල් පච්ච සහිත, නිහඬ වන්නැයි සංඥා කරන කිරිගරුඬ ප්‍රතිමාවක් සහ ලතින් වදනක් ඇති, සේදූ කළු පැහැති ඕවර්සයිස් ටී-ෂර්ට් එකක්.",
+  }),
+  tee({
+    id: "174b4bce-e028-42c5-ac31-7347c5ec69ed",
+    slug: "paradise-lost-tee",
+    name: "Paradise Lost Tee",
+    color: "White",
+    description: "Oversized white tee with a cracked marble bust, a red rose, and a torn-poster collage under a brush-script “Paradise Lost” headline.",
+    siDescription: "පින්සලෙන් ලියූ “Paradise Lost” මාතෘකාවක් යටතේ, ඉරිතැලුණු කිරිගරුඬ ප්‍රතිමාවක්, රතු රෝස මලක් සහ ඉරුණු පෝස්ටර් කොලාජ් චිත්‍රයක් සහිත සුදු ඕවර්සයිස් ටී-ෂර්ට් එකක්.",
+  }),
+  tee({
+    id: "2479dd44-adae-4475-896a-92822f0a01d6",
+    slug: "vigorous-archangel-tee",
+    name: "Vigorous Archangel Tee",
+    color: "White",
+    description: "Oversized white tee with a sword-wielding archangel statue framed by bold red “Vigorous” type and “Celestial Grace” details.",
+    siDescription: "තද රතු “Vigorous” අකුරු සහ “Celestial Grace” විස්තර මැද, කඩුවක් දරන අග්‍ර දේවදූත ප්‍රතිමාවක් සහිත සුදු ඕවර්සයිස් ටී-ෂර්ට් එකක්.",
+  }),
+  tee({
+    id: "fbc4699c-e080-4616-849e-3e4bd0c66524",
+    slug: "naga-guard-tee",
+    name: "Naga Guard Tee",
+    color: "White",
+    description: "Oversized white tee with an ornate mythical Naga serpent coiled through red slashes and graffiti “Naga Guards” tags.",
+    siDescription: "රතු ඉරි සහ “Naga Guards” ග්‍රැෆිටි අකුරු හරහා දඟර ගැසුණු, අලංකාර කැටයම් සහිත මිථ්‍යා නාගයෙකුගේ චිත්‍රයක් ඇති සුදු ඕවර්සයිස් ටී-ෂර්ට් එකක්.",
+  }),
+  tee({
+    id: "bc85b61f-91b2-466c-9ec7-2e7930626ed8",
+    slug: "intoxicated-medusa-tee",
+    name: "Intoxicated Medusa Tee",
+    color: "Washed black",
+    description: "Oversized washed-black tee with a cracked stone Medusa crowned in vivid green serpents above blackletter “Intoxicated” type.",
+    siDescription: "දීප්තිමත් කොළ පැහැ සර්පයින්ගෙන් ඔටුනු පැළඳි, ඉරිතැලුණු ගල් මෙඩූසා හිසක් සහ “Intoxicated” අකුරු සහිත, සේදූ කළු පැහැති ඕවර්සයිස් ටී-ෂර්ට් එකක්.",
+  }),
+  tee({
+    id: "30cededa-9c76-4ff1-8bdb-a7b31fde514b",
+    slug: "ruthless-tee",
+    name: "Ruthless Tee",
+    color: "Black",
+    description: "Oversized black tee with a skeletal ribcage wound by a teal serpent under a “Ruthless” headline.",
+    siDescription: "“Ruthless” මාතෘකාව යටතේ, නිල්-කොළ පැහැ සර්පයෙකු වෙළී ඇති ඇටසැකිලි ඉළ ඇට කූඩුවක චිත්‍රයක් සහිත කළු ඕවර්සයිස් ටී-ෂර්ට් එකක්.",
+  }),
+  tee({
+    id: "3a65dbb3-5700-48a2-9218-1001147080d7",
+    slug: "eternal-watcher-tee",
+    name: "Eternal Watcher Tee",
+    color: "Washed black",
+    description: "Oversized washed-black tee with a blood-red eye gripped by dripping tentacles, “Eternal Watcher” script, and the BRAKMASRA mark.",
+    siDescription: "ගලා හැලෙන ස්පර්ශාංගවලින් වෙළුණු ලේ-රතු ඇසක්, “Eternal Watcher” අකුරු සහ BRAKMASRA සලකුණ සහිත, සේදූ කළු පැහැති ඕවර්සයිස් ටී-ෂර්ට් එකක්.",
+  }),
 ];

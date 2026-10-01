@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { hasSupabaseAuthCookie, refreshAuthSession } from "@/lib/supabase-auth-proxy";
 import { authDemoMode, authEnabled } from "@/lib/features";
+import { isScannerProbe } from "@/lib/scanner-probes";
 import { createContentSecurityPolicy } from "@/lib/security-headers";
 
 const authPaths = [
@@ -33,6 +34,11 @@ function shouldRefreshSession(request: NextRequest) {
 }
 
 export async function proxy(request: NextRequest) {
+  // Scanner noise gets a bare 404 here, before any page (and its CPU) is spent on it.
+  if (isScannerProbe(request.nextUrl.pathname)) {
+    return new NextResponse(null, { status: 404, headers: { "Cache-Control": "public, max-age=3600" } });
+  }
+
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
   const contentSecurityPolicy = createContentSecurityPolicy(nonce);
   const requestHeaders = new Headers(request.headers);
@@ -59,8 +65,10 @@ export async function proxy(request: NextRequest) {
   return response;
 }
 
+// Static files and the build-time metadata routes (robots, sitemap, manifest,
+// share image) need neither a CSP nonce nor a session refresh, so they skip the proxy.
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|icon.svg|.*\\.(?:svg|png|jpg|jpeg|gif|webp|avif|ico)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|icon.svg|robots.txt|sitemap.xml|manifest.webmanifest|opengraph-image|.*\\.(?:svg|png|jpg|jpeg|gif|webp|avif|ico)$).*)",
   ],
 };

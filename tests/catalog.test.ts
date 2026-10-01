@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Product } from "@/data/products";
-import { findProduct, searchProducts, toCartLine } from "@/lib/catalog";
+import { HOME_PRODUCT_LIMIT, findProduct, homeProducts, searchProducts, toCartLine } from "@/lib/catalog";
 
 // Test fixtures only — never copy these into data/products.ts.
 const hoodie: Product = {
@@ -69,5 +69,29 @@ describe("catalog helpers", () => {
 
   it("rejects products without a photo", () => {
     expect(toCartLine({ ...hoodie, images: [] }, { size: "L", color: "Black", quantity: 1 })).toBeNull();
+  });
+});
+
+describe("home page products", () => {
+  const many: Product[] = Array.from({ length: 9 }, (_, index) => ({ ...hoodie, id: `id-${index}`, slug: `tee-${index}` }));
+  const slugs = (list: Product[]) => list.map((product) => product.slug);
+
+  it("shows up to six products", () => {
+    expect(HOME_PRODUCT_LIMIT).toBe(6);
+  });
+
+  it("shows the picked products in shop order", () => {
+    const picked = many.map((product, index) => ({ ...product, featured: [1, 4, 7].includes(index) }));
+    expect(slugs(homeProducts(picked))).toEqual(["tee-1", "tee-4", "tee-7"]);
+  });
+
+  it("keeps only the first six picks", () => {
+    const picked = many.map((product) => ({ ...product, featured: true }));
+    expect(slugs(homeProducts(picked))).toEqual(["tee-0", "tee-1", "tee-2", "tee-3", "tee-4", "tee-5"]);
+  });
+
+  it("falls back to the first six products when none are picked", () => {
+    expect(slugs(homeProducts(many))).toEqual(["tee-0", "tee-1", "tee-2", "tee-3", "tee-4", "tee-5"]);
+    expect(homeProducts([])).toEqual([]);
   });
 });

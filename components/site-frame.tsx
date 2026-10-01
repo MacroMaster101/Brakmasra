@@ -2,8 +2,8 @@
 
 import { usePathname } from "next/navigation";
 
-import { BackToTop } from "@/components/back-to-top";
 import { CartProvider } from "@/components/cart-provider";
+import { FloatingActions } from "@/components/floating-actions";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { LanguageProvider } from "@/components/language-provider";
@@ -34,7 +34,8 @@ export function SiteFrame({
         {!isFocusedAuthPage && <Header commerceEnabled={!launchMode} member={member} />}
         <main id="content">{children}</main>
         {!isFocusedAuthPage && <Footer />}
-        {!isFocusedAuthPage && <BackToTop />}
+        {/* Staff screens skip the customer chat button. */}
+        {!isFocusedAuthPage && <FloatingActions showWhatsApp={!pathname.startsWith("/admin")} />}
       </CartProvider>
     </LanguageProvider>
   );

@@ -19,6 +19,7 @@ export type ProductRow = {
   category: string | null;
   badge: string | null;
   coming_soon: boolean | null;
+  featured: boolean | null;
   si_description: string | null;
   si_fabric: string | null;
   si_care: unknown;
@@ -82,6 +83,7 @@ export function productFromRow(row: ProductRow, supabaseUrl: string | undefined)
     category: row.category === "Apparel" || row.category === "Headwear" ? (row.category as ProductCategory) : undefined,
     badge,
     preview: row.coming_soon === true,
+    featured: row.featured === true,
     si: siDescription
       ? { description: siDescription, fabric: row.si_fabric?.trim() || row.fabric || "", care: strings(row.si_care) }
       : undefined,

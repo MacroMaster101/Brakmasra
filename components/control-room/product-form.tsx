@@ -114,6 +114,7 @@ export function ProductForm({ product, canManage }: { product: AdminProduct | nu
             </Field>
           </div>
           <Toggle name="comingSoon" label="crsComingSoon" hint="crsComingSoonHint" defaultChecked={product?.comingSoon ?? false} />
+          <Toggle name="featured" label="crsFeatured" hint="crsFeaturedHint" defaultChecked={product?.featured ?? false} />
         </fieldset>
 
         <fieldset className="crs-fieldset" disabled={!canManage}>

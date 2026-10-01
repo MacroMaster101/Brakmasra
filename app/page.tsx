@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { HomeView } from "@/components/home-view";
 import { socialLinks } from "@/data/site";
+import { homeProducts } from "@/lib/catalog";
 import { commerceEnabled } from "@/lib/features";
 import { homeJsonLd, pageMetadata } from "@/lib/seo";
 import { getCatalog } from "@/lib/store";
@@ -20,7 +21,7 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
       />
-      <HomeView products={products} commerceEnabled={commerceEnabled} />
+      <HomeView products={homeProducts(products)} commerceEnabled={commerceEnabled} />
     </>
   );
 }

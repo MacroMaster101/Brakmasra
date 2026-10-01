@@ -93,6 +93,7 @@ export function ControlRoomProducts({ products, canManage, notice }: {
                       <span className="crs-pills">
                         <StatusPill tone={product.status}>{t[productStatusLabels[product.status]]}</StatusPill>
                         {product.comingSoon && <StatusPill tone="pending">{t.crsComingSoon}</StatusPill>}
+                        {product.featured && <StatusPill tone="on">{t.crsFeaturedTag}</StatusPill>}
                       </span>
                     </td>
                     <td data-label={t.crsStock} className={product.stock === 0 ? "crs-out" : undefined}>

@@ -1,0 +1,30 @@
+name: Branch flow
+
+# Enforces main <- dev <- feature: pull requests into main must come from
+# this repository's dev branch.
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, reopened, synchronize, edited]
+
+permissions: {}
+
+jobs:
+  branch-flow:
+    # The main branch ruleset requires this check by name. Rename both together.
+    name: Branch flow
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Require dev as the source branch
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          THIS_REPO: ${{ github.repository }}
+        run: |
+          if [ "$HEAD_REPO" = "$THIS_REPO" ] && [ "$HEAD_REF" = "dev" ]; then
+            echo "OK: pull request comes from dev."
+            exit 0
+          fi
+          echo "::error::Pull requests into main must come from dev (got $HEAD_REPO:$HEAD_REF). Merge into dev first, then open dev -> main."
+          exit 1

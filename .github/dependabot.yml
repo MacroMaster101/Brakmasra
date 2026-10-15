@@ -1,11 +1,14 @@
 version: 2
 updates:
+  # Updates land on dev first and reach main through the dev -> main pull request.
   - package-ecosystem: npm
     directory: /
+    target-branch: dev
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
   - package-ecosystem: github-actions
     directory: /
+    target-branch: dev
     schedule:
       interval: weekly

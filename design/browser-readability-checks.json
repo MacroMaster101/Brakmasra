@@ -1,0 +1,2516 @@
+{
+  "date": "2026-10-15",
+  "checks": [
+    {
+      "clipped": [],
+      "heading": "Carry the unknown.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        305,
+        3523
+      ],
+      "url": "/shop",
+      "viewport": [
+        320,
+        740
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Paradise Lost Tee",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        305,
+        2881
+      ],
+      "url": "/shop/paradise-lost-tee",
+      "viewport": [
+        320,
+        740
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "We go where the road gets quiet.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        305,
+        5395
+      ],
+      "url": "/about",
+      "viewport": [
+        320,
+        740
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Keep the line open.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        305,
+        3033
+      ],
+      "url": "/contact",
+      "viewport": [
+        320,
+        740
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "The cart opens soon.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        305,
+        2295
+      ],
+      "url": "/cart",
+      "viewport": [
+        320,
+        740
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Checkout opens soon.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        305,
+        2331
+      ],
+      "url": "/checkout",
+      "viewport": [
+        320,
+        740
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Terms of Service",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        305,
+        5786
+      ],
+      "url": "/terms",
+      "viewport": [
+        320,
+        740
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Privacy Policy",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        305,
+        7830
+      ],
+      "url": "/privacy",
+      "viewport": [
+        320,
+        740
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "formBottom": 773.453125,
+      "heading": "Welcome back",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        305,
+        797
+      ],
+      "url": "/login",
+      "viewport": [
+        320,
+        740
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "formBottom": 946.5625,
+      "heading": "Create your account",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        305,
+        957
+      ],
+      "url": "/signup",
+      "viewport": [
+        320,
+        740
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "formBottom": 545.71875,
+      "heading": "Reset your password",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        320,
+        740
+      ],
+      "url": "/forgot-password",
+      "viewport": [
+        320,
+        740
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Carry the unknown.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        3605
+      ],
+      "url": "/shop",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Paradise Lost Tee",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        2831
+      ],
+      "url": "/shop/paradise-lost-tee",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "We go where the road gets quiet.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        4934
+      ],
+      "url": "/about",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Keep the line open.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        2865
+      ],
+      "url": "/contact",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "The cart opens soon.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        2181
+      ],
+      "url": "/cart",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Checkout opens soon.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        2181
+      ],
+      "url": "/checkout",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Terms of Service",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        5233
+      ],
+      "url": "/terms",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Privacy Policy",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        6812
+      ],
+      "url": "/privacy",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "formBottom": 747.953125,
+      "heading": "Welcome back",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        390,
+        844
+      ],
+      "url": "/login",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "formBottom": 769,
+      "heading": "Create your account",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        390,
+        844
+      ],
+      "url": "/signup",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "formBottom": 545.71875,
+      "heading": "Reset your password",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        390,
+        844
+      ],
+      "url": "/forgot-password",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Carry the unknown.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        753,
+        4205
+      ],
+      "url": "/shop",
+      "viewport": [
+        768,
+        1024
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Paradise Lost Tee",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        753,
+        1721
+      ],
+      "url": "/shop/paradise-lost-tee",
+      "viewport": [
+        768,
+        1024
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "We go where the road gets quiet.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        753,
+        3687
+      ],
+      "url": "/about",
+      "viewport": [
+        768,
+        1024
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Keep the line open.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        753,
+        2325
+      ],
+      "url": "/contact",
+      "viewport": [
+        768,
+        1024
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "The cart opens soon.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        753,
+        1736
+      ],
+      "url": "/cart",
+      "viewport": [
+        768,
+        1024
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Checkout opens soon.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        753,
+        1736
+      ],
+      "url": "/checkout",
+      "viewport": [
+        768,
+        1024
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Terms of Service",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        753,
+        4051
+      ],
+      "url": "/terms",
+      "viewport": [
+        768,
+        1024
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Privacy Policy",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        753,
+        5071
+      ],
+      "url": "/privacy",
+      "viewport": [
+        768,
+        1024
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "formBottom": 833.671875,
+      "heading": "Welcome back",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        768,
+        1024
+      ],
+      "url": "/login",
+      "viewport": [
+        768,
+        1024
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "formBottom": 853.96875,
+      "heading": "Create your account",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        768,
+        1024
+      ],
+      "url": "/signup",
+      "viewport": [
+        768,
+        1024
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "formBottom": 715.75,
+      "heading": "Reset your password",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        768,
+        1024
+      ],
+      "url": "/forgot-password",
+      "viewport": [
+        768,
+        1024
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Carry the unknown.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        2577
+      ],
+      "url": "/shop",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Paradise Lost Tee",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        1391
+      ],
+      "url": "/shop/paradise-lost-tee",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "We go where the road gets quiet.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        3554
+      ],
+      "url": "/about",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Keep the line open.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        1584
+      ],
+      "url": "/contact",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "The cart opens soon.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        1336
+      ],
+      "url": "/cart",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Checkout opens soon.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        1336
+      ],
+      "url": "/checkout",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Terms of Service",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        3484
+      ],
+      "url": "/terms",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Privacy Policy",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        4462
+      ],
+      "url": "/privacy",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "formBottom": 666.046875,
+      "heading": "Welcome back",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1280,
+        720
+      ],
+      "url": "/login",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "formBottom": 673.84375,
+      "heading": "Create your account",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1280,
+        720
+      ],
+      "url": "/signup",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "formBottom": 560.125,
+      "heading": "Reset your password",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1280,
+        720
+      ],
+      "url": "/forgot-password",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "light",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Carry the unknown.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        305,
+        3523
+      ],
+      "url": "/shop",
+      "viewport": [
+        320,
+        740
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Paradise Lost Tee",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        305,
+        2881
+      ],
+      "url": "/shop/paradise-lost-tee",
+      "viewport": [
+        320,
+        740
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "We go where the road gets quiet.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        305,
+        5395
+      ],
+      "url": "/about",
+      "viewport": [
+        320,
+        740
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Keep the line open.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        305,
+        3033
+      ],
+      "url": "/contact",
+      "viewport": [
+        320,
+        740
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "The cart opens soon.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        305,
+        2295
+      ],
+      "url": "/cart",
+      "viewport": [
+        320,
+        740
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Checkout opens soon.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        305,
+        2331
+      ],
+      "url": "/checkout",
+      "viewport": [
+        320,
+        740
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Terms of Service",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        305,
+        5786
+      ],
+      "url": "/terms",
+      "viewport": [
+        320,
+        740
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Privacy Policy",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        305,
+        7830
+      ],
+      "url": "/privacy",
+      "viewport": [
+        320,
+        740
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "formBottom": 773.453125,
+      "heading": "Welcome back",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        305,
+        797
+      ],
+      "url": "/login",
+      "viewport": [
+        320,
+        740
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "formBottom": 946.5625,
+      "heading": "Create your account",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        305,
+        957
+      ],
+      "url": "/signup",
+      "viewport": [
+        320,
+        740
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "formBottom": 545.71875,
+      "heading": "Reset your password",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        320,
+        740
+      ],
+      "url": "/forgot-password",
+      "viewport": [
+        320,
+        740
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Carry the unknown.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        3605
+      ],
+      "url": "/shop",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Paradise Lost Tee",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        2831
+      ],
+      "url": "/shop/paradise-lost-tee",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "We go where the road gets quiet.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        4934
+      ],
+      "url": "/about",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Keep the line open.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        2865
+      ],
+      "url": "/contact",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "The cart opens soon.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        2181
+      ],
+      "url": "/cart",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Checkout opens soon.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        2181
+      ],
+      "url": "/checkout",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Terms of Service",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        5233
+      ],
+      "url": "/terms",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Privacy Policy",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        6812
+      ],
+      "url": "/privacy",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "formBottom": 747.953125,
+      "heading": "Welcome back",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        390,
+        844
+      ],
+      "url": "/login",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "formBottom": 769,
+      "heading": "Create your account",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        390,
+        844
+      ],
+      "url": "/signup",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "formBottom": 545.71875,
+      "heading": "Reset your password",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        390,
+        844
+      ],
+      "url": "/forgot-password",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Carry the unknown.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        753,
+        4205
+      ],
+      "url": "/shop",
+      "viewport": [
+        768,
+        1024
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Paradise Lost Tee",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        753,
+        1721
+      ],
+      "url": "/shop/paradise-lost-tee",
+      "viewport": [
+        768,
+        1024
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "We go where the road gets quiet.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        753,
+        3687
+      ],
+      "url": "/about",
+      "viewport": [
+        768,
+        1024
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Keep the line open.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        753,
+        2325
+      ],
+      "url": "/contact",
+      "viewport": [
+        768,
+        1024
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "The cart opens soon.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        753,
+        1736
+      ],
+      "url": "/cart",
+      "viewport": [
+        768,
+        1024
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Checkout opens soon.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        753,
+        1736
+      ],
+      "url": "/checkout",
+      "viewport": [
+        768,
+        1024
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Terms of Service",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        753,
+        4051
+      ],
+      "url": "/terms",
+      "viewport": [
+        768,
+        1024
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Privacy Policy",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        753,
+        5071
+      ],
+      "url": "/privacy",
+      "viewport": [
+        768,
+        1024
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "formBottom": 833.671875,
+      "heading": "Welcome back",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        768,
+        1024
+      ],
+      "url": "/login",
+      "viewport": [
+        768,
+        1024
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "formBottom": 853.96875,
+      "heading": "Create your account",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        768,
+        1024
+      ],
+      "url": "/signup",
+      "viewport": [
+        768,
+        1024
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "formBottom": 715.75,
+      "heading": "Reset your password",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        768,
+        1024
+      ],
+      "url": "/forgot-password",
+      "viewport": [
+        768,
+        1024
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Carry the unknown.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        2577
+      ],
+      "url": "/shop",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Paradise Lost Tee",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        1391
+      ],
+      "url": "/shop/paradise-lost-tee",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "We go where the road gets quiet.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        3554
+      ],
+      "url": "/about",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Keep the line open.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        1584
+      ],
+      "url": "/contact",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "The cart opens soon.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        1336
+      ],
+      "url": "/cart",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Checkout opens soon.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        1336
+      ],
+      "url": "/checkout",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Terms of Service",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        3484
+      ],
+      "url": "/terms",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "Privacy Policy",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        4462
+      ],
+      "url": "/privacy",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "formBottom": 666.046875,
+      "heading": "Welcome back",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1280,
+        720
+      ],
+      "url": "/login",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "formBottom": 673.84375,
+      "heading": "Create your account",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1280,
+        720
+      ],
+      "url": "/signup",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "formBottom": 560.125,
+      "heading": "Reset your password",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1280,
+        720
+      ],
+      "url": "/forgot-password",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "dark",
+      "lang": "en"
+    },
+    {
+      "clipped": [],
+      "heading": "නොදන්නා අභිරහස රැගෙන යන්න.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        3809
+      ],
+      "url": "/shop",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "dark",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "heading": "Paradise Lost Tee",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        3073
+      ],
+      "url": "/shop/paradise-lost-tee",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "dark",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "heading": "මඟ නිහඬ වන තැනට අපි යන්නෙමු.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        5445
+      ],
+      "url": "/about",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "dark",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "heading": "සබඳතාව විවෘතව තබන්න.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        3209
+      ],
+      "url": "/contact",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "dark",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "heading": "සේවා නියම",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        6347
+      ],
+      "url": "/terms",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "dark",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "heading": "රහස්‍යතා ප්‍රතිපත්තිය",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        8573
+      ],
+      "url": "/privacy",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "dark",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "formBottom": 812.9375,
+      "heading": "නැවත සාදරයෙන් පිළිගනිමු",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        390,
+        844
+      ],
+      "url": "/login",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "dark",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "formBottom": 803.859375,
+      "heading": "ඔබේ ගිණුම සාදන්න",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        390,
+        844
+      ],
+      "url": "/signup",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "dark",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "formBottom": 575.015625,
+      "heading": "මුරපදය යළි සකසන්න",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        390,
+        844
+      ],
+      "url": "/forgot-password",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "dark",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "heading": "කරත්තය ළඟදීම විවෘත වේ.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        2333
+      ],
+      "url": "/cart",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "dark",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "heading": "ගෙවීම් ළඟදීම විවෘත වේ.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        2333
+      ],
+      "url": "/checkout",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "dark",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "heading": "නොදන්නා අභිරහස රැගෙන යන්න.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        2634
+      ],
+      "url": "/shop",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "dark",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "heading": "Paradise Lost Tee",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        1541
+      ],
+      "url": "/shop/paradise-lost-tee",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "dark",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "heading": "මඟ නිහඬ වන තැනට අපි යන්නෙමු.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        3776
+      ],
+      "url": "/about",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "dark",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "heading": "සබඳතාව විවෘතව තබන්න.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        1721
+      ],
+      "url": "/contact",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "dark",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "heading": "සේවා නියම",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        3927
+      ],
+      "url": "/terms",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "dark",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "heading": "රහස්‍යතා ප්‍රතිපත්තිය",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        4973
+      ],
+      "url": "/privacy",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "dark",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "formBottom": 677.390625,
+      "heading": "නැවත සාදරයෙන් පිළිගනිමු",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1280,
+        720
+      ],
+      "url": "/login",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "dark",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "formBottom": 684.796875,
+      "heading": "ඔබේ ගිණුම සාදන්න",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1280,
+        720
+      ],
+      "url": "/signup",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "dark",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "formBottom": 560.46875,
+      "heading": "මුරපදය යළි සකසන්න",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1280,
+        720
+      ],
+      "url": "/forgot-password",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "dark",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "heading": "කරත්තය ළඟදීම විවෘත වේ.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        1407
+      ],
+      "url": "/cart",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "dark",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "heading": "ගෙවීම් ළඟදීම විවෘත වේ.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        1407
+      ],
+      "url": "/checkout",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "dark",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "heading": "නොදන්නා අභිරහස රැගෙන යන්න.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        3809
+      ],
+      "url": "/shop",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "light",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "heading": "Paradise Lost Tee",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        3073
+      ],
+      "url": "/shop/paradise-lost-tee",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "light",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "heading": "මඟ නිහඬ වන තැනට අපි යන්නෙමු.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        5445
+      ],
+      "url": "/about",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "light",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "heading": "සබඳතාව විවෘතව තබන්න.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        3209
+      ],
+      "url": "/contact",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "light",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "heading": "සේවා නියම",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        6347
+      ],
+      "url": "/terms",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "light",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "heading": "රහස්‍යතා ප්‍රතිපත්තිය",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        8573
+      ],
+      "url": "/privacy",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "light",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "formBottom": 812.9375,
+      "heading": "නැවත සාදරයෙන් පිළිගනිමු",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        390,
+        844
+      ],
+      "url": "/login",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "light",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "formBottom": 803.859375,
+      "heading": "ඔබේ ගිණුම සාදන්න",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        390,
+        844
+      ],
+      "url": "/signup",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "light",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "formBottom": 575.015625,
+      "heading": "මුරපදය යළි සකසන්න",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        390,
+        844
+      ],
+      "url": "/forgot-password",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "light",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "heading": "කරත්තය ළඟදීම විවෘත වේ.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        2333
+      ],
+      "url": "/cart",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "light",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "heading": "ගෙවීම් ළඟදීම විවෘත වේ.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        2333
+      ],
+      "url": "/checkout",
+      "viewport": [
+        390,
+        844
+      ],
+      "theme": "light",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "heading": "නොදන්නා අභිරහස රැගෙන යන්න.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        2634
+      ],
+      "url": "/shop",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "light",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "heading": "Paradise Lost Tee",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        1541
+      ],
+      "url": "/shop/paradise-lost-tee",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "light",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "heading": "මඟ නිහඬ වන තැනට අපි යන්නෙමු.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        3776
+      ],
+      "url": "/about",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "light",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "heading": "සබඳතාව විවෘතව තබන්න.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        1721
+      ],
+      "url": "/contact",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "light",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "heading": "සේවා නියම",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        3927
+      ],
+      "url": "/terms",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "light",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "heading": "රහස්‍යතා ප්‍රතිපත්තිය",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        4973
+      ],
+      "url": "/privacy",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "light",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "formBottom": 677.390625,
+      "heading": "නැවත සාදරයෙන් පිළිගනිමු",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1280,
+        720
+      ],
+      "url": "/login",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "light",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "formBottom": 684.796875,
+      "heading": "ඔබේ ගිණුම සාදන්න",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1280,
+        720
+      ],
+      "url": "/signup",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "light",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "formBottom": 560.46875,
+      "heading": "මුරපදය යළි සකසන්න",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1280,
+        720
+      ],
+      "url": "/forgot-password",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "light",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "heading": "කරත්තය ළඟදීම විවෘත වේ.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        1407
+      ],
+      "url": "/cart",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "light",
+      "lang": "si"
+    },
+    {
+      "clipped": [],
+      "heading": "ගෙවීම් ළඟදීම විවෘත වේ.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        1407
+      ],
+      "url": "/checkout",
+      "viewport": [
+        1280,
+        720
+      ],
+      "theme": "light",
+      "lang": "si"
+    }
+  ],
+  "home": [
+    {
+      "clipped": [],
+      "heading": "Made to stand apart.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        305,
+        8007
+      ],
+      "url": "/",
+      "viewport": [
+        320,
+        740
+      ]
+    },
+    {
+      "clipped": [],
+      "heading": "Made to stand apart.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        375,
+        8474
+      ],
+      "url": "/",
+      "viewport": [
+        390,
+        844
+      ]
+    },
+    {
+      "clipped": [],
+      "heading": "Made to stand apart.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        753,
+        7250
+      ],
+      "url": "/",
+      "viewport": [
+        768,
+        1024
+      ]
+    },
+    {
+      "clipped": [],
+      "heading": "Made to stand apart.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1009,
+        6242
+      ],
+      "url": "/",
+      "viewport": [
+        1024,
+        768
+      ]
+    },
+    {
+      "clipped": [],
+      "heading": "Made to stand apart.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1265,
+        6119
+      ],
+      "url": "/",
+      "viewport": [
+        1280,
+        720
+      ]
+    },
+    {
+      "clipped": [],
+      "heading": "Made to stand apart.",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1905,
+        7246
+      ],
+      "url": "/",
+      "viewport": [
+        1920,
+        1080
+      ]
+    }
+  ],
+  "auth": [
+    {
+      "clipped": [],
+      "formBottom": 773.453125,
+      "heading": "Welcome back",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        360,
+        800
+      ],
+      "url": "/login",
+      "viewport": [
+        360,
+        800
+      ]
+    },
+    {
+      "clipped": [],
+      "formBottom": 788.59375,
+      "heading": "Create your account",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        360,
+        800
+      ],
+      "url": "/signup",
+      "viewport": [
+        360,
+        800
+      ]
+    },
+    {
+      "clipped": [],
+      "formBottom": 666.046875,
+      "heading": "Welcome back",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1280,
+        720
+      ],
+      "url": "/login",
+      "viewport": [
+        1280,
+        720
+      ]
+    },
+    {
+      "clipped": [],
+      "formBottom": 673.84375,
+      "heading": "Create your account",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1280,
+        720
+      ],
+      "url": "/signup",
+      "viewport": [
+        1280,
+        720
+      ]
+    },
+    {
+      "clipped": [],
+      "formBottom": 628.09375,
+      "heading": "Welcome back",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1280,
+        640
+      ],
+      "url": "/login",
+      "viewport": [
+        1280,
+        640
+      ]
+    },
+    {
+      "clipped": [],
+      "formBottom": 630.765625,
+      "heading": "Create your account",
+      "outside": [],
+      "overflow": 0,
+      "page": [
+        1280,
+        640
+      ],
+      "url": "/signup",
+      "viewport": [
+        1280,
+        640
+      ]
+    }
+  ],
+  "popups": [
+    {
+      "kind": "header currency",
+      "left": 16,
+      "limit": 305,
+      "right": 176,
+      "viewport": 320
+    },
+    {
+      "kind": "header currency",
+      "left": 16,
+      "limit": 375,
+      "right": 176,
+      "viewport": 390
+    },
+    {
+      "kind": "header currency",
+      "left": 495.25,
+      "limit": 753,
+      "right": 655.25,
+      "viewport": 768
+    },
+    {
+      "kind": "header currency",
+      "left": 939.0625,
+      "limit": 1265,
+      "right": 1099.0625,
+      "viewport": 1280
+    },
+    {
+      "kind": "footer language",
+      "left": 16,
+      "limit": 305,
+      "right": 176,
+      "viewport": 320
+    }
+  ],
+  "passwordToggle": {
+    "shown": "text",
+    "hidden": "password"
+  }
+}

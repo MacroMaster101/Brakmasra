@@ -8,17 +8,28 @@ import { AuthShell } from "@/components/auth-shell";
 import { useLanguage } from "@/components/language-provider";
 import type { TextKey } from "@/lib/i18n";
 
-export function AuthComingSoon() {
+export function AuthComingSoon({ compact = false }: { compact?: boolean }) {
   const { t } = useLanguage();
 
   return (
-    <AuthShell titleKey="authSoonTitle" descriptionKey="authSoonDesc">
+    <AuthShell
+      compact={compact}
+      titleKey="authSoonTitle"
+      descriptionKey="authSoonDesc"
+    >
       <div className="auth-coming-soon">
-        <div className="launch-status"><LockKeyhole aria-hidden="true" /><span>{t.comingSoonClosedStatus}</span></div>
+        <div className="launch-status">
+          <LockKeyhole aria-hidden="true" />
+          <span>{t.comingSoonClosedStatus}</span>
+        </div>
         <p>{t.comingSoonNoAccountNeeded}</p>
         <div className="launch-actions">
-          <Link className="button button-primary" href="/shop">{t.homeExploreBtn} <ArrowRight /></Link>
-          <Link className="button button-secondary" href="/#drop-alerts">{t.homeNewsletterBtn} <BellRing /></Link>
+          <Link className="button button-primary" href="/shop">
+            {t.homeExploreBtn} <ArrowRight />
+          </Link>
+          <Link className="button button-secondary" href="/#drop-alerts">
+            {t.homeNewsletterBtn} <BellRing />
+          </Link>
         </div>
       </div>
     </AuthShell>
@@ -29,7 +40,10 @@ type StoreComingSoonProps = {
   area: "account" | "cart" | "checkout";
 };
 
-const storeCopy: Record<StoreComingSoonProps["area"], { eyebrow: TextKey; title: TextKey; description: TextKey }> = {
+const storeCopy: Record<
+  StoreComingSoonProps["area"],
+  { eyebrow: TextKey; title: TextKey; description: TextKey }
+> = {
   account: {
     eyebrow: "comingSoonAccountEyebrow",
     title: "comingSoonAccountTitle",
@@ -60,14 +74,25 @@ export function StoreComingSoon({ area }: StoreComingSoonProps) {
           <h1>{t[copy.title]}</h1>
           <p>{t[copy.description]}</p>
           <div className="launch-actions">
-            <Link className="button button-primary" href="/shop">{t.homeExploreBtn} <ArrowRight /></Link>
-            <Link className="button button-secondary" href="/#drop-alerts">{t.homeNewsletterBtn} <BellRing /></Link>
+            <Link className="button button-primary" href="/shop">
+              {t.homeExploreBtn} <ArrowRight />
+            </Link>
+            <Link className="button button-secondary" href="/#drop-alerts">
+              {t.homeNewsletterBtn} <BellRing />
+            </Link>
           </div>
-          <p className="launch-footnote"><Icon aria-hidden="true" /> {t.comingSoonFootnote}</p>
+          <p className="launch-footnote">
+            <Icon aria-hidden="true" /> {t.comingSoonFootnote}
+          </p>
         </div>
 
         <div className="launch-visual" aria-hidden="true">
-          <Image src="/images/brakmasra-hero.png" alt="" fill sizes="(max-width: 900px) 100vw, 48vw" />
+          <Image
+            src="/images/brakmasra-hero.png"
+            alt=""
+            fill
+            sizes="(max-width: 900px) 100vw, 48vw"
+          />
           <div className="launch-visual-scrim" />
           <div className="launch-visual-mark">
             <Image src="/images/logo.png" alt="" width={104} height={104} />
@@ -91,8 +116,12 @@ export function ProductComingSoon() {
         <p>{t.productNotOpenDesc}</p>
       </div>
       <div className="launch-actions">
-        <Link className="button button-primary" href="/#drop-alerts">{t.homeNewsletterBtn} <BellRing /></Link>
-        <Link className="button button-secondary" href="/shop">{t.productBackToCollection}</Link>
+        <Link className="button button-primary" href="/#drop-alerts">
+          {t.homeNewsletterBtn} <BellRing />
+        </Link>
+        <Link className="button button-secondary" href="/shop">
+          {t.productBackToCollection}
+        </Link>
       </div>
     </div>
   );

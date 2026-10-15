@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { AuthShell } from "@/components/auth-shell";
 
 import { useLanguage } from "@/components/language-provider";
 import type { TextKey } from "@/lib/i18n";
@@ -166,51 +167,46 @@ export function CheckoutLoadingState({ embedded = false }: { embedded?: boolean 
   );
 }
 
-export function AuthLoadingState() {
+export function AuthLoadingState({
+  compact = false,
+}: { compact?: boolean } = {}) {
   return (
-    <LoadingStatus className="auth-page loading-auth" label="loadingAuth">
-      <div className="auth-shell">
-        <div className="auth-art">
-          <Image src="/images/auth-manor.png" alt="" fill sizes="(max-width: 767px) 100vw, 48vw" />
-          <div className="auth-art-scrim" />
-          <div className="auth-art-copy loading-auth-art-copy"><Line size="short" /><div className="loading-block loading-auth-art-title" /><Line size="long" /></div>
+    <AuthShell compact={compact}>
+      <LoadingStatus className="loading-auth-panel" label="loadingAuth">
+        <div className="loading-block loading-auth-title" />
+        <div className="loading-copy-lines">
+          <Line size="full" />
+          <Line size="medium" />
         </div>
-        <div className="auth-panel">
-          <div className="auth-panel-inner loading-auth-panel">
-            <div className="loading-block loading-auth-title" />
-            <div className="loading-copy-lines"><Line size="full" /><Line size="medium" /></div>
-            <div className="loading-block loading-form-control" />
-            <div className="loading-auth-divider"><span /><span /></div>
-            <div className="loading-block loading-field" />
-            <div className="loading-block loading-field" />
-            <div className="loading-block loading-form-control" />
-          </div>
+        <div className="loading-block loading-form-control" />
+        <div className="loading-auth-divider">
+          <span />
+          <span />
         </div>
-      </div>
-    </LoadingStatus>
+        <div className="loading-block loading-field" />
+        <div className="loading-block loading-field" />
+        <div className="loading-block loading-form-control" />
+      </LoadingStatus>
+    </AuthShell>
   );
 }
 
-export function AuthComingSoonLoadingState() {
+export function AuthComingSoonLoadingState({
+  compact = false,
+}: { compact?: boolean } = {}) {
   return (
-    <LoadingStatus className="auth-page loading-auth" label="loadingMemberAccess">
-      <div className="auth-shell">
-        <div className="auth-art">
-          <Image src="/images/auth-manor.png" alt="" fill sizes="(max-width: 767px) 100vw, 48vw" />
-          <div className="auth-art-scrim" />
-          <div className="auth-art-copy loading-auth-art-copy"><Line size="short" /><div className="loading-block loading-auth-art-title" /><Line size="long" /></div>
+    <AuthShell compact={compact}>
+      <LoadingStatus className="loading-auth-panel" label="loadingMemberAccess">
+        <div className="loading-block loading-auth-title" />
+        <div className="loading-copy-lines">
+          <Line size="full" />
+          <Line size="medium" />
         </div>
-        <div className="auth-panel">
-          <div className="auth-panel-inner loading-auth-panel">
-            <div className="loading-block loading-auth-title" />
-            <div className="loading-copy-lines"><Line size="full" /><Line size="medium" /></div>
-            <div className="loading-block loading-product-note" />
-            <div className="loading-block loading-form-control" />
-            <div className="loading-block loading-form-control" />
-          </div>
-        </div>
-      </div>
-    </LoadingStatus>
+        <div className="loading-block loading-product-note" />
+        <div className="loading-block loading-form-control" />
+        <div className="loading-block loading-form-control" />
+      </LoadingStatus>
+    </AuthShell>
   );
 }
 

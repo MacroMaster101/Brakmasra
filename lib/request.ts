@@ -80,7 +80,14 @@ export function sameOrigin(request: NextRequest) {
   const origin = request.headers.get("origin");
   if (!origin) return false;
   try {
-    return new URL(origin).origin === request.nextUrl.origin;
+    // NextURL normalizes loopback addresses (127.0.0.1 becomes localhost).
+    // Compare with the actual HTTP Host so a valid browser request still
+    // matches. Forwarded host/protocol headers are deliberately not trusted.
+    const host = request.headers.get("host");
+    if (host && !/^[a-z0-9.[\]:-]+$/i.test(host)) return false;
+    const target = host ? new URL(`${request.nextUrl.protocol}//${host}`) : request.nextUrl;
+    const supplied = new URL(origin);
+    return supplied.origin === origin && supplied.origin === target.origin;
   } catch {
     return false;
   }

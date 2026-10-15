@@ -1,45 +1,32 @@
 "use client";
 
+import { Globe } from "lucide-react";
 import { useLanguage } from "@/components/language-provider";
+import { PreferenceMenu } from "@/components/preference-menu";
+import { parseLanguage } from "@/lib/i18n";
 
 export function LanguageSwitcher({
   className = "",
   showLabels = false,
+  placement = "down",
 }: {
   className?: string;
   showLabels?: boolean;
+  placement?: "down" | "up";
 }) {
   const { lang, setLang, t } = useLanguage();
-
   return (
-    <div
-      className={`lang-switcher ${className}`}
-      role="group"
-      aria-label={t.languageSelection}
-    >
-      <button
-        type="button"
-        className={`lang-btn ${lang === "en" ? "is-active" : ""}`}
-        onClick={() => setLang("en")}
-        aria-pressed={lang === "en"}
-        lang="en"
-        title="Switch to English"
-      >
-        <span>{showLabels ? "English" : "EN"}</span>
-      </button>
-      <span className="lang-divider" aria-hidden="true">
-        /
-      </span>
-      <button
-        type="button"
-        className={`lang-btn ${lang === "si" ? "is-active" : ""}`}
-        onClick={() => setLang("si")}
-        aria-pressed={lang === "si"}
-        lang="si"
-        title="සිංහල භාෂාවට මාරු වන්න"
-      >
-        <span>{showLabels ? "සිංහල" : "සිං"}</span>
-      </button>
-    </div>
+    <PreferenceMenu
+      className={`language-select ${className}`}
+      label={t.languageSelection}
+      value={lang}
+      options={[
+        { value: "en", label: "English" },
+        { value: "si", label: "සිංහල" },
+      ]}
+      onChange={(value) => setLang(parseLanguage(value))}
+      icon={showLabels ? <Globe aria-hidden="true" /> : undefined}
+      placement={placement}
+    />
   );
 }

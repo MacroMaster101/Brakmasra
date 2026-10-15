@@ -16,8 +16,8 @@ export function searchProducts(query: string, list: Product[] = catalog): Produc
   );
 }
 
-/** The home page shows at most this many products: one large card and five smaller ones. */
-export const HOME_PRODUCT_LIMIT = 6;
+/** The home page shows at most this many products: two full rows of the four-column grid. */
+export const HOME_PRODUCT_LIMIT = 8;
 
 /** Products picked for the home page, in shop order; the first ones in the shop when none are picked. */
 export function homeProducts(list: Product[]): Product[] {

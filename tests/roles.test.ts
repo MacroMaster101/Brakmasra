@@ -12,6 +12,9 @@ describe("member roles", () => {
     expect(parseRole("editor")).toBeNull();
     expect(parseRole("WEB_DEV")).toBeNull();
     expect(parseRole(undefined)).toBeNull();
+    expect(parseRole("constructor")).toBeNull();
+    expect(parseRole("__proto__")).toBeNull();
+    expect(parseRole("toString")).toBeNull();
   });
 
   it("ranks Web Dev > Owner > Staff > Supporter > member", () => {

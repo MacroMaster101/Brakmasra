@@ -36,11 +36,11 @@ Welcome to the **BRAKMASRA** source repository! 🚀 This is a high-performance,
 
 ## 🛠️ Local Development
 
-Get up and running in seconds. Requirements: **Node.js 20.9+** & **npm**.
+Requirements: **Node.js 24 LTS** (see `.nvmrc`) and **npm**.
 
 ```bash
 # 1. Install dependencies
-npm install
+npm ci
 
 # 2. Setup your local environment
 copy .env.example .env
@@ -102,11 +102,14 @@ npm run db:studio
 ## 🚀 Deployment Checklist
 
 Before going live on **Vercel**, ensure you have:
-1. [x] Set the exact `NEXT_PUBLIC_SITE_URL`.
-2. [x] Set `BRAKMASRA_LAUNCH_MODE=on` for the hype phase.
-3. [x] Added all Supabase variables in your Vercel settings so contact & newsletter forms work.
-4. [x] Pushed all migrations to your live Supabase database.
-5. [x] Verified all routes (`/`, `/shop`, `/login`, etc.) are behaving securely.
+1. [ ] Set the exact HTTPS `NEXT_PUBLIC_SITE_URL` and use Node.js 24 LTS.
+2. [ ] Keep `BRAKMASRA_LAUNCH_MODE=on` until payments, stock, and policies are ready.
+3. [ ] Add server-only Supabase secrets in Vercel, never in GitHub source. Set `BRAKMASRA_AUTH_MODE=on` only when member sign-in is ready.
+4. [ ] Apply and verify the Supabase migrations, RLS, email templates, and exact allowed callback URLs in the production project.
+5. [ ] Verify real email confirmation and the six-digit password-recovery flow. Recovery grants require `RECOVERY_SIGNING_SECRET` (32+ random characters) or the existing server-only Supabase secret.
+6. [ ] Verify production routes, security headers, and access controls after deployment.
+
+These are deployment checks to perform, not a claim that the remote project has already been configured. See the [security review](docs/security-review-2026-10-15.md) for local checks and outstanding development-tool advisories.
 
 ---
 
@@ -119,6 +122,7 @@ npm run lint       # ESLint check
 npm run typecheck  # TypeScript validation
 npm test           # Vitest unit tests
 npm run build      # Next.js production build
+npm audit --omit=dev --audit-level=high  # Production dependency security gate
 ```
 
 ---

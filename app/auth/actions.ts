@@ -14,6 +14,7 @@ import { parsePhoneInput } from "@/lib/phone-input";
 import { rateLimit } from "@/lib/rate-limit";
 import { clientAddress } from "@/lib/request";
 import { RESET_CODE_LENGTH } from "@/lib/reset-code";
+import { clearPasswordRecovery, grantPasswordRecovery, hasPasswordRecovery } from "@/lib/recovery-session";
 import { createAuthClient } from "@/lib/supabase-auth";
 
 export type AuthActionState = {
@@ -302,6 +303,10 @@ export async function verifyResetCodeAction(
       return { status: "error", message: "Password reset is unavailable right now. Please try again." };
     }
     if (error) return { status: "error", message: "That code is incorrect or has expired." };
+    const { data: verified } = await supabase.auth.getClaims();
+    if (!verified?.claims || !(await grantPasswordRecovery(verified.claims))) {
+      return { status: "error", message: "Password reset is unavailable right now. Please try again." };
+    }
   } catch {
     return { status: "error", message: "Password reset is unavailable right now. Please try again." };
   }
@@ -332,7 +337,9 @@ export async function resetPasswordAction(
   try {
     const supabase = await createAuthClient();
     const { data } = await supabase.auth.getClaims();
-    if (!data?.claims) return { status: "error", message: "Request a new reset code and try again." };
+    if (!data?.claims || !(await hasPasswordRecovery(data.claims))) {
+      return { status: "error", message: "Request a new reset code and try again." };
+    }
 
     const { error } = await supabase.auth.updateUser({ password: parsed.data.password });
     if (isAuthWeakPasswordError(error)) return { status: "error", message: "Use upper and lowercase letters, a number, and a symbol." };
@@ -340,6 +347,7 @@ export async function resetPasswordAction(
       return { status: "error", message: "Choose a password you haven't used for this account." };
     }
     if (error) return { status: "error", message: "Your password could not be updated. Request a new reset code and try again." };
+    await clearPasswordRecovery();
   } catch {
     return { status: "error", message: "Your password could not be updated. Please try again." };
   }
@@ -354,6 +362,7 @@ export async function logoutAction() {
 
   const supabase = await createAuthClient();
   await supabase.auth.signOut();
+  await clearPasswordRecovery();
   revalidatePath("/", "layout");
   redirect("/login?signedOut=1");
 }

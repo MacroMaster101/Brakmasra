@@ -1,0 +1,29 @@
+[
+  {
+    "name": "campaign-wide-v3",
+    "referenced_image_paths": [
+      "C:/Users/Kavisha Lakshan/Documents/GitHub/BRAKMASRA/public/images/campaign-wide-v2.webp"
+    ],
+    "prompt": "Edit target: this fashion campaign photograph. Correct only the composition and framing. Keep the people, faces, exact t-shirts, all artwork, colors and studio lighting unchanged. The output must remain a wide 16:9 landscape hero with no border or frame. Make the uppermost 25 PERCENT of the ENTIRE image completely empty seamless studio background, including above the models on the right. Move and scale the models down so the first pixel of any hair begins BELOW the one-quarter-height line. The models should look photographed from farther away, less zoomed in; their heads, shoulders, tees and upper trousers must remain visible. Keep subjects on the right and left half completely empty for copy. This clear top quarter is essential for overlay navigation and must not contain a face or hair. Extend the same studio background smoothly across every edge. No outline, no panel, no additional text or objects.",
+    "source": "C:\\Users\\Kavisha Lakshan\\.codex\\generated_images\\01a13aed-e74f-7ce0-a049-8d5ca9de03ad\\exec-f4eba553-ab45-45d5-ba6f-399ccabdab5d.png",
+    "output": "C:/Users/Kavisha Lakshan/Documents/GitHub/BRAKMASRA/public/images/campaign-wide-v3.webp"
+  },
+  {
+    "name": "campaign-black-v3",
+    "referenced_image_paths": [
+      "C:/Users/Kavisha Lakshan/Documents/GitHub/BRAKMASRA/public/images/campaign-black-v2.webp"
+    ],
+    "prompt": "Edit target: this fashion campaign photograph. Correct only the composition and framing. Keep the people, faces, exact t-shirts, all artwork, colors and studio lighting unchanged. The output must remain a wide 16:9 landscape hero with no border or frame. Make the uppermost 25 PERCENT of the ENTIRE image completely empty seamless studio background, including above the models on the right. Move and scale the models down so the first pixel of any hair begins BELOW the one-quarter-height line. The models should look photographed from farther away, less zoomed in; their heads, shoulders, tees and upper trousers must remain visible. Keep subjects on the right and left half completely empty for copy. This clear top quarter is essential for overlay navigation and must not contain a face or hair. Extend the same studio background smoothly across every edge. No outline, no panel, no additional text or objects.",
+    "source": "C:\\Users\\Kavisha Lakshan\\.codex\\generated_images\\01a13aed-e74f-7ce0-a049-8d5ca9de03ad\\exec-27b1ff81-b7df-4ce4-9fa9-d24e041e741c.png",
+    "output": "C:/Users/Kavisha Lakshan/Documents/GitHub/BRAKMASRA/public/images/campaign-black-v3.webp"
+  },
+  {
+    "name": "campaign-white-v3",
+    "referenced_image_paths": [
+      "C:/Users/Kavisha Lakshan/Documents/GitHub/BRAKMASRA/public/images/campaign-white-v2.webp"
+    ],
+    "prompt": "Edit target: this fashion campaign photograph. Correct only the composition and framing. Keep the people, faces, exact t-shirts, all artwork, colors and studio lighting unchanged. The output must remain a wide 16:9 landscape hero with no border or frame. Make the uppermost 25 PERCENT of the ENTIRE image completely empty seamless studio background, including above the models on the right. Move and scale the models down so the first pixel of any hair begins BELOW the one-quarter-height line. The models should look photographed from farther away, less zoomed in; their heads, shoulders, tees and upper trousers must remain visible. Keep subjects on the right and left half completely empty for copy. This clear top quarter is essential for overlay navigation and must not contain a face or hair. Extend the same studio background smoothly across every edge. No outline, no panel, no additional text or objects.",
+    "source": "C:\\Users\\Kavisha Lakshan\\.codex\\generated_images\\01a13aed-e74f-7ce0-a049-8d5ca9de03ad\\exec-a2da7273-c397-4996-9b0a-df0ffd2721b6.png",
+    "output": "C:/Users/Kavisha Lakshan/Documents/GitHub/BRAKMASRA/public/images/campaign-white-v3.webp"
+  }
+]

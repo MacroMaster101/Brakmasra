@@ -18,7 +18,7 @@ const LEGACY_ROLES: Record<string, MemberRole> = { admin: "staff", support: "sup
 export function parseRole(value: unknown): MemberRole | null {
   if (typeof value !== "string") return null;
   if ((MEMBER_ROLES as readonly string[]).includes(value)) return value as MemberRole;
-  return LEGACY_ROLES[value] ?? null;
+  return Object.hasOwn(LEGACY_ROLES, value) ? LEGACY_ROLES[value] : null;
 }
 
 export function hasRoleAtLeast(role: MemberRole | null, minimum: MemberRole) {

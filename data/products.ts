@@ -40,7 +40,7 @@ function tee({ color, siDescription, ...details }: TeeDetails): Product {
     ...details,
     price: 690000,
     currency: "LKR",
-    images: [`/images/products/${details.slug}.webp`],
+    images: [`/images/models/${details.slug.replace(/-tee$/, "")}.webp`, `/images/products/${details.slug}.webp`],
     sizes: ["S", "M", "L", "XL", "2XL"],
     colors: [color],
     fabric: "Cotton jersey",

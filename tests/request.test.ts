@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it } from "vitest";
+import { NextRequest } from "next/server";
 
-import { clientAddress, readJsonBody, trustedProxyProvider } from "@/lib/request";
+import { clientAddress, readJsonBody, sameOrigin, trustedProxyProvider } from "@/lib/request";
 
 const originalEnvironment = { ...process.env };
 
@@ -9,6 +10,27 @@ afterEach(() => {
 });
 
 describe("request security helpers", () => {
+  it("accepts the actual browser origin when NextURL normalizes a loopback host", () => {
+    const request = new NextRequest("http://localhost:3000/api/contact", {
+      headers: { host: "127.0.0.1:3000", origin: "http://127.0.0.1:3000" },
+    });
+    expect(sameOrigin(request)).toBe(true);
+    expect(sameOrigin(new NextRequest("https://store.example/api", {
+      headers: { host: "store.example", origin: "https://store.example" },
+    }))).toBe(true);
+  });
+
+  it("rejects cross-site, malformed, missing, and forged forwarded origins", () => {
+    for (const origin of ["https://evil.example", "http://store.example", "null", "https://store.example/path", ""]) {
+      expect(sameOrigin(new NextRequest("https://store.example/api", {
+        headers: { host: "store.example", origin, "x-forwarded-host": "evil.example" },
+      }))).toBe(false);
+    }
+    expect(sameOrigin(new NextRequest("https://store.example/api", {
+      headers: { host: "store.example/evil", origin: "https://store.example" },
+    }))).toBe(false);
+  });
+
   it("normalizes a valid header from the configured proxy", () => {
     const headers = new Headers({ "x-forwarded-for": "2001:DB8::1, 10.0.0.1" });
     expect(clientAddress(headers, "generic")).toBe("2001:db8::1");

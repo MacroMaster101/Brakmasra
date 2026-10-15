@@ -5,6 +5,8 @@ import Link from "next/link";
 import { X } from "lucide-react";
 
 import { useLanguage } from "@/components/language-provider";
+import { LanguageSwitcher } from "@/components/language-switcher";
+import { ThemeToggle } from "@/components/theme-toggle";
 import type { TextKey } from "@/lib/i18n";
 
 type AuthShellProps = {
@@ -15,28 +17,45 @@ type AuthShellProps = {
   titleKey?: TextKey;
 };
 
-export function AuthShell({ children, compact = false, descriptionKey, titleKey }: AuthShellProps) {
+export function AuthShell({
+  children,
+  compact = false,
+  descriptionKey,
+  titleKey,
+}: AuthShellProps) {
   const { t } = useLanguage();
 
   return (
-    <section className="auth-page">
-      <div className={`auth-shell${compact ? " is-compact" : ""}`}>
+    <section className={`auth-page${compact ? " is-register" : ""}`}>
+      <header className="auth-topbar">
         <Link className="auth-home-link" href="/" aria-label={t.brandHomeLabel}>
-          <Image src="/images/logo.png" alt="" width={34} height={34} />
           <span>BRAKMASRA</span>
         </Link>
-        <Link className="auth-close" href="/" aria-label={t.authCloseLabel}>
-          <X aria-hidden="true" />
-        </Link>
+        <div className="auth-preferences">
+          <LanguageSwitcher />
+          <ThemeToggle />
+          <Link className="auth-close" href="/" aria-label={t.authCloseLabel}>
+            <X aria-hidden="true" />
+          </Link>
+        </div>
+      </header>
 
+      <div className={`auth-shell${compact ? " is-compact" : ""}`}>
         <div className="auth-art" aria-hidden="true">
-          <Image
-            src="/images/auth-manor.png"
-            alt=""
-            fill
-            sizes="(max-width: 767px) 100vw, 48vw"
-          />
-          <div className="auth-art-scrim" />
+          <div className="auth-art-image">
+            <Image
+              src={
+                compact
+                  ? "/images/auth/members-medusa-cutout.webp"
+                  : "/images/auth/members-paradise-cutout.webp"
+              }
+              alt=""
+              fill
+              preload
+              quality={95}
+              sizes="(max-width: 767px) 76vw, 50vw"
+            />
+          </div>
           <div className="auth-art-copy">
             <span>{t.authArtEyebrow}</span>
             <h2>{t.authArtTitle}</h2>

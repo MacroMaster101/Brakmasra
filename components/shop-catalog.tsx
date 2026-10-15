@@ -1,11 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
-import type { Product, ProductCategory } from "@/data/products";
+import Link from "next/link";
+import type { Product } from "@/data/products";
 import { searchProducts } from "@/lib/catalog";
 import { ProductCard } from "@/components/product-card";
 import { useLanguage } from "@/components/language-provider";
+import { useWishlist } from "@/lib/wishlist";
 
 export function ShopCatalog({
   products,
@@ -15,44 +18,56 @@ export function ShopCatalog({
   commerceEnabled: boolean;
 }) {
   const { t } = useLanguage();
-  const [query, setQuery] = useState("");
-  const [category, setCategory] = useState<"All" | ProductCategory>("All");
-  const matchingCategory =
-    category === "All"
-      ? products
-      : products.filter((product) => product.category === category);
-  const results = searchProducts(query, matchingCategory);
-  const categories: Array<"All" | ProductCategory> = [
-    "All",
-    "Apparel",
-    "Headwear",
-  ];
-
-  const getCategoryLabel = (cat: "All" | ProductCategory) => {
-    switch (cat) {
-      case "All":
-        return t.shopFilterAll;
-      case "Apparel":
-        return t.shopFilterApparel;
-      case "Headwear":
-        return t.shopFilterHeadwear;
-      default:
-        return cat;
-    }
-  };
-
+  const params = useSearchParams();
+  const { slugs } = useWishlist();
+  const initialQuery = params.get("q") ?? "";
+  const initialColor = params.get("color") ?? "all";
+  const [queryOverride, setQuery] = useState<{
+    initial: string;
+    value: string;
+  } | null>(null);
+  const [colorOverride, setColor] = useState<{
+    initial: string;
+    value: string;
+  } | null>(null);
+  const [sort, setSort] = useState("featured");
+  const query =
+    queryOverride?.initial === initialQuery
+      ? queryOverride.value
+      : initialQuery;
+  const color =
+    colorOverride?.initial === initialColor
+      ? colorOverride.value
+      : initialColor;
+  const savedOnly = params.get("saved") === "1";
+  const filtered = products.filter(
+    (product) =>
+      (!savedOnly || slugs.includes(product.slug)) &&
+      (color === "all" ||
+        product.colors.some((value) => value.toLowerCase().includes(color))),
+  );
+  const results = [...searchProducts(query, filtered)].sort((a, b) =>
+    sort === "name"
+      ? a.name.localeCompare(b.name)
+      : sort === "low"
+        ? a.price - b.price
+        : sort === "high"
+          ? b.price - a.price
+          : 0,
+  );
   return (
     <>
       <header className="page-hero">
         <span className="eyebrow">{t.shopHeroEyebrow}</span>
-        <h1>{t.shopHeroTitle}</h1>
-        <p>{t.shopHeroDesc}</p>
+        <h1>{savedOnly ? t.storeSaved : t.shopHeroTitle}</h1>
+        <p>{savedOnly ? t.storeEmptySavedDesc : t.shopHeroDesc}</p>
       </header>
-      <div className="catalog-note">
-        <strong>{t.shopLaunchStatus}</strong>
-        <span>{t.shopLaunchDesc}</span>
-      </div>
-
+      {!commerceEnabled && (
+        <div className="catalog-note">
+          <strong>{t.shopLaunchStatus}</strong>
+          <span>{t.shopLaunchDesc}</span>
+        </div>
+      )}
       <div className="shop-tools">
         <label className="search-field">
           <Search />
@@ -60,41 +75,75 @@ export function ShopCatalog({
           <input
             type="search"
             value={query}
-            onChange={(event) => setQuery(event.target.value)}
+            onChange={(event) =>
+              setQuery({ initial: initialQuery, value: event.target.value })
+            }
             placeholder={t.shopSearchPlaceholder}
           />
         </label>
-        <div className="category-filter" role="group" aria-label={t.shopFilterLabel}>
-          {categories.map((item) => (
+        <div
+          className="collection-tabs"
+          role="group"
+          aria-label={t.shopFilterLabel}
+        >
+          {[
+            ["all", t.storeAllTees],
+            ["black", t.storeBlackTees],
+            ["white", t.storeWhiteTees],
+          ].map(([value, label]) => (
             <button
-              key={item}
+              key={value}
               type="button"
-              aria-pressed={category === item}
-              className={category === item ? "is-active" : ""}
-              onClick={() => setCategory(item)}
+              aria-pressed={color === value}
+              onClick={() => setColor({ initial: initialColor, value })}
             >
-              {getCategoryLabel(item)}
+              {label}
             </button>
           ))}
         </div>
+        <label className="sort-select">
+          <span className="sr-only">{t.storeSort}</span>
+          <select
+            aria-label={t.storeSort}
+            value={sort}
+            onChange={(event) => setSort(event.target.value)}
+          >
+            <option value="featured">{t.storeFeatured}</option>
+            <option value="name">{t.storeName}</option>
+            {commerceEnabled && (
+              <>
+                <option value="low">{t.storePriceLow}</option>
+                <option value="high">{t.storePriceHigh}</option>
+              </>
+            )}
+          </select>
+        </label>
       </div>
       <p className="result-count" aria-live="polite">
         {t.shopResultCount(results.length)}
       </p>
       {results.length ? (
-        <div className="shop-grid">
-          {results.map((product) => (
+        <div className="product-grid">
+          {results.map((product, index) => (
             <ProductCard
               key={product.id}
               product={product}
               commerceEnabled={commerceEnabled}
+              priority={index < 4}
             />
           ))}
         </div>
       ) : (
         <div className="empty-state">
-          <h2>{t.shopNoResultsTitle(query.trim())}</h2>
-          <p>{t.shopNoResultsDesc}</p>
+          <h2>
+            {savedOnly ? t.storeEmptySaved : t.shopNoResultsTitle(query.trim())}
+          </h2>
+          <p>{savedOnly ? t.storeEmptySavedDesc : t.shopNoResultsDesc}</p>
+          {savedOnly && (
+            <Link className="button button-primary" href="/shop">
+              {t.homeExploreBtn}
+            </Link>
+          )}
         </div>
       )}
     </>

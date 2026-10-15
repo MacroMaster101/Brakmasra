@@ -1,0 +1,32 @@
+[
+  {
+    "name": "campaign-wide-4k",
+    "referenced_image_paths": [
+      "C:\\Users\\Kavisha Lakshan\\.codex\\generated_images\\01a13aed-e74f-7ce0-a049-8d5ca9de03ad\\exec-f4eba553-ab45-45d5-ba6f-399ccabdab5d.png"
+    ],
+    "prompt": "Use case: identity-preserve. Upgrade this reference fashion campaign to a crisp high-resolution 4K landscape photo, target 3840 x 2160 pixels. Preserve these exact adult models, faces, t-shirt designs, typography, artwork and poses. Correct the studio backdrop to one continuous, clean, very pale neutral gray (#f2f2f2), edge to edge, with no vertical panels or gradients or vignette or seams. Premium realistic fashion photography, detailed cotton, sharp artwork and natural detailed skin, no smoothing or blur. Composition: same people on the RIGHT half, full heads and entire t-shirts to upper thighs. Highest hair pixel around 18 percent of canvas height. Left 50 percent entirely empty for headline. Subjects a little larger than reference; preserve safe headroom. Designed for a fullscreen responsive storefront hero, no borders, no outlines, no watermark, no additional objects or text.",
+    "source": "C:\\Users\\Kavisha Lakshan\\.codex\\generated_images\\01a13aed-e74f-7ce0-a049-8d5ca9de03ad\\exec-694bc272-b46c-45b8-ad42-4e7034da27e5.png",
+    "output": "C:/Users/Kavisha Lakshan/Documents/GitHub/BRAKMASRA/public/images/campaign-wide-4k.webp",
+    "resolutionNote": "Built-in output upscaled to 3840px wide; not native 4K generation."
+  },
+  {
+    "name": "campaign-black-4k",
+    "referenced_image_paths": [
+      "C:\\Users\\Kavisha Lakshan\\.codex\\generated_images\\01a13aed-e74f-7ce0-a049-8d5ca9de03ad\\exec-27b1ff81-b7df-4ce4-9fa9-d24e041e741c.png"
+    ],
+    "prompt": "Use case: identity-preserve. Upgrade this reference fashion campaign to a crisp high-resolution 4K landscape photo, target 3840 x 2160 pixels. Preserve these exact adult models, faces, t-shirt designs, typography, artwork and poses. Correct the studio backdrop to one continuous, clean, very pale neutral gray (#f2f2f2), edge to edge, with no vertical panels or gradients or vignette or seams. Premium realistic fashion photography, detailed cotton, sharp artwork and natural detailed skin, no smoothing or blur. Composition: same people on the RIGHT half, full heads and entire t-shirts to upper thighs. Highest hair pixel around 18 percent of canvas height. Left 50 percent entirely empty for headline. Subjects a little larger than reference; preserve safe headroom. Designed for a fullscreen responsive storefront hero, no borders, no outlines, no watermark, no additional objects or text.",
+    "source": "C:\\Users\\Kavisha Lakshan\\.codex\\generated_images\\01a13aed-e74f-7ce0-a049-8d5ca9de03ad\\exec-08283042-3e0b-4405-90a9-4446bd28e02d.png",
+    "output": "C:/Users/Kavisha Lakshan/Documents/GitHub/BRAKMASRA/public/images/campaign-black-4k.webp",
+    "resolutionNote": "Built-in output upscaled to 3840px wide; not native 4K generation."
+  },
+  {
+    "name": "campaign-white-4k",
+    "referenced_image_paths": [
+      "C:\\Users\\Kavisha Lakshan\\.codex\\generated_images\\01a13aed-e74f-7ce0-a049-8d5ca9de03ad\\exec-a2da7273-c397-4996-9b0a-df0ffd2721b6.png"
+    ],
+    "prompt": "Use case: identity-preserve. Upgrade this reference fashion campaign to a crisp high-resolution 4K landscape photo, target 3840 x 2160 pixels. Preserve these exact adult models, faces, t-shirt designs, typography, artwork and poses. Correct the studio backdrop to one continuous, clean, very pale neutral gray (#f2f2f2), edge to edge, with no vertical panels or gradients or vignette or seams. Premium realistic fashion photography, detailed cotton, sharp artwork and natural detailed skin, no smoothing or blur. Composition: same people on the RIGHT half, full heads and entire t-shirts to upper thighs. Highest hair pixel around 18 percent of canvas height. Left 50 percent entirely empty for headline. Subjects a little larger than reference; preserve safe headroom. Designed for a fullscreen responsive storefront hero, no borders, no outlines, no watermark, no additional objects or text.",
+    "source": "C:\\Users\\Kavisha Lakshan\\.codex\\generated_images\\01a13aed-e74f-7ce0-a049-8d5ca9de03ad\\exec-7a9b4f4e-9738-482d-8704-5de99e0e6457.png",
+    "output": "C:/Users/Kavisha Lakshan/Documents/GitHub/BRAKMASRA/public/images/campaign-white-4k.webp",
+    "resolutionNote": "Built-in output upscaled to 3840px wide; not native 4K generation."
+  }
+]

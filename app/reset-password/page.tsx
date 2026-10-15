@@ -7,6 +7,7 @@ import { AuthComingSoon } from "@/components/coming-soon";
 import { AuthShell } from "@/components/auth-shell";
 import { authDemoMode, authEnabled } from "@/lib/features";
 import { createAuthClient } from "@/lib/supabase-auth";
+import { hasPasswordRecovery } from "@/lib/recovery-session";
 
 export const metadata: Metadata = { title: "Choose a new password", robots: { index: false, follow: false } };
 
@@ -16,7 +17,7 @@ export default async function ResetPasswordPage() {
 
   const supabase = await createAuthClient();
   const { data } = await supabase.auth.getClaims();
-  if (!data?.claims) redirect("/forgot-password");
+  if (!data?.claims || !(await hasPasswordRecovery(data.claims))) redirect("/forgot-password");
 
   return (
     <AuthShell titleKey="resetTitle" descriptionKey="resetDesc">

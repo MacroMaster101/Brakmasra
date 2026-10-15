@@ -1,0 +1,972 @@
+/* Readability across the storefront, account pages and staff tools.
+   16px inputs; 16–18px copy; 13–14px supporting text; 600–700 label/title weights.
+   Layouts grow and wrap instead of hiding text as a viewport gets narrower. */
+:root {
+  --text-secondary: #4f4f57;
+  --text-muted: #60606a;
+  --success-text: #21613d;
+  --success-surface: #eaf3ed;
+  --success-border: #a4c9b0;
+  --warning-text: #80591b;
+  --role-blue: #166076;
+  --role-purple: #614195;
+}
+:root[data-theme="dark"] {
+  --text-secondary: #c5c5cb;
+  --text-muted: #b0b0b8;
+  --success-text: #a7f3c0;
+  --success-surface: #182b20;
+  --success-border: #395e44;
+  --warning-text: #f7d27a;
+  --role-blue: #67e8f9;
+  --role-purple: #c4b5fd;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --text-secondary: #c5c5cb;
+    --text-muted: #b0b0b8;
+    --success-text: #a7f3c0;
+    --success-surface: #182b20;
+    --success-border: #395e44;
+    --warning-text: #f7d27a;
+    --role-blue: #67e8f9;
+    --role-purple: #c4b5fd;
+  }
+}
+html {
+  font-size: 16px;
+}
+body {
+  font-size: 17px;
+  line-height: 1.65;
+}
+strong,
+b {
+  font-weight: 700;
+}
+h1,
+h2,
+h3 {
+  overflow-wrap: anywhere;
+}
+/* Content remains readable even before an observer-triggered entrance. */
+html.reveal-ready [data-reveal] {
+  opacity: 1;
+}
+.page-hero h1,
+.checkout-header h1,
+.account-identity-copy h1,
+.admin-shell h1,
+.launch-copy h1 {
+  font-size: clamp(32px, 4.2vw, 58px);
+  font-weight: 700;
+  line-height: 1.18;
+  letter-spacing: -0.035em;
+}
+.store-section-heading h2,
+.section-heading h2,
+.editorial-copy h2,
+.newsletter-grid h2,
+.contact-intro h2,
+.about-story-aside h2,
+.about-channel-title h3,
+.empty-state h2 {
+  font-size: clamp(28px, 3vw, 44px);
+  font-weight: 700;
+  line-height: 1.2;
+}
+.page-hero p,
+.store-section-heading p,
+.section-heading p,
+.editorial-copy p,
+.newsletter-grid p,
+.contact-intro > p,
+.about-story-copy p,
+.about-channel-footer p,
+.about-channel-quote,
+.about-channel-pillar p,
+.product-description,
+.quick-view-copy > p,
+.empty-state p,
+.launch-copy > p {
+  font-size: 17px;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+.button,
+.text-link,
+.collection-tabs button,
+.category-filter button {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: center;
+}
+.button svg,
+.text-link svg {
+  flex-shrink: 0;
+}
+.text-link {
+  text-align: start;
+}
+.button:disabled {
+  opacity: 0.65;
+}
+label {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+select,
+textarea {
+  font-size: 16px;
+}
+.eyebrow,
+.product-category,
+.product-specs dt,
+.about-story-pill span,
+.about-channel-title span,
+.legal-toc > span,
+.result-count {
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+}
+.store-launch-note .page-shell {
+  flex-wrap: wrap;
+  font-size: 14px;
+  line-height: 1.5;
+  gap: 6px 16px;
+}
+.store-launch-note strong {
+  white-space: normal;
+  font-weight: 700;
+}
+.product-card-info h3 {
+  font-size: 18px;
+  font-weight: 650;
+  line-height: 1.4;
+}
+.product-card-price {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+.product-card-variants {
+  font-size: 13px;
+  line-height: 1.5;
+  flex-wrap: wrap;
+}
+.product-badge {
+  max-width: calc(100% - 66px);
+  font: 700 12px/1.35 var(--body);
+  white-space: normal;
+  overflow-wrap: anywhere;
+  letter-spacing: 0.02em;
+}
+.product-save {
+  width: 40px;
+  height: 40px;
+}
+.product-quick-view {
+  min-height: 44px;
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.4;
+  padding: 6px 10px;
+}
+.product-quick-view svg {
+  flex-shrink: 0;
+}
+.product-detail-copy h1 {
+  font-size: clamp(30px, 3.3vw, 48px);
+  font-weight: 700;
+  line-height: 1.2;
+}
+.product-price {
+  font-size: 20px;
+  font-weight: 700;
+}
+.support-options h3,
+.product-launch-state h2 {
+  font-size: 22px;
+  line-height: 1.4;
+  font-weight: 700;
+}
+.support-options p,
+.product-launch-state p {
+  font-size: 16px;
+  line-height: 1.65;
+}
+.contact-email strong,
+.contact-email > span > span {
+  font-size: 16px;
+  line-height: 1.5;
+}
+.contact-email small {
+  font-size: 14px;
+  line-height: 1.6;
+}
+.product-specs dd,
+.quick-view-sizes span {
+  font-size: 15px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.collection-tile-copy h3,
+.store-services h3,
+.review-card h3 {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+.collection-tile-copy p,
+.store-services p,
+.review-card blockquote {
+  font-size: 16px;
+  line-height: 1.65;
+}
+.review-author strong {
+  font-size: 16px;
+  font-weight: 650;
+}
+.review-author span {
+  font-size: 14px;
+}
+.sample-review-notice {
+  font-size: 14px !important;
+}
+.consent,
+.form-status,
+.checkout-note,
+.order-summary p,
+.catalog-note,
+.cart-line p,
+.currency-conversion-note {
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.product-stock-status {
+  margin-top: 24px;
+  color: var(--text-secondary);
+  font-size: 16px;
+  font-weight: 650;
+}
+.cart-line h2 {
+  font-size: 20px;
+  line-height: 1.35;
+}
+.line-price strong,
+.quantity span {
+  font: 650 16px/1.4 var(--body);
+}
+.search-field input,
+.sort-select select {
+  font-size: 16px;
+}
+.sort-select {
+  min-width: 0;
+}
+.fashion-footer .footer-email,
+.footer-contact-link,
+.fashion-footer .footer-col a,
+.footer-newsletter > p,
+.fashion-footer .footer-intro p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+.fashion-footer .footer-col h2,
+.footer-newsletter h2 {
+  font: 700 17px/1.4 var(--body);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text);
+}
+.fashion-footer .footer-brand {
+  font-size: 24px;
+  font-weight: 700;
+}
+.footer-bottom,
+.footer-payment-note,
+.footer-preferences > span,
+.newsletter-compact .consent,
+.newsletter-compact .form-status,
+.footer-newsletter .footer-social a {
+  font-size: 14px;
+  line-height: 1.6;
+}
+.newsletter-compact .newsletter-input-wrap input {
+  font-size: 16px;
+}
+.newsletter-compact .consent input {
+  width: 17px;
+  height: 17px;
+}
+.footer-email {
+  min-width: 0;
+  max-width: 100%;
+}
+.footer-email span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.footer-email svg {
+  flex-shrink: 0;
+}
+.footer-email:hover,
+.footer-col a:hover {
+  color: var(--accent-bright);
+}
+.footer-bottom,
+.footer-legal a {
+  color: var(--text-secondary);
+}
+.footer-legal a:hover {
+  color: var(--accent-bright);
+}
+.about-hero-btn-channel:hover,
+.about-channel-btn,
+.about-channel-btn:hover {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.legal-section h2 {
+  font-size: clamp(20px, 2vw, 26px);
+  font-weight: 700;
+  line-height: 1.4;
+}
+.legal-section p,
+.legal-section li,
+.legal-toc a {
+  font-size: 16px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+.legal-section > header {
+  align-items: flex-start;
+}
+.legal-section > header span {
+  flex-shrink: 0;
+  font-size: 14px;
+}
+.legal-toc a::before {
+  font-size: 14px;
+}
+.about-story-pill strong {
+  font-size: 16px;
+  font-weight: 700;
+}
+.about-hero-btn-channel,
+.about-channel-btn,
+.about-channel-link {
+  max-width: 100%;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.5;
+  white-space: normal;
+}
+.about-visual-badge {
+  font-size: 14px;
+  line-height: 1.5;
+}
+.launch-footnote {
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+}
+.auth-page .auth-heading h1,
+.auth-page .auth-shell.is-compact .auth-heading h1,
+.auth-page .auth-art-copy h2 {
+  font-weight: 700;
+}
+.auth-page .auth-field,
+.auth-page .auth-shell.is-compact .auth-field {
+  font-weight: 600;
+}
+.auth-page .button,
+.auth-page .auth-shell.is-compact .auth-submit {
+  font-weight: 700;
+}
+.auth-page .auth-status {
+  overflow-wrap: anywhere;
+}
+.auth-page .auth-shell.is-compact .auth-field-hint,
+.auth-page .auth-shell.is-compact .password-rules {
+  font-size: 13px;
+  line-height: 1.5;
+}
+@media (min-width: 768px) and (max-height: 800px) {
+  .auth-page:not(.is-register) .auth-panel {
+    padding-top: calc(var(--auth-header-height) + 24px);
+    padding-bottom: 24px;
+  }
+  .auth-page:not(.is-register) .auth-social,
+  .auth-page:not(.is-register) .auth-divider,
+  .auth-page:not(.is-register) .auth-switch {
+    margin-top: 16px;
+  }
+  .auth-page:not(.is-register) .auth-form {
+    gap: 14px;
+    margin-top: 16px;
+  }
+}
+@media (min-width: 768px) and (max-height: 700px) {
+  .auth-page:not(.is-register) .auth-panel {
+    padding-top: calc(var(--auth-header-height) + 16px);
+    padding-bottom: 12px;
+  }
+}
+/* Remove dark-only field/panel fills that made text vanish in light mode. */
+.account-profile,
+.account-orders,
+.account-readonly-value,
+.account-order,
+.account-methods li,
+.account-code-step,
+.cr-sidebar,
+.cr-stat,
+.cr-empty,
+.cr-message,
+.cr-found,
+.cr-counts li,
+.cr-checks li,
+.crs-fieldset,
+.crs-stock-cell,
+.crs-order li,
+.cr-mobilebar-button {
+  background: var(--surface);
+  border-color: var(--border);
+  box-shadow: none;
+}
+.account-form .auth-field {
+  color: var(--text);
+  font-size: 15px;
+}
+.account-form .auth-field input,
+.account-form .phone-control,
+.account-code-step .code-input input,
+.cr-inline-form select,
+.cr-find-form input,
+.crs-field :is(input, select, textarea),
+.crs-photo-alt input,
+.crs-stock-cell input {
+  background: var(--background);
+  color: var(--text);
+  color-scheme: inherit;
+  font-size: 16px;
+  border-color: var(--border-light);
+}
+.account-form .phone-control input {
+  border: 0;
+}
+.account-form .phone-country select {
+  color-scheme: inherit;
+}
+.account-form .password-rules {
+  font-size: 14px;
+  line-height: 1.5;
+}
+.account-form .password-rule-mark {
+  border-color: var(--border-light);
+}
+.account-form .password-rules li.is-met .password-rule-mark {
+  background: var(--text);
+  color: var(--background);
+  border-color: var(--text);
+}
+.account-panel-heading h2,
+.cr-panel-heading h2 {
+  font-size: clamp(22px, 2.2vw, 30px);
+  line-height: 1.35;
+  font-weight: 700;
+}
+.account-panel-heading p,
+.account-code-step > p,
+.cr-panel-heading p,
+.cr-message-text,
+.cr-message-preview,
+.cr-empty p,
+.crs-danger p,
+.crs-import p,
+.crs-readonly {
+  font-size: 16px;
+  line-height: 1.65;
+}
+.account-tabs a {
+  font: 650 15px/1.4 var(--body);
+  text-transform: none;
+  letter-spacing: 0;
+}
+.account-profile dt,
+.account-identity-since,
+.account-identity-since span,
+.account-order span,
+.account-order-status,
+.account-method-state,
+.account-form .auth-field-hint,
+.cr-stat small,
+.cr-stat-label,
+.cr-identity-label,
+.cr-nav-heading,
+.cr-message-meta dt,
+.cr-counts span,
+.cr-table th,
+.cr-table td::before,
+.cr-status,
+.cr-manage summary,
+.crs-facts dt,
+.crs-field small,
+.crs-toggle small,
+.crs-block,
+.crs-product-link small,
+.crs-row-link small,
+.avatar-editor-source {
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+.account-order strong,
+.account-order time,
+.cr-table,
+.cr-table td,
+.crs-facts dd,
+.crs-label {
+  font-size: 16px;
+  line-height: 1.5;
+}
+.crs-label {
+  color: var(--text);
+  font-weight: 600;
+}
+.cr-table td {
+  border-color: var(--border);
+}
+.account-method-icon {
+  background: var(--surface-raised);
+}
+.account-method-state,
+.account-order-status {
+  white-space: normal;
+}
+.account-avatar,
+.avatar-editor-photo {
+  color: #fff;
+}
+.account-notice {
+  color: var(--text);
+  background: var(--surface);
+  border-color: var(--border);
+}
+.account-form-status.is-error {
+  color: var(--accent-bright);
+}
+.account-form-status.is-success {
+  color: var(--success-text);
+}
+.crs-photo,
+.crs-thumb {
+  background: var(--surface);
+}
+.crs-photo-cover {
+  color: #fff;
+}
+.crs-photo-caption,
+.cr-filter a,
+.cr-nav a,
+.cr-nav-account,
+.cr-inline-form label > span,
+.cr-find-form label > span {
+  font-size: 15px;
+  line-height: 1.5;
+}
+.cr-sidebar-title,
+.cr-mobilebar-title h1 {
+  font-weight: 700;
+  line-height: 1.35;
+}
+.member-identity strong,
+.member-row {
+  font-size: 16px;
+  line-height: 1.5;
+}
+.member-identity span {
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.member-panel {
+  max-width: calc(100vw - 32px);
+}
+.cr-manage .cr-inline-form {
+  max-width: 100%;
+}
+.cr-manage .cr-inline-form select {
+  min-width: 0;
+}
+.account-order-status.is-pending,
+.cr-status:is(.is-new, .is-pending, .is-no),
+.cr-action-status.is-error,
+.crs-out,
+.crs-danger-button,
+.avatar-editor-source,
+.member-row-logout,
+.nav-logout-button {
+  color: var(--accent-bright);
+}
+.crs-danger-button:hover:not(:disabled),
+.member-row-logout:hover {
+  color: var(--accent-bright);
+  background: var(--surface-raised);
+}
+.crs-notice,
+.cr-status:is(.is-resolved, .is-paid, .is-fulfilled, .is-active, .is-yes) {
+  color: var(--success-text);
+  background: var(--success-surface);
+  border-color: var(--success-border);
+}
+.cr-counts .is-active strong {
+  color: var(--success-text);
+}
+.role-badge,
+.member-identity .role-badge {
+  font-size: 13px;
+  line-height: 1.4;
+  box-shadow: none;
+  white-space: normal;
+}
+.role-badge.is-web-dev {
+  color: var(--role-blue);
+}
+.role-badge.is-owner {
+  color: var(--warning-text);
+}
+.role-badge.is-supporter {
+  color: var(--role-purple);
+}
+.role-badge.is-staff {
+  color: var(--accent-bright);
+}
+.cr-mobilebar-button span {
+  overflow: visible;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.cr-mobilebar-button {
+  padding-block: 8px;
+}
+.crs-stock-cell,
+.crs-field,
+.crs-product-link,
+.crs-row-link {
+  min-width: 0;
+}
+.crs-facts dd,
+.account-readonly-value strong {
+  overflow-wrap: anywhere;
+}
+.crs-fieldset legend {
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+.cr-note,
+.cr-action-status,
+.cr-audit-target,
+.cr-found-identity span,
+.crs-photo-alt,
+.crs-photo-cover,
+.avatar-editor-hint {
+  font-size: 14px;
+  line-height: 1.6;
+}
+.not-found:not(.error-page) .button-primary {
+  background: #fafafa;
+  border-color: #fafafa;
+  color: #171719;
+}
+.not-found:not(.error-page) .button-secondary {
+  border-color: #c5c5cb;
+  color: #fafafa;
+}
+.not-found:not(.error-page) .button:hover {
+  background: var(--accent);
+  color: #fafafa;
+  border-color: var(--accent);
+}
+.error-page {
+  background: var(--background);
+  color: var(--text);
+}
+.not-found.error-page p {
+  color: var(--text-secondary);
+}
+.error-page h1 {
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 700;
+  line-height: 1.2;
+}
+.error-page {
+  min-height: 70svh;
+  padding-inline: var(--page-gutter);
+}
+.announcement-short {
+  display: none;
+}
+.store-topbar p {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  line-height: 1.5;
+  padding-block: 4px;
+}
+.storefront-header .store-nav-row > a {
+  font-weight: 700;
+}
+.shop-mega-column h2 {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+.shop-mega-column a {
+  font-size: 16px;
+  line-height: 1.5;
+}
+.shop-mega-tile-copy {
+  white-space: normal;
+}
+.campaign-hero .campaign-copy h1 {
+  font-weight: 700;
+  line-height: 1.15;
+}
+.campaign-hero .campaign-cta {
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: normal;
+}
+@media (max-width: 1023px) {
+  .fashion-footer .footer-grid {
+    gap: 24px;
+  }
+  .product-detail-copy {
+    position: static;
+  }
+}
+@media (max-width: 767px) {
+  :root {
+    --announcement-height: 70px;
+  }
+  .store-topbar .store-topbar-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+    padding-block: 4px;
+  }
+  .store-topbar p {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 4px 10px;
+    margin: 0;
+    font-size: 14px;
+  }
+  .store-topbar p .announcement-full {
+    display: none;
+  }
+  .store-topbar p .announcement-short,
+  .store-topbar p a {
+    display: inline;
+    margin: 0;
+  }
+  .store-topbar-tools {
+    justify-content: center;
+    min-height: 30px;
+  }
+  .store-topbar .preference-trigger {
+    font-size: 14px;
+  }
+  .campaign-hero {
+    min-height: 600px;
+  }
+  .campaign-hero .campaign-copy {
+    width: 72%;
+  }
+  .campaign-hero .campaign-copy h1 {
+    font-size: clamp(30px, 8vw, 40px);
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+  .campaign-hero .campaign-copy p {
+    display: block;
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 22px;
+  }
+  .campaign-overlay {
+    background: linear-gradient(
+      90deg,
+      #f2f2f2,
+      rgb(242 242 242 / 0.97) 44%,
+      rgb(242 242 242 / 0.88) 70%,
+      rgb(242 242 242 / 0.12)
+    );
+  }
+  :root[data-theme="dark"] .campaign-overlay {
+    background: linear-gradient(
+      90deg,
+      #19191c,
+      rgb(25 25 28 / 0.96) 44%,
+      rgb(25 25 28 / 0.86) 70%,
+      rgb(25 25 28 / 0.12)
+    );
+  }
+  .campaign-hero .campaign-cta {
+    padding-inline: 18px;
+    font-size: 16px;
+  }
+  .page-hero h1,
+  .checkout-header h1,
+  .launch-copy h1 {
+    font-size: clamp(30px, 8vw, 40px);
+  }
+  .store-section-heading h2,
+  .newsletter-grid h2,
+  .editorial-copy h2 {
+    font-size: clamp(27px, 7vw, 34px);
+  }
+  .product-card-info h3 {
+    font-size: 16px;
+  }
+  .product-card-price {
+    font-size: 15px;
+  }
+  .product-card-variants {
+    font-size: 12px;
+  }
+  .collection-tabs button {
+    min-height: 44px;
+    padding: 8px 12px;
+    font-size: 15px;
+  }
+  .shop-tools .search-field,
+  .sort-select {
+    width: 100%;
+    max-width: none;
+  }
+  .sort-select select {
+    width: 100%;
+  }
+  .store-launch-note .page-shell {
+    justify-content: flex-start;
+  }
+  .store-services {
+    gap: 24px 16px;
+  }
+  .store-services h3 {
+    font-size: 18px;
+  }
+  .store-services p {
+    font-size: 15px;
+  }
+  .cart-line {
+    gap: 12px;
+  }
+  .auth-page:not(.is-register) .auth-panel {
+    padding-bottom: 24px;
+  }
+  .account-tabs {
+    flex-wrap: wrap;
+    overflow: visible;
+  }
+  .account-tabs a {
+    flex: 1 1 auto;
+    padding: 8px 12px;
+  }
+  .account-methods li {
+    flex-wrap: wrap;
+  }
+  .account-identity-copy h1 {
+    font-size: clamp(28px, 7vw, 38px);
+    line-height: 1.25;
+  }
+  .legal-section > header {
+    gap: 10px;
+  }
+  .legal-section,
+  .account-panel {
+    padding: 20px;
+  }
+  .cr-table tr {
+    background: var(--surface);
+    border-color: var(--border);
+  }
+  .cr-manage .cr-inline-form {
+    max-width: 100%;
+  }
+  .fashion-footer .footer-grid {
+    gap: 28px 20px;
+  }
+  .footer-bottom {
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  .footer-payment-note {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+html[lang="si"]
+  :is(
+    .page-hero h1,
+    .launch-copy h1,
+    .checkout-header h1,
+    .store-section-heading h2,
+    .section-heading h2,
+    .contact-intro h2,
+    .newsletter-grid h2,
+    .about-story-aside h2
+  ) {
+  font-weight: 700;
+  line-height: 1.45;
+}
+html[lang="si"]
+  :is(.button, .text-link, .collection-tabs button, .category-filter button) {
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 650;
+}
+html[lang="si"]
+  :is(
+    .product-badge,
+    .eyebrow,
+    .product-category,
+    .result-count,
+    .account-tabs a,
+    .account-order span,
+    .role-badge,
+    .cr-table th,
+    .cr-table td::before
+  ) {
+  font-size: 14px;
+  line-height: 1.6;
+}
+html[lang="si"] .campaign-hero .campaign-copy h1 {
+  line-height: 1.45;
+}
+@media (max-width: 767px) {
+  html[lang="si"] .campaign-hero {
+    min-height: 740px;
+  }
+  html[lang="si"] .campaign-hero .campaign-copy {
+    width: 85%;
+  }
+  html[lang="si"] .campaign-hero .campaign-copy h1 {
+    font-size: 28px;
+  }
+}

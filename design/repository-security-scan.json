@@ -1,0 +1,16 @@
+{
+  "testedAt": "2026-10-15T05:33:38.082Z",
+  "candidateFiles": 350,
+  "textFilesScanned": 288,
+  "findings": [],
+  "oversized": [],
+  "configuredSecretsInClientBundles": [],
+  "sensitiveFilesInHistory": [],
+  "scope": "Targeted candidate-file patterns and configured-value scan; history filename check, not exhaustive history content scan.",
+  "flags": {
+    "launchMode": "on",
+    "authMode": "on",
+    "localDemoEnabled": false,
+    "demoDisabledByCodeInProduction": true
+  }
+}

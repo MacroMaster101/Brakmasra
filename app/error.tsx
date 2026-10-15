@@ -6,11 +6,13 @@ export default function ErrorPage({ reset }: { reset: () => void }) {
   const { t } = useLanguage();
 
   return (
-    <div className="not-found">
+    <div className="not-found error-page">
       <span className="eyebrow">{t.errorEyebrow}</span>
       <h1>{t.errorTitle}</h1>
       <p>{t.errorDesc}</p>
-      <button className="button button-primary" type="button" onClick={reset}>{t.errorRetry}</button>
+      <button className="button button-primary" type="button" onClick={reset}>
+        {t.errorRetry}
+      </button>
     </div>
   );
 }

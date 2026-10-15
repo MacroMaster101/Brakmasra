@@ -76,8 +76,8 @@ describe("home page products", () => {
   const many: Product[] = Array.from({ length: 9 }, (_, index) => ({ ...hoodie, id: `id-${index}`, slug: `tee-${index}` }));
   const slugs = (list: Product[]) => list.map((product) => product.slug);
 
-  it("shows up to six products", () => {
-    expect(HOME_PRODUCT_LIMIT).toBe(6);
+  it("shows up to eight products", () => {
+    expect(HOME_PRODUCT_LIMIT).toBe(8);
   });
 
   it("shows the picked products in shop order", () => {
@@ -85,13 +85,13 @@ describe("home page products", () => {
     expect(slugs(homeProducts(picked))).toEqual(["tee-1", "tee-4", "tee-7"]);
   });
 
-  it("keeps only the first six picks", () => {
+  it("keeps only the first eight picks", () => {
     const picked = many.map((product) => ({ ...product, featured: true }));
-    expect(slugs(homeProducts(picked))).toEqual(["tee-0", "tee-1", "tee-2", "tee-3", "tee-4", "tee-5"]);
+    expect(slugs(homeProducts(picked))).toEqual(["tee-0", "tee-1", "tee-2", "tee-3", "tee-4", "tee-5", "tee-6", "tee-7"]);
   });
 
-  it("falls back to the first six products when none are picked", () => {
-    expect(slugs(homeProducts(many))).toEqual(["tee-0", "tee-1", "tee-2", "tee-3", "tee-4", "tee-5"]);
+  it("falls back to the first eight products when none are picked", () => {
+    expect(slugs(homeProducts(many))).toEqual(["tee-0", "tee-1", "tee-2", "tee-3", "tee-4", "tee-5", "tee-6", "tee-7"]);
     expect(homeProducts([])).toEqual([]);
   });
 });

@@ -4,6 +4,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { safeRedirectPath } from "@/lib/auth";
 import { authDemoMode, authEnabled } from "@/lib/features";
 import { createAuthClient } from "@/lib/supabase-auth";
+import { grantPasswordRecovery } from "@/lib/recovery-session";
 
 const allowedOtpTypes = new Set<EmailOtpType>([
   "email",
@@ -23,32 +24,40 @@ export async function GET(request: NextRequest) {
   const tokenHash = request.nextUrl.searchParams.get("token_hash");
   const rawType = request.nextUrl.searchParams.get("type");
   const next = safeRedirectPath(request.nextUrl.searchParams.get("next"));
-  const destination = request.nextUrl.clone();
-  destination.pathname = next;
-  destination.search = "";
+  const destination = new URL(next, request.nextUrl.origin);
 
-  const supabase = await createAuthClient();
-  let error: Error | null = null;
+  try {
+    const supabase = await createAuthClient();
+    let error: Error | null = null;
+    let verifiedRecovery = false;
 
-  if (code) {
-    const result = await supabase.auth.exchangeCodeForSession(
-      code,
-      flowId ? { flowId } : undefined,
-    );
-    error = result.error;
-  } else if (tokenHash && rawType && allowedOtpTypes.has(rawType as EmailOtpType)) {
-    const result = await supabase.auth.verifyOtp({
-      token_hash: tokenHash,
-      type: rawType as EmailOtpType,
-    });
-    error = result.error;
-  } else {
-    error = new Error("Missing confirmation token.");
+    if (code) {
+      const result = await supabase.auth.exchangeCodeForSession(
+        code,
+        flowId ? { flowId } : undefined,
+      );
+      error = result.error;
+    } else if (tokenHash && rawType && allowedOtpTypes.has(rawType as EmailOtpType)) {
+      const result = await supabase.auth.verifyOtp({
+        token_hash: tokenHash,
+        type: rawType as EmailOtpType,
+      });
+      error = result.error;
+      verifiedRecovery = !error && rawType === "recovery";
+    } else {
+      error = new Error("Missing confirmation token.");
+    }
+
+    if (verifiedRecovery) {
+      const { data } = await supabase.auth.getClaims();
+      if (!data?.claims || !(await grantPasswordRecovery(data.claims))) {
+        error = new Error("Recovery could not be verified.");
+      }
+    }
+    if (!error) return NextResponse.redirect(destination);
+  } catch {
+    // Do not expose provider errors, authorization codes, or tokens.
   }
 
-  if (!error) return NextResponse.redirect(destination);
-
-  destination.pathname = "/login";
-  destination.searchParams.set("notice", "confirmation-failed");
-  return NextResponse.redirect(destination);
+  return NextResponse.redirect(new URL("/login?notice=confirmation-failed", request.nextUrl.origin));
 }

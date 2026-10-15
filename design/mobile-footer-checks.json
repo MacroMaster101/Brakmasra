@@ -1,0 +1,23 @@
+{
+  "change": "Centered footer at widths below 768px; desktop styles unchanged.",
+  "checks": [
+    {
+      "width": 320,
+      "horizontalOverflow": 0
+    },
+    {
+      "width": 390,
+      "horizontalOverflow": 0
+    },
+    {
+      "width": 767,
+      "horizontalOverflow": 0
+    },
+    {
+      "width": 1280,
+      "horizontalOverflow": 0,
+      "desktopFooterGeometryUnchanged": true
+    }
+  ],
+  "preview": "design/previews/mobile-footer-centered.jpg"
+}

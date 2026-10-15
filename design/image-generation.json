@@ -1,0 +1,177 @@
+{
+  "tool": "Built-in image_gen",
+  "assets": [
+    {
+      "name": "campaign",
+      "prompt": "Use case: ads-marketing. Asset: wide 3:2 fashion campaign photograph for BRAKMASRA streetwear homepage. Two stylish Sri Lankan adult fashion models, male with curly black hair and female with black hair, wearing oversized washed-black and white graphic t-shirts, loose charcoal jeans. Bold gothic marble-statue and red rose graphic print on the tees. Models positioned together on right half, left half completely empty pale cool-gray seamless studio background for website text. Full head to upper thigh, casual confident natural poses. Soft daylight, highly realistic cotton fabric and skin, contemporary premium streetwear campaign, clean sophisticated photography, no text outside garment, no watermark. Keep entire background very pale gray and calm.",
+      "source": "C:\\Users\\Kavisha Lakshan\\.codex\\generated_images\\01a13aed-e74f-7ce0-a049-8d5ca9de03ad\\exec-f97b0324-fb6c-4f4c-9f97-75e91b7ced09.png",
+      "output": "C:\\Users\\Kavisha Lakshan\\Documents\\GitHub\\BRAKMASRA\\public\\images\\campaign.webp"
+    },
+    {
+      "name": "caged-freedom",
+      "referenced_image_paths": [
+        "C:/Users/Kavisha Lakshan/Documents/GitHub/BRAKMASRA/public/images/products/caged-freedom-tee.webp"
+      ],
+      "prompt": "Use case: product-mockup. Reference image is garment design reference. Create photorealistic vertical 3:4 e-commerce fashion photograph of a Sri Lankan adult male model wearing the exact oversized washed-black graphic t-shirt from reference, preserve printed nun, chains, all typography and print placement as closely as possible. Model head to upper thighs, centered, relaxed hands at sides, dark loose jeans. Seamless light cool-gray studio background, soft even daylight, natural skin and fabric texture, no props, no watermark. This is an on-model product photograph, not a hanging shirt.",
+      "source": "C:\\Users\\Kavisha Lakshan\\.codex\\generated_images\\01a13aed-e74f-7ce0-a049-8d5ca9de03ad\\exec-d06483a4-d629-4757-8dcd-ff9614fc55e6.png",
+      "output": "C:\\Users\\Kavisha Lakshan\\Documents\\GitHub\\BRAKMASRA\\public\\images\\models\\caged-freedom.webp"
+    },
+    {
+      "name": "look-for-the-light",
+      "referenced_image_paths": [
+        "C:/Users/Kavisha Lakshan/Documents/GitHub/BRAKMASRA/public/images/products/look-for-the-light-tee.webp"
+      ],
+      "prompt": "Use case: product-mockup. Reference image is garment design reference. Photorealistic vertical 3:4 studio e-commerce fashion portrait of a Sri Lankan adult female model wearing the exact white oversized graphic t-shirt from the reference, faithfully reproduce orange black cinematic collage and print placement. Head to upper thighs, centered, relaxed hands at sides, charcoal loose jeans. Plain light cool-gray studio backdrop, even daylight, real cotton drape and skin texture. No props, no extra text, no watermark.",
+      "source": "C:\\Users\\Kavisha Lakshan\\.codex\\generated_images\\01a13aed-e74f-7ce0-a049-8d5ca9de03ad\\exec-d6002dbe-1694-45d0-b33a-50f24ca25d9f.png",
+      "output": "C:\\Users\\Kavisha Lakshan\\Documents\\GitHub\\BRAKMASRA\\public\\images\\models\\look-for-the-light.webp"
+    },
+    {
+      "name": "silent-faith",
+      "referenced_image_paths": [
+        "C:/Users/Kavisha Lakshan/Documents/GitHub/BRAKMASRA/public/images/products/silent-faith-tee.webp"
+      ],
+      "prompt": "Use case: product-mockup. Reference is the exact garment design. Make a photorealistic vertical 3:4 e-commerce studio portrait of a stylish Sri Lankan adult male model wearing this exact oversized graphic t-shirt, preserve garment color, all printed artwork and typography, sleeve details and print positioning faithfully. The model is centered, entire head and upper thighs visible, wearing loose charcoal jeans, relaxed natural arms at sides, no arms covering print, expression confident. Plain seamless light cool-gray studio background with soft even daylight, realistic skin and cotton fabric texture. A premium cohesive fashion catalogue. No accessories, no props, no watermark, no text outside garment.",
+      "source": "C:\\Users\\Kavisha Lakshan\\.codex\\generated_images\\01a13aed-e74f-7ce0-a049-8d5ca9de03ad\\exec-fde29936-05ee-4e7d-80cd-522eca6c11de.png",
+      "output": "C:\\Users\\Kavisha Lakshan\\Documents\\GitHub\\BRAKMASRA\\public\\images\\models\\silent-faith.webp"
+    },
+    {
+      "name": "paradise-lost",
+      "referenced_image_paths": [
+        "C:/Users/Kavisha Lakshan/Documents/GitHub/BRAKMASRA/public/images/products/paradise-lost-tee.webp"
+      ],
+      "prompt": "Use case: product-mockup. Reference is the exact garment design. Make a photorealistic vertical 3:4 e-commerce studio portrait of a stylish Sri Lankan adult female model wearing this exact oversized graphic t-shirt, preserve garment color, all printed artwork and typography, sleeve details and print positioning faithfully. The model is centered, entire head and upper thighs visible, wearing loose charcoal jeans, relaxed natural arms at sides, no arms covering print, expression confident. Plain seamless light cool-gray studio background with soft even daylight, realistic skin and cotton fabric texture. A premium cohesive fashion catalogue. No accessories, no props, no watermark, no text outside garment.",
+      "source": "C:\\Users\\Kavisha Lakshan\\.codex\\generated_images\\01a13aed-e74f-7ce0-a049-8d5ca9de03ad\\exec-f2f40867-4d86-4d5b-9727-b097167ae6c4.png",
+      "output": "C:\\Users\\Kavisha Lakshan\\Documents\\GitHub\\BRAKMASRA\\public\\images\\models\\paradise-lost.webp"
+    },
+    {
+      "name": "vigorous-archangel",
+      "referenced_image_paths": [
+        "C:/Users/Kavisha Lakshan/Documents/GitHub/BRAKMASRA/public/images/products/vigorous-archangel-tee.webp"
+      ],
+      "prompt": "Use case: product-mockup. Reference is the exact garment design. Make a photorealistic vertical 3:4 e-commerce studio portrait of a stylish Sri Lankan adult male model wearing this exact oversized graphic t-shirt, preserve garment color, all printed artwork and typography, sleeve details and print positioning faithfully. The model is centered, entire head and upper thighs visible, wearing loose charcoal jeans, relaxed natural arms at sides, no arms covering print, expression confident. Plain seamless light cool-gray studio background with soft even daylight, realistic skin and cotton fabric texture. A premium cohesive fashion catalogue. No accessories, no props, no watermark, no text outside garment.",
+      "source": "C:\\Users\\Kavisha Lakshan\\.codex\\generated_images\\01a13aed-e74f-7ce0-a049-8d5ca9de03ad\\exec-a54869fb-0ab3-4ddb-bd5f-4a687cc7c8fb.png",
+      "output": "C:\\Users\\Kavisha Lakshan\\Documents\\GitHub\\BRAKMASRA\\public\\images\\models\\vigorous-archangel.webp"
+    },
+    {
+      "name": "naga-guard",
+      "referenced_image_paths": [
+        "C:/Users/Kavisha Lakshan/Documents/GitHub/BRAKMASRA/public/images/products/naga-guard-tee.webp"
+      ],
+      "prompt": "Use case: product-mockup. Reference is the exact garment design. Make a photorealistic vertical 3:4 e-commerce studio portrait of a stylish Sri Lankan adult female model wearing this exact oversized graphic t-shirt, preserve garment color, all printed artwork and typography, sleeve details and print positioning faithfully. The model is centered, entire head and upper thighs visible, wearing loose charcoal jeans, relaxed natural arms at sides, no arms covering print, expression confident. Plain seamless light cool-gray studio background with soft even daylight, realistic skin and cotton fabric texture. A premium cohesive fashion catalogue. No accessories, no props, no watermark, no text outside garment.",
+      "source": "C:\\Users\\Kavisha Lakshan\\.codex\\generated_images\\01a13aed-e74f-7ce0-a049-8d5ca9de03ad\\exec-374462f6-1eac-4282-b138-fe587d4977a7.png",
+      "output": "C:\\Users\\Kavisha Lakshan\\Documents\\GitHub\\BRAKMASRA\\public\\images\\models\\naga-guard.webp"
+    },
+    {
+      "name": "intoxicated-medusa",
+      "referenced_image_paths": [
+        "C:/Users/Kavisha Lakshan/Documents/GitHub/BRAKMASRA/public/images/products/intoxicated-medusa-tee.webp"
+      ],
+      "prompt": "Use case: product-mockup. Reference is the exact garment design. Make a photorealistic vertical 3:4 e-commerce studio portrait of a stylish Sri Lankan adult male model wearing this exact oversized graphic t-shirt, preserve garment color, all printed artwork and typography, sleeve details and print positioning faithfully. The model is centered, entire head and upper thighs visible, wearing loose charcoal jeans, relaxed natural arms at sides, no arms covering print, expression confident. Plain seamless light cool-gray studio background with soft even daylight, realistic skin and cotton fabric texture. A premium cohesive fashion catalogue. No accessories, no props, no watermark, no text outside garment.",
+      "source": "C:\\Users\\Kavisha Lakshan\\.codex\\generated_images\\01a13aed-e74f-7ce0-a049-8d5ca9de03ad\\exec-2bcc6fae-ca00-492f-be03-6fc129e584be.png",
+      "output": "C:\\Users\\Kavisha Lakshan\\Documents\\GitHub\\BRAKMASRA\\public\\images\\models\\intoxicated-medusa.webp"
+    },
+    {
+      "name": "ruthless",
+      "referenced_image_paths": [
+        "C:/Users/Kavisha Lakshan/Documents/GitHub/BRAKMASRA/public/images/products/ruthless-tee.webp"
+      ],
+      "prompt": "Use case: product-mockup. Reference is the exact garment design. Make a photorealistic vertical 3:4 e-commerce studio portrait of a stylish Sri Lankan adult female model wearing this exact oversized graphic t-shirt, preserve garment color, all printed artwork and typography, sleeve details and print positioning faithfully. The model is centered, entire head and upper thighs visible, wearing loose charcoal jeans, relaxed natural arms at sides, no arms covering print, expression confident. Plain seamless light cool-gray studio background with soft even daylight, realistic skin and cotton fabric texture. A premium cohesive fashion catalogue. No accessories, no props, no watermark, no text outside garment.",
+      "source": "C:\\Users\\Kavisha Lakshan\\.codex\\generated_images\\01a13aed-e74f-7ce0-a049-8d5ca9de03ad\\exec-0c88b6c6-5432-4376-999a-fed804c06406.png",
+      "output": "C:\\Users\\Kavisha Lakshan\\Documents\\GitHub\\BRAKMASRA\\public\\images\\models\\ruthless.webp"
+    },
+    {
+      "name": "eternal-watcher",
+      "referenced_image_paths": [
+        "C:/Users/Kavisha Lakshan/Documents/GitHub/BRAKMASRA/public/images/products/eternal-watcher-tee.webp"
+      ],
+      "prompt": "Use case: product-mockup. Reference is the exact garment design. Make a photorealistic vertical 3:4 e-commerce studio portrait of a stylish Sri Lankan adult male model wearing this exact oversized graphic t-shirt, preserve garment color, all printed artwork and typography, sleeve details and print positioning faithfully. The model is centered, entire head and upper thighs visible, wearing loose charcoal jeans, relaxed natural arms at sides, no arms covering print, expression confident. Plain seamless light cool-gray studio background with soft even daylight, realistic skin and cotton fabric texture. A premium cohesive fashion catalogue. No accessories, no props, no watermark, no text outside garment.",
+      "source": "C:\\Users\\Kavisha Lakshan\\.codex\\generated_images\\01a13aed-e74f-7ce0-a049-8d5ca9de03ad\\exec-6e060e6f-271b-46eb-b677-1afd18ac5aa7.png",
+      "output": "C:\\Users\\Kavisha Lakshan\\Documents\\GitHub\\BRAKMASRA\\public\\images\\models\\eternal-watcher.webp"
+    },
+    {
+      "name": "campaign-wide-v2",
+      "referenced_image_paths": [
+        "C:/Users/Kavisha Lakshan/Documents/GitHub/BRAKMASRA/public/images/products/caged-freedom-tee.webp",
+        "C:/Users/Kavisha Lakshan/Documents/GitHub/BRAKMASRA/public/images/products/paradise-lost-tee.webp"
+      ],
+      "prompt": "Use case: ads-marketing. Website hero photography, wide 16:9 landscape composition. The two reference images define exact garments: image 1 washed-black Caged Freedom tee, image 2 white Paradise Lost tee. A stylish adult Sri Lankan man wearing garment 1 and an adult Sri Lankan woman wearing garment 2, relaxed confident fashion poses, loose charcoal jeans, realistic skin and cotton. Faithfully preserve each garment print, color and positioning. Both models together in the RIGHT 48 percent of the image, no people or props on the LEFT 52 percent. Seamless pale cool gray studio wall and floor fills the ENTIRE canvas edge to edge, uniformly softly lit. Models framed head to upper thighs. Leave clear empty space above their heads for the navigation: highest part of the models begins at least 17 percent below the top of the image. The left half is uninterrupted empty background for headline copy. Premium clean e-commerce fashion campaign, soft daylight, no borders, no frames, no panels, no cutout outlines, no vignettes, no text outside the shirt artwork, no watermarks.",
+      "source": "C:\\Users\\Kavisha Lakshan\\.codex\\generated_images\\01a13aed-e74f-7ce0-a049-8d5ca9de03ad\\exec-207c057c-8ef1-4557-af8c-6cc8e2c04b4c.png",
+      "output": "C:\\Users\\Kavisha Lakshan\\Documents\\GitHub\\BRAKMASRA\\public\\images\\campaign-wide-v2.webp"
+    },
+    {
+      "name": "campaign-black-v2",
+      "referenced_image_paths": [
+        "C:/Users/Kavisha Lakshan/Documents/GitHub/BRAKMASRA/public/images/products/intoxicated-medusa-tee.webp"
+      ],
+      "prompt": "Use case: ads-marketing. Generate a WIDE 16:9 landscape website fashion hero photograph. Reference defines exact washed-black Intoxicated Medusa oversized graphic t-shirt: faithfully preserve the green snakes and stone head artwork, all garment design and printed text. One stylish adult Sri Lankan male fashion model in this exact t-shirt and loose charcoal jeans, natural confident pose, head to upper thighs. Model wholly on the RIGHT third of the canvas. The LEFT 58 percent must be entirely empty pale cool-gray studio backdrop for a website headline. Seamless pale cool-gray background fills every edge with the same studio lighting; soft light, authentic cotton and skin texture. Highest point of the model's head begins at least 17 percent below the top for an overlay navigation. Modern fashion campaign. No panels, no borders, no frames, no cutout or edge outlines, no props, no text outside garment, no watermark.",
+      "source": "C:\\Users\\Kavisha Lakshan\\.codex\\generated_images\\01a13aed-e74f-7ce0-a049-8d5ca9de03ad\\exec-86d57925-eaa6-428b-93c2-743116bb6e6c.png",
+      "output": "C:\\Users\\Kavisha Lakshan\\Documents\\GitHub\\BRAKMASRA\\public\\images\\campaign-black-v2.webp"
+    },
+    {
+      "name": "campaign-white-v2",
+      "referenced_image_paths": [
+        "C:/Users/Kavisha Lakshan/Documents/GitHub/BRAKMASRA/public/images/products/vigorous-archangel-tee.webp"
+      ],
+      "prompt": "Use case: ads-marketing. WIDE 16:9 landscape e-commerce website campaign photograph. Reference defines exact white oversized Vigorous Archangel graphic tee: preserve white cotton, red type, detailed angel print and positioning faithfully. A stylish Sri Lankan adult female model with dark hair wearing this exact t-shirt and relaxed charcoal jeans, naturally confident, head to upper thighs. Model positioned entirely on RIGHT third, LEFT 58 percent completely empty and uncluttered for website text. Uniform pale cool-gray seamless studio backdrop fills entire image edge to edge. Soft even daylight, realistic face and cotton fabric texture. Leave at least 17 percent of the image as empty space above the model's head so navigation can overlay. No borders, no frame, no panels, no cutout outlines, no vignettes, no props, no watermark, no extra printed text.",
+      "source": "C:\\Users\\Kavisha Lakshan\\.codex\\generated_images\\01a13aed-e74f-7ce0-a049-8d5ca9de03ad\\exec-4015ccb2-05f6-42f0-a223-fb827d20d00d.png",
+      "output": "C:\\Users\\Kavisha Lakshan\\Documents\\GitHub\\BRAKMASRA\\public\\images\\campaign-white-v2.webp"
+    },
+    {
+      "name": "campaign-wide-v3",
+      "referenced_image_paths": [
+        "C:/Users/Kavisha Lakshan/Documents/GitHub/BRAKMASRA/public/images/campaign-wide-v2.webp"
+      ],
+      "prompt": "Edit target: this fashion campaign photograph. Correct only the composition and framing. Keep the people, faces, exact t-shirts, all artwork, colors and studio lighting unchanged. The output must remain a wide 16:9 landscape hero with no border or frame. Make the uppermost 25 PERCENT of the ENTIRE image completely empty seamless studio background, including above the models on the right. Move and scale the models down so the first pixel of any hair begins BELOW the one-quarter-height line. The models should look photographed from farther away, less zoomed in; their heads, shoulders, tees and upper trousers must remain visible. Keep subjects on the right and left half completely empty for copy. This clear top quarter is essential for overlay navigation and must not contain a face or hair. Extend the same studio background smoothly across every edge. No outline, no panel, no additional text or objects.",
+      "source": "C:\\Users\\Kavisha Lakshan\\.codex\\generated_images\\01a13aed-e74f-7ce0-a049-8d5ca9de03ad\\exec-f4eba553-ab45-45d5-ba6f-399ccabdab5d.png",
+      "output": "C:/Users/Kavisha Lakshan/Documents/GitHub/BRAKMASRA/public/images/campaign-wide-v3.webp"
+    },
+    {
+      "name": "campaign-black-v3",
+      "referenced_image_paths": [
+        "C:/Users/Kavisha Lakshan/Documents/GitHub/BRAKMASRA/public/images/campaign-black-v2.webp"
+      ],
+      "prompt": "Edit target: this fashion campaign photograph. Correct only the composition and framing. Keep the people, faces, exact t-shirts, all artwork, colors and studio lighting unchanged. The output must remain a wide 16:9 landscape hero with no border or frame. Make the uppermost 25 PERCENT of the ENTIRE image completely empty seamless studio background, including above the models on the right. Move and scale the models down so the first pixel of any hair begins BELOW the one-quarter-height line. The models should look photographed from farther away, less zoomed in; their heads, shoulders, tees and upper trousers must remain visible. Keep subjects on the right and left half completely empty for copy. This clear top quarter is essential for overlay navigation and must not contain a face or hair. Extend the same studio background smoothly across every edge. No outline, no panel, no additional text or objects.",
+      "source": "C:\\Users\\Kavisha Lakshan\\.codex\\generated_images\\01a13aed-e74f-7ce0-a049-8d5ca9de03ad\\exec-27b1ff81-b7df-4ce4-9fa9-d24e041e741c.png",
+      "output": "C:/Users/Kavisha Lakshan/Documents/GitHub/BRAKMASRA/public/images/campaign-black-v3.webp"
+    },
+    {
+      "name": "campaign-white-v3",
+      "referenced_image_paths": [
+        "C:/Users/Kavisha Lakshan/Documents/GitHub/BRAKMASRA/public/images/campaign-white-v2.webp"
+      ],
+      "prompt": "Edit target: this fashion campaign photograph. Correct only the composition and framing. Keep the people, faces, exact t-shirts, all artwork, colors and studio lighting unchanged. The output must remain a wide 16:9 landscape hero with no border or frame. Make the uppermost 25 PERCENT of the ENTIRE image completely empty seamless studio background, including above the models on the right. Move and scale the models down so the first pixel of any hair begins BELOW the one-quarter-height line. The models should look photographed from farther away, less zoomed in; their heads, shoulders, tees and upper trousers must remain visible. Keep subjects on the right and left half completely empty for copy. This clear top quarter is essential for overlay navigation and must not contain a face or hair. Extend the same studio background smoothly across every edge. No outline, no panel, no additional text or objects.",
+      "source": "C:\\Users\\Kavisha Lakshan\\.codex\\generated_images\\01a13aed-e74f-7ce0-a049-8d5ca9de03ad\\exec-a2da7273-c397-4996-9b0a-df0ffd2721b6.png",
+      "output": "C:/Users/Kavisha Lakshan/Documents/GitHub/BRAKMASRA/public/images/campaign-white-v3.webp"
+    },
+    {
+      "name": "campaign-wide-4k",
+      "referenced_image_paths": [
+        "C:\\Users\\Kavisha Lakshan\\.codex\\generated_images\\01a13aed-e74f-7ce0-a049-8d5ca9de03ad\\exec-f4eba553-ab45-45d5-ba6f-399ccabdab5d.png"
+      ],
+      "prompt": "Use case: identity-preserve. Upgrade this reference fashion campaign to a crisp high-resolution 4K landscape photo, target 3840 x 2160 pixels. Preserve these exact adult models, faces, t-shirt designs, typography, artwork and poses. Correct the studio backdrop to one continuous, clean, very pale neutral gray (#f2f2f2), edge to edge, with no vertical panels or gradients or vignette or seams. Premium realistic fashion photography, detailed cotton, sharp artwork and natural detailed skin, no smoothing or blur. Composition: same people on the RIGHT half, full heads and entire t-shirts to upper thighs. Highest hair pixel around 18 percent of canvas height. Left 50 percent entirely empty for headline. Subjects a little larger than reference; preserve safe headroom. Designed for a fullscreen responsive storefront hero, no borders, no outlines, no watermark, no additional objects or text.",
+      "source": "C:\\Users\\Kavisha Lakshan\\.codex\\generated_images\\01a13aed-e74f-7ce0-a049-8d5ca9de03ad\\exec-694bc272-b46c-45b8-ad42-4e7034da27e5.png",
+      "output": "C:/Users/Kavisha Lakshan/Documents/GitHub/BRAKMASRA/public/images/campaign-wide-4k.webp",
+      "resolutionNote": "Built-in output upscaled to 3840px wide; not native 4K generation."
+    },
+    {
+      "name": "campaign-black-4k",
+      "referenced_image_paths": [
+        "C:\\Users\\Kavisha Lakshan\\.codex\\generated_images\\01a13aed-e74f-7ce0-a049-8d5ca9de03ad\\exec-27b1ff81-b7df-4ce4-9fa9-d24e041e741c.png"
+      ],
+      "prompt": "Use case: identity-preserve. Upgrade this reference fashion campaign to a crisp high-resolution 4K landscape photo, target 3840 x 2160 pixels. Preserve these exact adult models, faces, t-shirt designs, typography, artwork and poses. Correct the studio backdrop to one continuous, clean, very pale neutral gray (#f2f2f2), edge to edge, with no vertical panels or gradients or vignette or seams. Premium realistic fashion photography, detailed cotton, sharp artwork and natural detailed skin, no smoothing or blur. Composition: same people on the RIGHT half, full heads and entire t-shirts to upper thighs. Highest hair pixel around 18 percent of canvas height. Left 50 percent entirely empty for headline. Subjects a little larger than reference; preserve safe headroom. Designed for a fullscreen responsive storefront hero, no borders, no outlines, no watermark, no additional objects or text.",
+      "source": "C:\\Users\\Kavisha Lakshan\\.codex\\generated_images\\01a13aed-e74f-7ce0-a049-8d5ca9de03ad\\exec-08283042-3e0b-4405-90a9-4446bd28e02d.png",
+      "output": "C:/Users/Kavisha Lakshan/Documents/GitHub/BRAKMASRA/public/images/campaign-black-4k.webp",
+      "resolutionNote": "Built-in output upscaled to 3840px wide; not native 4K generation."
+    },
+    {
+      "name": "campaign-white-4k",
+      "referenced_image_paths": [
+        "C:\\Users\\Kavisha Lakshan\\.codex\\generated_images\\01a13aed-e74f-7ce0-a049-8d5ca9de03ad\\exec-a2da7273-c397-4996-9b0a-df0ffd2721b6.png"
+      ],
+      "prompt": "Use case: identity-preserve. Upgrade this reference fashion campaign to a crisp high-resolution 4K landscape photo, target 3840 x 2160 pixels. Preserve these exact adult models, faces, t-shirt designs, typography, artwork and poses. Correct the studio backdrop to one continuous, clean, very pale neutral gray (#f2f2f2), edge to edge, with no vertical panels or gradients or vignette or seams. Premium realistic fashion photography, detailed cotton, sharp artwork and natural detailed skin, no smoothing or blur. Composition: same people on the RIGHT half, full heads and entire t-shirts to upper thighs. Highest hair pixel around 18 percent of canvas height. Left 50 percent entirely empty for headline. Subjects a little larger than reference; preserve safe headroom. Designed for a fullscreen responsive storefront hero, no borders, no outlines, no watermark, no additional objects or text.",
+      "source": "C:\\Users\\Kavisha Lakshan\\.codex\\generated_images\\01a13aed-e74f-7ce0-a049-8d5ca9de03ad\\exec-7a9b4f4e-9738-482d-8704-5de99e0e6457.png",
+      "output": "C:/Users/Kavisha Lakshan/Documents/GitHub/BRAKMASRA/public/images/campaign-white-4k.webp",
+      "resolutionNote": "Built-in output upscaled to 3840px wide; not native 4K generation."
+    }
+  ]
+}

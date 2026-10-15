@@ -6,7 +6,9 @@ import { Minus, Plus, Trash2 } from "lucide-react";
 import { useCart } from "@/components/cart-provider";
 import { useLanguage } from "@/components/language-provider";
 import { CartLoadingState } from "@/components/loading-states";
-import { cartSubtotal, formatMoney } from "@/lib/cart";
+import { cartSubtotal } from "@/lib/cart";
+import { useCurrency } from "@/components/currency-provider";
+import { CurrencyConversionNote } from "@/components/currency-switcher";
 
 export function CartView() {
   const { hydrated, lines, update, remove } = useCart();
@@ -38,6 +40,7 @@ type CartState = ReturnType<typeof useCart>;
 
 function CartLines({ lines, update, remove }: Pick<CartState, "lines" | "update" | "remove">) {
   const { t } = useLanguage();
+  const { formatPrice } = useCurrency();
 
   return (
     <div className="cart-layout">
@@ -59,7 +62,7 @@ function CartLines({ lines, update, remove }: Pick<CartState, "lines" | "update"
               </div>
             </div>
             <div className="line-price">
-              <strong>{formatMoney(line.unitPrice * line.quantity, line.currency)}</strong>
+              <strong>{formatPrice(line.unitPrice * line.quantity, line.currency)}</strong>
               <button type="button" onClick={() => remove(index)} aria-label={t.cartRemove(line.name)}>
                 <Trash2 />
               </button>
@@ -71,9 +74,10 @@ function CartLines({ lines, update, remove }: Pick<CartState, "lines" | "update"
         <h2>{t.cartSummaryTitle}</h2>
         <div>
           <span>{t.cartSubtotal}</span>
-          <strong>{formatMoney(cartSubtotal(lines), lines[0].currency)}</strong>
+          <strong>{formatPrice(cartSubtotal(lines), lines[0].currency)}</strong>
         </div>
         <p>{t.cartShippingNote}</p>
+        <CurrencyConversionNote />
         <Link className="button button-primary full" href="/checkout">{t.cartContinueCheckout}</Link>
       </aside>
     </div>

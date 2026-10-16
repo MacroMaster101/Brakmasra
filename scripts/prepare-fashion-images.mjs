@@ -2,12 +2,17 @@ import sharp from "sharp";
 import { readFile, mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-const manifest = JSON.parse(
-  await readFile(
+let manifest;
+try {
+  manifest = JSON.parse(await readFile(
     new URL("../design/image-generation.json", import.meta.url),
     "utf8",
-  ),
-);
+  ));
+} catch (error) {
+  if (error.code !== "ENOENT") throw error;
+  console.log("Local image-generation manifest is not present. Committed website images are ready to use.");
+  process.exit(0);
+}
 const root = path.resolve("public/images");
 await mkdir(path.join(root, "models"), { recursive: true });
 const selected = new Set(process.argv.slice(2));

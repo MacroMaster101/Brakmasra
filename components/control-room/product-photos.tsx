@@ -62,7 +62,7 @@ function PhotoAlt({ image }: { image: AdminImage }) {
 
 function MoveButtons({ image, first, last }: { image: AdminImage; first: boolean; last: boolean }) {
   const { t } = useLanguage();
-  const { formAction, pending, onSubmit } = useCrForm(moveProductImageAction);
+  const { state, formAction, pending, onSubmit } = useCrForm(moveProductImageAction);
   return (
     <form className="crs-photo-move" action={formAction} onSubmit={onSubmit}>
       <input type="hidden" name="id" value={image.id} />
@@ -72,6 +72,7 @@ function MoveButtons({ image, first, last }: { image: AdminImage; first: boolean
       <button type="submit" name="direction" value="down" disabled={pending || last} aria-label={t.crsMoveDown} title={t.crsMoveDown}>
         <ArrowDown aria-hidden="true" />
       </button>
+      <ActionStatus state={state} />
     </form>
   );
 }

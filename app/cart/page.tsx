@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "Cart", robots: { index: false, follo
 export default function CartPage() {
   if (!commerceEnabled) return <StoreComingSoon area="cart" />;
   return (
-    <div className="page-shell page-top">
+    <div className="page-shell page-top cart-page">
       <CartView />
     </div>
   );

@@ -14,6 +14,7 @@ export const CONTROL_ROOM_SECTIONS = [
   { key: "messages", href: "/admin/messages", permission: "view_messages" },
   { key: "subscribers", href: "/admin/subscribers", permission: "view_newsletter" },
   { key: "team", href: "/admin/team", permission: "manage_team" },
+  { key: "content", href: "/admin/content", permission: "manage_site" },
   { key: "site", href: "/admin/site", permission: "manage_site" },
 ] as const satisfies readonly { key: string; href: string; permission: Permission }[];
 export type ControlRoomSection = (typeof CONTROL_ROOM_SECTIONS)[number]["key"];

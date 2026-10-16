@@ -37,14 +37,13 @@ const cachedActiveProducts = unstable_cache(loadActiveProducts, ["store-active-p
 });
 
 /**
- * What the shop shows. Until products are added in the Control Room (or when
- * the database can't be reached) the built-in launch collection is used, so
- * the storefront never goes blank.
+ * The starter collection is used only without a connected database. An empty
+ * live catalogue stays empty: archived/deleted products must never reappear.
  */
 export const getCatalog = cache(async (): Promise<Product[]> => {
   try {
     const products = await cachedActiveProducts();
-    return products && products.length > 0 ? products.map((product) => {
+    return products !== null ? products.map((product) => {
       // Add the campaign photograph only to the unchanged, bundled launch art.
       // Photos uploaded by the merchant keep their selected order.
       const original = `/images/products/${product.slug}.webp`;
@@ -54,10 +53,20 @@ export const getCatalog = cache(async (): Promise<Product[]> => {
         : product;
     }) : starterProducts;
   } catch {
-    return starterProducts;
+    return [];
   }
 });
 
 export async function getCatalogProduct(slug: string): Promise<Product | undefined> {
   return (await getCatalog()).find((product) => product.slug === slug);
 }
+
+export type CatalogCollection = { slug: string; name: string; description: string; productIds: string[] };
+const cachedCollections = unstable_cache(async (): Promise<CatalogCollection[]> => {
+  const db = getSupabaseServerClient();
+  if (!db) return [];
+  const { data, error } = await db.from("collections").select("slug, name, description, collection_products(product_id, position)").eq("active", true).order("name").limit(200);
+  if (error) throw new Error("Collections could not be loaded.");
+  return (data ?? []).map((row) => ({ slug: row.slug, name: row.name, description: row.description ?? "", productIds: [...row.collection_products].sort((a, b) => a.position - b.position).map((item) => item.product_id) }));
+}, ["store-active-collections"], { tags: [CATALOG_TAG], revalidate: 300 });
+export const getCatalogCollections = cache(async () => { try { return await cachedCollections(); } catch { return []; } });

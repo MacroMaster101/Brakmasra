@@ -20,7 +20,7 @@ const person = (n: number, role: MemberRole | null) => ({ id: id(n), role });
 describe("Control Room sections", () => {
   it("shows each role only the sections it may use", () => {
     const shop = ["products", "collections", "discounts", "orders", "messages"];
-    expect(controlRoomSections("web_dev")).toEqual(["overview", ...shop, "subscribers", "team", "site"]);
+    expect(controlRoomSections("web_dev")).toEqual(["overview", ...shop, "subscribers", "team", "content", "site"]);
     expect(controlRoomSections("owner")).toEqual(["overview", ...shop, "subscribers", "team"]);
     expect(controlRoomSections("staff")).toEqual(["overview", ...shop]);
   });

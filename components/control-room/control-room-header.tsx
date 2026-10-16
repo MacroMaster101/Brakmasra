@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 import {
   ChevronDown,
+  FilePenLine,
   Inbox,
   LayoutDashboard,
   Layers,
@@ -34,6 +35,7 @@ const tabs: Record<ControlRoomSection, { label: TextKey; icon: LucideIcon }> = {
   messages: { label: "crTabMessages", icon: Inbox },
   subscribers: { label: "crTabSubscribers", icon: Mail },
   team: { label: "crTabTeam", icon: Users },
+  content: { label: "crTabContent", icon: FilePenLine },
   site: { label: "crTabSite", icon: ServerCog },
 };
 
@@ -42,7 +44,7 @@ const groups: { label: TextKey | null; sections: ControlRoomSection[] }[] = [
   { label: null, sections: ["overview"] },
   { label: "crNavShop", sections: ["products", "collections", "discounts", "orders"] },
   { label: "crNavPeople", sections: ["messages", "subscribers", "team"] },
-  { label: "crNavSystem", sections: ["site"] },
+  { label: "crNavSystem", sections: ["content", "site"] },
 ];
 
 type ControlRoomHeaderProps = {

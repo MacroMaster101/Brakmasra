@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { startTransition, useActionState, type FormEvent, type ReactNode } from "react";
+import { startTransition, useActionState, useState, type FormEvent, type ReactNode } from "react";
 import { ArrowLeft, Trash2 } from "lucide-react";
 
 import type { ControlRoomActionState } from "@/app/admin/actions";
 import { ActionStatus } from "@/components/control-room/shared";
+import { useDashboardNotify } from "@/components/control-room/notifications";
+import { ConfirmDialog } from "@/components/control-room/confirm-dialog";
 import { useLanguage } from "@/components/language-provider";
 import type { TextKey } from "@/lib/i18n";
 
@@ -15,14 +17,20 @@ export const idleState: ControlRoomActionState = { status: "idle", message: "" }
 
 /**
  * Runs a Control Room action without React's automatic form reset, so typed
- * values stay after an error. With `confirmText`, the browser asks first.
+ * values stay after an error.
  */
-export function useCrForm(action: CrAction, confirmText?: string) {
-  const [state, formAction, pending] = useActionState(action, idleState);
+export function useCrForm(action: CrAction) {
+  const notify = useDashboardNotify();
+  const [state, formAction, pending] = useActionState(async (previous: ControlRoomActionState, data: FormData) => {
+    const reply = await action(previous, data);
+    // Product/collection forms remount after their server data is refreshed.
+    // The layout owns the notification so successful saves remain visible.
+    notify(reply);
+    return reply;
+  }, idleState);
 
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (confirmText && !window.confirm(confirmText)) return;
     const submitter = (event.nativeEvent as SubmitEvent).submitter;
     const formData = new FormData(event.currentTarget, submitter);
     startTransition(() => formAction(formData));
@@ -106,8 +114,14 @@ export function DeleteForm({ action, id, confirm, label = "crsDelete", compact }
   compact?: boolean;
 }) {
   const { t } = useLanguage();
-  const { state, formAction, pending, onSubmit } = useCrForm(action, t[confirm]);
+  const { state, formAction, pending } = useCrForm(action);
+  const [confirmation, setConfirmation] = useState<FormData | null>(null);
+  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setConfirmation(new FormData(event.currentTarget, (event.nativeEvent as SubmitEvent).submitter));
+  };
   return (
+    <>
     <form className={compact ? "crs-delete is-compact" : "crs-delete"} action={formAction} onSubmit={onSubmit}>
       <input type="hidden" name="id" value={id} />
       <button className="crs-danger-button" type="submit" disabled={pending}>
@@ -116,6 +130,8 @@ export function DeleteForm({ action, id, confirm, label = "crsDelete", compact }
       </button>
       <ActionStatus state={state} />
     </form>
+    {confirmation && <ConfirmDialog question={t[confirm]} onCancel={() => setConfirmation(null)} onConfirm={() => { const data = confirmation; setConfirmation(null); startTransition(() => formAction(data)); }} />}
+    </>
   );
 }
 

@@ -43,7 +43,7 @@ export function ContactForm() {
   }
 
   return (
-    <form className="contact-form panel" onSubmit={submit}>
+    <form className="contact-form panel" aria-labelledby="contact-form-title" aria-describedby="contact-safety" onSubmit={submit}>
       <div className="form-row">
         <label>
           {t.contactFieldName}

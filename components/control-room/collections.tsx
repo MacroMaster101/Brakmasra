@@ -195,6 +195,7 @@ export function CollectionEditor({ data, canManage, notice }: {
             desc="crsCollectionFormDesc"
           >
             <Notice text={notice} />
+            {collection?.active && <Link className="cms-link" href={`/shop?collection=${collection.slug}`} target="_blank" rel="noopener">{t.navShop} ↗</Link>}
             <CollectionForm key={collection ? `${collection.id}:${collection.productIds.join(",")}` : "new"} collection={collection} products={products} canManage={canManage} />
             {collection && canManage && (
               <section className="crs-danger" aria-labelledby="crs-delete-collection">

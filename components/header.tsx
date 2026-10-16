@@ -1,9 +1,10 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/store-image";
 import Link from "next/link";
 import {
   ChevronDown,
+  ArrowRight,
   Heart,
   Menu,
   Search,
@@ -23,13 +24,18 @@ import { CurrencySwitcher } from "@/components/currency-switcher";
 import { primaryNav } from "@/data/navigation";
 import { useWishlist } from "@/lib/wishlist";
 import type { MemberSummary } from "@/lib/member";
+import { shopCategories, type ShopMenu } from "@/data/shop-menu";
+import { lockPageScroll } from "@/lib/page-scroll-lock";
+import { SearchPanel } from "@/components/search-panel";
 
 export function Header({
   commerceEnabled,
   member,
+  shopMenu,
 }: {
   commerceEnabled: boolean;
   member: MemberSummary | null;
+  shopMenu: ShopMenu;
 }) {
   const [open, setOpen] = useState(false);
   const [dropdown, setDropdown] = useState<string | null>(null);
@@ -38,8 +44,10 @@ export function Header({
   const { slugs } = useWishlist();
   const { t } = useLanguage();
   const search = useRef<HTMLDialogElement>(null);
+  const releaseSearchLock = useRef<(() => void) | null>(null);
   const drawer = useRef<HTMLElement>(null);
   const menuButton = useRef<HTMLButtonElement>(null);
+  const shopButton = useRef<HTMLButtonElement>(null);
   const header = useRef<HTMLElement>(null);
   const navId = useId();
   const searchId = useId();
@@ -51,6 +59,7 @@ export function Header({
       setDropdown(href);
   };
   const leaveMenu = () => {
+    if (!window.matchMedia("(min-width: 1200px) and (hover: hover)").matches) return;
     menuLeaveTimer.current = setTimeout(() => setDropdown(null), 130);
   };
   const { scrollY } = useScroll();
@@ -93,6 +102,22 @@ export function Header({
     setOpen(false);
     setDropdown(null);
   };
+  const openSearch = () => {
+    close();
+    requestAnimationFrame(() => {
+      if (!search.current || search.current.open) return;
+      releaseSearchLock.current = lockPageScroll();
+      search.current.showModal();
+      search.current.querySelector<HTMLInputElement>('input[type="search"]')?.focus({ preventScroll: true });
+    });
+  };
+  useEffect(() => () => releaseSearchLock.current?.(), []);
+  useEffect(() => {
+    if (!header.current) return;
+    header.current.dataset.scrolled = String(window.scrollY > 36);
+    header.current.dataset.hidden = "false";
+    lastScroll.current = window.scrollY;
+  }, []);
   useEffect(() => {
     const onClick = (event: MouseEvent) => {
       if (!header.current?.contains(event.target as Node)) setDropdown(null);
@@ -101,7 +126,8 @@ export function Header({
       if (event.key === "Escape") {
         setOpen(false);
         setDropdown(null);
-        if (open) menuButton.current?.focus();
+        if (open) menuButton.current?.focus({ preventScroll: true });
+        else if (dropdown) shopButton.current?.focus({ preventScroll: true });
       }
       if (open && event.key === "Tab") {
         const elements =
@@ -111,10 +137,10 @@ export function Header({
           last = elements[elements.length - 1];
         if (event.shiftKey && document.activeElement === first) {
           event.preventDefault();
-          last.focus();
+            last.focus({ preventScroll: true });
         } else if (!event.shiftKey && document.activeElement === last) {
           event.preventDefault();
-          first.focus();
+            first.focus({ preventScroll: true });
         }
       }
     };
@@ -125,54 +151,34 @@ export function Header({
       document.removeEventListener("keydown", onKey);
       if (menuLeaveTimer.current) clearTimeout(menuLeaveTimer.current);
     };
-  }, [open]);
+  }, [open, dropdown]);
   useEffect(() => {
     if (!open) return;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    drawer.current?.querySelector<HTMLButtonElement>("button")?.focus();
+    const unlock = lockPageScroll();
+    drawer.current?.querySelector<HTMLButtonElement>("button")?.focus({ preventScroll: true });
+    const desktop = window.matchMedia("(min-width: 1200px)");
+    const onResize = () => { if (desktop.matches) { setOpen(false); setDropdown(null); } };
+    desktop.addEventListener("change", onResize);
     return () => {
-      document.body.style.overflow = previous;
+      unlock();
+      desktop.removeEventListener("change", onResize);
     };
   }, [open]);
-  const sublinks = (href: string) =>
-    href === "/"
-      ? [
-          { label: t.storeNewArrivals, href: "/#collection" },
-          { label: t.storeExploreTitle, href: "/#collections" },
-          { label: t.storeLookbookTitle, href: "/#lookbook" },
-        ]
-      : [
-          { label: t.storeAllTees, href: "/shop" },
-          { label: t.storeBlackTees, href: "/shop?color=black" },
-          { label: t.storeWhiteTees, href: "/shop?color=white" },
-          { label: t.storeSaved, href: "/shop?saved=1" },
-        ];
   const shopGroups = [
-    { title: t.footerCollection, links: sublinks("/shop") },
-    {
-      title: t.storeInformation,
-      links: [
-        { label: t.footerOurStory, href: "/about" },
-        { label: t.storeLookbookTitle, href: "/#lookbook" },
-        { label: t.homeNewsletterBtn, href: "/#drop-alerts" },
-        { label: t.navContact, href: "/contact" },
-      ],
-    },
-    {
-      title: t.storeCustomerServices,
-      links: [
-        { label: t.footerOrderSupport, href: "/contact" },
-        { label: t.storeDelivery, href: "/terms" },
-        { label: t.storeReturns, href: "/terms" },
-        { label: t.legalPrivacy, href: "/privacy" },
-      ],
-    },
-  ];
+    { id: "clothing", title: t.storeClothing },
+    { id: "accessories", title: t.storeAccessories },
+  ].map((group) => ({
+    ...group,
+    links: shopCategories.filter((category) => category.group === group.id).map((category) => ({
+      label: t[category.labelKey],
+      href: `/shop?category=${category.id}`,
+      available: shopMenu.categories.some((item) => item.id === category.id && item.available),
+    })),
+  }));
   return (
     <header
       ref={header}
-      className={`site-header storefront-header${pathname === "/" ? " is-home" : ""}`}
+      className={`site-header storefront-header${pathname === "/" ? " is-home" : ""}${pathname === "/about" ? " is-about" : ""}`}
     >
       <a className="skip-link" href="#content">
         {t.skipLink}
@@ -212,12 +218,16 @@ export function Header({
             className="icon-button mobile-close"
             onClick={() => {
               close();
-              menuButton.current?.focus();
+              menuButton.current?.focus({ preventScroll: true });
             }}
             aria-label={t.navCloseMenu}
           >
             <X />
           </button>
+          <div className="mobile-drawer-heading">
+            <Link href="/" onClick={close} aria-label={t.brandHomeLabel}>BRAKMASRA</Link>
+            <Link className="mobile-drawer-login" href={member ? "/account" : "/login"} onClick={close}>{member ? t.navAccount : t.navLogin}<UserRound aria-hidden="true" /></Link>
+          </div>
           {primaryNav.map(({ labelKey, href }) => (
             <div
               key={href}
@@ -238,6 +248,7 @@ export function Header({
                 </Link>
                 {href === "/shop" && (
                   <button
+                    ref={shopButton}
                     type="button"
                     className="nav-chevron"
                     aria-label={`${t[labelKey]} ${t.navOpenMenu}`}
@@ -262,6 +273,8 @@ export function Header({
                 <div
                   id={`${navId}-${labelKey}`}
                   className="store-nav-dropdown shop-mega-menu"
+                  role="group"
+                  aria-label={t.storeShopMenu}
                   data-open={dropdown === href}
                   inert={dropdown !== href}
                   aria-hidden={dropdown !== href}
@@ -272,61 +285,55 @@ export function Header({
                   onPointerLeave={leaveMenu}
                 >
                   <div className="shop-mega-inner">
+                    <div className="shop-mega-column">
+                      <h2>{t.footerCollection}</h2>
+                      <div className="shop-mega-links">
+                        <Link href="/shop" onClick={close}>{t.storeBrowseAll}</Link>
+                        <Link href="/shop?saved=1" onClick={close}>{t.storeSaved}</Link>
+                      </div>
+                    </div>
                     {shopGroups.map((group) => (
                       <div className="shop-mega-column" key={group.title}>
                         <h2>{group.title}</h2>
-                        {group.links.map((item) => (
+                        <div className="shop-mega-links">{group.links.map((item) => (
                           <Link
                             key={item.label}
                             href={item.href}
                             onClick={close}
+                            className={!item.available ? "shop-category-upcoming" : undefined}
                           >
-                            {item.label}
+                            <span>{item.label}</span>{!item.available && <small>{t.shopComingSoon}</small>}
                           </Link>
-                        ))}
+                        ))}</div>
                       </div>
                     ))}
-                    {[
-                      {
-                        label: t.storeBlackTees,
-                        href: "/shop?color=black",
-                        image: "/images/models/caged-freedom.webp",
-                      },
-                      {
-                        label: t.storeWhiteTees,
-                        href: "/shop?color=white",
-                        image: "/images/models/paradise-lost.webp",
-                      },
-                    ].map((tile) => (
-                      <Link
-                        className="shop-mega-tile"
-                        href={tile.href}
-                        key={tile.href}
-                        onClick={close}
-                      >
+                    {shopMenu.cards.map((tile) => {
+                      const label = tile.color === "black" ? t.storeBlackTees : t.storeWhiteTees;
+                      const content = <>
                         <Image
                           src={tile.image}
                           alt=""
                           fill
                           sizes="(min-width: 1200px) 24vw, 160px"
                         />
-                        <span>
-                          {tile.label}
-                          <span>
-                            {t.navShop} <span aria-hidden="true">→</span>
-                          </span>
-                        </span>
-                      </Link>
-                    ))}
+                        <span className="shop-mega-caption"><strong>{label}</strong><span className="shop-mega-cta">{tile.href ? <><span>{t.navShop}</span><ArrowRight aria-hidden="true" /></> : t.shopComingSoon}</span></span>
+                      </>;
+                      return tile.href ? <Link className="shop-mega-tile" href={tile.href} key={tile.color} onClick={close}>{content}</Link>
+                        : <div className="shop-mega-tile" key={tile.color} aria-disabled="true">{content}</div>;
+                    })}
                   </div>
                 </div>
               )}
             </div>
           ))}
-          <MobileAccountPanel member={member} onNavigate={close} />
+          <div className="mobile-drawer-quick">
+            <Link href="/shop?saved=1" onClick={close}>{t.storeWishlist}<Heart aria-hidden="true" /></Link>
+            <button type="button" onClick={openSearch}>{t.storeSearchButton}<Search aria-hidden="true" /></button>
+          </div>
+          {member && <MobileAccountPanel member={member} onNavigate={close} />}
           <div className="mobile-lang-wrap">
-            <LanguageSwitcher showLabels />
-            <CurrencySwitcher />
+            <LanguageSwitcher showLabels placement="up" />
+            <CurrencySwitcher placement="up" />
             <ThemeToggle />
           </div>
         </nav>
@@ -348,7 +355,7 @@ export function Header({
             className="icon-button"
             type="button"
             aria-label={t.storeSearch}
-            onClick={() => search.current?.showModal()}
+            onClick={openSearch}
           >
             <Search />
           </button>
@@ -391,55 +398,10 @@ export function Header({
           aria-label={t.navCloseMenu}
         />
       )}
-      <dialog
-        ref={search}
-        className="store-dialog search-dialog"
-        aria-labelledby={searchId}
-        onClick={(event) => {
-          if (event.target === event.currentTarget) search.current?.close();
-        }}
-      >
-        <div className="dialog-heading">
-          <h2 id={searchId}>{t.storeSearch}</h2>
-          <button
-            className="icon-button"
-            type="button"
-            aria-label={t.storeClose}
-            onClick={() => search.current?.close()}
-          >
-            <X />
-          </button>
-        </div>
-        <form action="/shop" onSubmit={() => search.current?.close()}>
-          <label className="search-field">
-            <Search />
-            <span className="sr-only">{t.shopSearchLabel}</span>
-            <input
-              autoFocus
-              type="search"
-              name="q"
-              placeholder={t.shopSearchPlaceholder}
-              required
-            />
-          </label>
-          <button className="button button-primary" type="submit">
-            {t.storeSearchButton}
-          </button>
-        </form>
-        <div className="search-suggestions">
-          {sublinks("/shop")
-            .slice(0, 3)
-            .map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => search.current?.close()}
-              >
-                {item.label}
-              </Link>
-            ))}
-        </div>
-      </dialog>
+      <SearchPanel dialogRef={search} titleId={searchId} menu={shopMenu} onClose={() => {
+        releaseSearchLock.current?.();
+        releaseSearchLock.current = null;
+      }} />
     </header>
   );
 }

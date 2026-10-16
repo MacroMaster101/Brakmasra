@@ -21,6 +21,9 @@ CLAUDE.local.md
 .windsurfrules
 .continue/
 .github/copilot-instructions.md
+.github/instructions/
+.github/prompts/
+.github/agents/
 .codeium/
 .roo/
 .clinerules
@@ -28,11 +31,30 @@ AGENTS.md
 GEMINI.md
 .gemini/
 .codex/
+.agents/
+.agent/
+.opencode/
+.qwen/
+.trae/
 .kiro/
 .freebuff/
 .superpowers/
 docs/superpowers/
 graphify-out/
+# Local AI generation prompts, QA reports and browser preview screenshots.
+# Website source, public image assets and project documentation stay versioned.
+/design/
+
+# Private credentials, local exports and database snapshots
+*.pem
+*.key
+*.p12
+*.pfx
+*.sqlite
+*.sqlite3
+*.db
+/backups/
+/exports/
 
 # tooling and OS
 *.log

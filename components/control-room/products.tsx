@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
-import { PackagePlus, Plus, Shirt } from "lucide-react";
+import { PackagePlus, Pencil, Plus, Shirt } from "lucide-react";
 
 import { importStarterProductsAction } from "@/app/admin/store-actions";
 import { ActionStatus, EmptyState, SectionGate, SectionPanel, StatusPill } from "@/components/control-room/shared";
@@ -72,6 +72,7 @@ export function ControlRoomProducts({ products, canManage, notice }: {
                   <th scope="col">{t.crsStock}</th>
                   <th scope="col">{t.crsUpdated}</th>
                   <th scope="col" className="is-end">{t.crsPrice}</th>
+                  {canManage && <th scope="col" className="is-end">{t.crsProductActions}</th>}
                 </tr>
               </thead>
               <tbody>
@@ -105,6 +106,14 @@ export function ControlRoomProducts({ products, canManage, notice }: {
                     <td data-label={t.crsPrice} className="is-end">
                       <strong>{formatMoney(product.priceMinor, product.currency)}</strong>
                     </td>
+                    {canManage && (
+                      <td data-label={t.crsProductActions} className="is-end">
+                        <Link className="crs-edit-product" href={`/admin/products/${product.id}`} aria-label={`${t.crsEditProduct}: ${product.name}`}>
+                          <Pencil size={16} aria-hidden="true" />
+                          {t.crsEditProduct}
+                        </Link>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>

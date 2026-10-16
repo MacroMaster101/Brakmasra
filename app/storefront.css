@@ -802,7 +802,7 @@ select {
   background: rgb(12 12 15 / 0.6);
   backdrop-filter: blur(3px);
 }
-body:has(.store-dialog[open]) {
+html:has(.store-dialog[open]) {
   overflow: hidden;
 }
 .dialog-heading {

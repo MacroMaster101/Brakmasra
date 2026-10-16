@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 
 import { noIndex, requireControlRoom } from "@/app/admin/access";
+import { DashboardToolbar } from "@/components/control-room/dashboard-toolbar";
+import { DashboardNotifications } from "@/components/control-room/notifications";
 import { ControlRoomHeader } from "@/components/control-room/control-room-header";
 import { controlRoomSections } from "@/lib/control-room-validation";
 
@@ -12,11 +14,13 @@ export default async function ControlRoomLayout({ children }: { children: React.
   const viewer = await requireControlRoom("control_room", "/admin");
 
   return (
+    <DashboardNotifications>
     <section className="cr-page">
       <div className="page-shell cr-shell">
         <ControlRoomHeader name={viewer.name} role={viewer.role} sections={controlRoomSections(viewer.role)} />
-        <div className="cr-content">{children}</div>
+        <div className="cr-content"><DashboardToolbar />{children}</div>
       </div>
     </section>
+    </DashboardNotifications>
   );
 }

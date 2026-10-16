@@ -91,43 +91,6 @@ function productRow(input: ProductInput) {
   };
 }
 
-/**
- * Makes the product's variants match the stock grid: existing size and colour
- * pairs are updated (and switched back on), new ones are added, and removed
- * ones are deleted, or only switched off when an order still points at them.
- */
-async function syncVariants(supabase: Admin, productId: string, slug: string, wanted: ProductInput["variants"]) {
-  const { data: existing, error } = await supabase
-    .from("product_variants")
-    .select("id, size, color")
-    .eq("product_id", productId);
-  if (error) return false;
-
-  const key = (size: string | null, color: string | null) => `${size ?? ""}\u0000${color ?? ""}`;
-  const current = new Map((existing ?? []).map((row) => [key(row.size, row.color), row.id as string]));
-  const wantedKeys = new Set(wanted.map((variant) => key(variant.size, variant.color)));
-
-  for (const variant of wanted) {
-    const id = current.get(key(variant.size, variant.color));
-    const fields = { size: variant.size || null, color: variant.color || null, inventory: variant.inventory, active: true };
-    const result = id
-      ? await supabase.from("product_variants").update(fields).eq("id", id)
-      : await supabase.from("product_variants").insert({ ...fields, product_id: productId, sku: sku(slug, variant.size, variant.color) });
-    if (result.error) return false;
-  }
-
-  for (const [variantKey, id] of current) {
-    if (wantedKeys.has(variantKey)) continue;
-    const removed = await supabase.from("product_variants").delete().eq("id", id);
-    if (removed.error) {
-      // Still referenced by an order: keep the record, stop selling it.
-      const hidden = await supabase.from("product_variants").update({ active: false, inventory: 0 }).eq("id", id);
-      if (hidden.error) return false;
-    }
-  }
-  return true;
-}
-
 export async function saveProductAction(
   _previousState: ControlRoomActionState,
   formData: FormData,
@@ -146,16 +109,11 @@ export async function saveProductAction(
 
   let productId = id?.data.id ?? "";
   try {
-    const row = productRow(input);
-    const result = productId
-      ? await supabase.from("products").update(row).eq("id", productId).select("id").maybeSingle()
-      : await supabase.from("products").insert({ ...row, currency: "LKR" }).select("id").single();
+    const result = await supabase.rpc("admin_save_product", { p_id: productId || null, p_product: productRow(input), p_variants: input.variants });
     if (isDuplicate(result.error)) return { status: "error", message: "Another product already uses that web address." };
-    if (result.error) return notSaved;
-    if (!result.data) return { status: "error", message: "That product no longer exists." };
-    productId = String(result.data.id);
-
-    if (!(await syncVariants(supabase, productId, input.slug, input.variants))) return notSaved;
+    if (result.error?.code === "P0002") return { status: "error", message: "That product no longer exists." };
+    if (result.error || !result.data) return notSaved;
+    productId = String(result.data);
   } catch {
     return notSaved;
   }
@@ -401,38 +359,22 @@ export async function moveProductImageAction(
 ): Promise<ControlRoomActionState> {
   const checked = await guard("manage_catalog", "product-photo", 80);
   if ("error" in checked) return checked.error;
-  const { supabase } = checked;
+  const { viewer, supabase } = checked;
 
   const parsed = imageMoveSchema.safeParse({ id: formText(formData.get("id")), direction: formText(formData.get("direction")) });
   if (!parsed.success) return { status: "error", message: firstIssue(parsed) };
 
   let productId: string;
   try {
-    const photo = await photoProduct(supabase, parsed.data.id);
-    if (!photo) return { status: "error", message: "That photo no longer exists." };
-    productId = photo.productId;
-    const { data: siblings, error } = await supabase
-      .from("product_images")
-      .select("id, position")
-      .eq("product_id", productId)
-      .order("position")
-      .order("id");
-    if (error || !siblings) return notSaved;
-
-    // Renumber 0..n-1 in the new order, which also repairs any gaps or ties.
-    const order = siblings.map((row) => String(row.id));
-    const from = order.indexOf(parsed.data.id);
-    const to = parsed.data.direction === "up" ? from - 1 : from + 1;
-    if (from < 0 || to < 0 || to >= order.length) return { status: "success", message: "Photo order saved." };
-    [order[from], order[to]] = [order[to], order[from]];
-    for (const [position, imageId] of order.entries()) {
-      const result = await supabase.from("product_images").update({ position }).eq("id", imageId);
-      if (result.error) return notSaved;
-    }
+    const result = await supabase.rpc("admin_move_product_image", { p_id: parsed.data.id, p_direction: parsed.data.direction });
+    if (result.error?.code === "P0002") return { status: "error", message: "That photo no longer exists." };
+    if (result.error || !result.data) return notSaved;
+    productId = String(result.data);
   } catch {
     return notSaved;
   }
 
+  await audit(viewer, "product.photo.move", "product", productId);
   refreshStore();
   revalidatePath(`/admin/products/${productId}`);
   return { status: "success", message: "Photo order saved." };
@@ -444,7 +386,7 @@ export async function updateProductImageAltAction(
 ): Promise<ControlRoomActionState> {
   const checked = await guard("manage_catalog", "product-photo", 80);
   if ("error" in checked) return checked.error;
-  const { supabase } = checked;
+  const { viewer, supabase } = checked;
 
   const parsed = imageAltSchema.safeParse({ id: formText(formData.get("id")), altText: formText(formData.get("altText")) });
   if (!parsed.success) return { status: "error", message: firstIssue(parsed) };
@@ -460,6 +402,7 @@ export async function updateProductImageAltAction(
     return notSaved;
   }
 
+  await audit(viewer, "product.photo.description", "product", productId);
   refreshStore();
   revalidatePath(`/admin/products/${productId}`);
   return { status: "success", message: "Photo description saved." };
@@ -493,22 +436,16 @@ export async function saveCollectionAction(
 
   let collectionId = id?.data.id ?? "";
   try {
-    const row = { name: input.name, slug: input.slug, description: input.description, active: input.active };
-    const result = collectionId
-      ? await supabase.from("collections").update(row).eq("id", collectionId).select("id").maybeSingle()
-      : await supabase.from("collections").insert(row).select("id").single();
+    const result = await supabase.rpc("admin_save_collection", {
+      p_id: collectionId || null,
+      p_collection: { name: input.name, slug: input.slug, description: input.description, active: input.active },
+      p_product_ids: input.productIds,
+    });
     if (isDuplicate(result.error)) return { status: "error", message: "Another collection already uses that web address." };
-    if (result.error) return notSaved;
-    if (!result.data) return { status: "error", message: "That collection no longer exists." };
-    collectionId = String(result.data.id);
-
-    const cleared = await supabase.from("collection_products").delete().eq("collection_id", collectionId);
-    if (cleared.error) return notSaved;
-    if (input.productIds.length) {
-      const links = input.productIds.map((productId, position) => ({ collection_id: collectionId, product_id: productId, position }));
-      const linked = await supabase.from("collection_products").insert(links);
-      if (linked.error) return { status: "error", message: "One of the chosen products no longer exists. Reload and try again." };
-    }
+    if (result.error?.code === "P0002") return { status: "error", message: "That collection no longer exists." };
+    if (result.error?.code === "23503") return { status: "error", message: "One of the chosen products no longer exists. Reload and try again." };
+    if (result.error || !result.data) return notSaved;
+    collectionId = String(result.data);
   } catch {
     return notSaved;
   }

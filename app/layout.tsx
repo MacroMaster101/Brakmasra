@@ -7,6 +7,18 @@ import "./storefront.css";
 import "./storefront-navigation.css";
 import "./storefront-auth.css";
 import "./storefront-typography.css";
+import "./storefront-about.css";
+import "./storefront-editorial.css";
+import "./storefront-shop.css";
+import "./storefront-search.css";
+import "./storefront-wishlist.css";
+import "./storefront-cart.css";
+import "./storefront-product.css";
+import { ContentProvider } from "@/components/content-provider";
+import { getPublicContent } from "@/lib/content";
+import "./control-room.css";
+import "./storefront-loading.css";
+import "./storefront-visibility.css";
 import { SiteFrame } from "@/components/site-frame";
 import { site } from "@/data/site";
 import { getSiteUrl } from "@/lib/auth";
@@ -14,6 +26,8 @@ import { launchMode } from "@/lib/features";
 import { LANGUAGE_COOKIE, parseLanguage } from "@/lib/i18n";
 import { CURRENCY_COOKIE, parseCurrency } from "@/lib/currency";
 import { getUsdRate } from "@/lib/exchange-rates";
+import { getCatalog } from "@/lib/store";
+import { buildShopMenu } from "@/data/shop-menu";
 import { getCurrentMember, memberSummary } from "@/lib/member";
 import { defaultTitle, socialMetadata } from "@/lib/seo";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -60,7 +74,9 @@ export default async function RootLayout({
   const lang = parseLanguage(preferences.get(LANGUAGE_COOKIE)?.value);
   const currency = parseCurrency(preferences.get(CURRENCY_COOKIE)?.value);
   const usdRate = launchMode ? null : await getUsdRate();
-  const member = memberSummary(await getCurrentMember());
+  const [currentMember, catalog, content] = await Promise.all([getCurrentMember(), getCatalog(), getPublicContent()]);
+  const member = memberSummary(currentMember);
+  const shopMenu = buildShopMenu(catalog);
   const nonce = (await headers()).get("x-nonce") ?? undefined;
 
   return (
@@ -79,15 +95,18 @@ export default async function RootLayout({
         />
       </head>
       <body>
+        <ContentProvider content={content}>
         <SiteFrame
           initialLang={lang}
           initialCurrency={currency}
           usdRate={usdRate}
           launchMode={launchMode}
           member={member}
+          shopMenu={shopMenu}
         >
           {children}
         </SiteFrame>
+        </ContentProvider>
         {process.env.VERCEL === "1" && (
           <>
             <SpeedInsights />

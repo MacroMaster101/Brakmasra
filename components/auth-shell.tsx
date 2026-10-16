@@ -1,6 +1,7 @@
 "use client";
 
-import Image from "next/image";
+import { AuthBrandAnimation } from "@/components/auth-brand-animation";
+import Image from "@/components/store-image";
 import Link from "next/link";
 import { X } from "lucide-react";
 
@@ -26,7 +27,7 @@ export function AuthShell({
   const { t } = useLanguage();
 
   return (
-    <section className={`auth-page${compact ? " is-register" : ""}`}>
+    <section className={`auth-page${compact ? " is-register" : ""}${titleKey === "loginTitle" ? " is-login" : ""}`}>
       <header className="auth-topbar">
         <Link className="auth-home-link" href="/" aria-label={t.brandHomeLabel}>
           <span>BRAKMASRA</span>
@@ -42,20 +43,10 @@ export function AuthShell({
 
       <div className={`auth-shell${compact ? " is-compact" : ""}`}>
         <div className="auth-art" aria-hidden="true">
-          <div className="auth-art-image">
-            <Image
-              src={
-                compact
-                  ? "/images/auth/members-medusa-cutout.webp"
-                  : "/images/auth/members-paradise-cutout.webp"
-              }
-              alt=""
-              fill
-              preload
-              quality={95}
-              sizes="(max-width: 767px) 76vw, 50vw"
-            />
+          <div className="auth-art-image auth-desktop-model">
+            <Image src={compact ? "/images/auth/members-medusa-cutout.webp" : "/images/auth/members-paradise-cutout.webp"} alt="" fill quality={95} sizes="(max-width: 767px) 1px, 50vw" />
           </div>
+          <AuthBrandAnimation />
           <div className="auth-art-copy">
             <span>{t.authArtEyebrow}</span>
             <h2>{t.authArtTitle}</h2>

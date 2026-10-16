@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/store-image";
 import Link from "next/link";
-import { ArrowUpRight, Eye, Heart, X } from "lucide-react";
+import { ArrowUpRight, Eye, Heart, Trash2, X } from "lucide-react";
 import { useId, useRef } from "react";
 import type { Product } from "@/data/products";
 import { useCurrency } from "@/components/currency-provider";
@@ -17,6 +17,7 @@ type ProductCardProps = {
   priority?: boolean;
   product: Product;
   sizes?: string;
+  removeOnly?: boolean;
 };
 
 export function ProductCard({
@@ -24,6 +25,7 @@ export function ProductCard({
   commerceEnabled,
   className = "",
   priority = false,
+  removeOnly = false,
   sizes = "(max-width: 767px) 50vw, (max-width: 1199px) 33vw, 340px",
 }: ProductCardProps) {
   const { t, lang } = useLanguage();
@@ -84,13 +86,13 @@ export function ProductCard({
         )}
         <button
           type="button"
-          className={`product-save icon-button${saved ? " is-saved" : ""}`}
+          className={`product-save icon-button${saved && !removeOnly ? " is-saved" : ""}`}
           aria-label={`${saved ? t.storeUnsave : t.storeSave}: ${product.name}`}
           title={saved ? t.storeUnsave : t.storeSave}
-          aria-pressed={saved}
+          aria-pressed={removeOnly ? undefined : saved}
           onClick={() => toggle(product.slug)}
         >
-          <Heart />
+          {removeOnly ? <Trash2 /> : <Heart />}
         </button>
         <button
           type="button"

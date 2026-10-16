@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Fragment } from "react";
 
 import { useLanguage } from "@/components/language-provider";
+import { usePageCopy } from "@/components/content-provider";
 import { LEGAL_UPDATED, legalDocuments, type LegalBlock, type LegalDocumentId } from "@/data/legal";
 import { formatDate } from "@/lib/i18n";
 
@@ -38,7 +39,7 @@ function Block({ block }: { block: LegalBlock }) {
 
 export function LegalView({ document: documentId }: { document: LegalDocumentId }) {
   const { t, lang } = useLanguage();
-  const doc = legalDocuments[documentId][lang];
+  const doc = usePageCopy(documentId, lang, legalDocuments[documentId][lang]);
   const updated = formatDate(LEGAL_UPDATED, lang);
 
   return (

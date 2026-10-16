@@ -1,6 +1,7 @@
 "use client";
 
 import { ExternalLink, ScrollText } from "lucide-react";
+import Link from "next/link";
 
 import { messageStatusLabels } from "@/components/control-room/messages";
 import { EmptyState, SectionGate, SectionPanel, StatusPill } from "@/components/control-room/shared";
@@ -42,6 +43,8 @@ export function ControlRoomSite({ checks, audit }: { checks: SiteCheck[]; audit:
 
   return (
     <>
+      <p className="cms-notice">{t.crPaymentPending}</p>
+      <Link href="/admin/site/loading-preview" className="cms-link">Loading-state previews →</Link>
       <SectionPanel id="cr-site-title" title="crSiteTitle" desc="crSiteDesc">
         <ul className="cr-checks">
           {checks.map(({ label, value, kind }) => (

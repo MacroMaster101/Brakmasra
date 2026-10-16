@@ -6,6 +6,7 @@ export const primaryNav: NavLink[] = [
   { label: "Home", labelKey: "navHome", href: "/" },
   { label: "Shop", labelKey: "navShop", href: "/shop" },
   { label: "About", labelKey: "navAbout", href: "/about" },
+  { label: "Blog", labelKey: "navBlog", href: "/blog" },
   { label: "Contact", labelKey: "navContact", href: "/contact" },
 ];
 
@@ -37,6 +38,7 @@ export const footerColumns: { title: string; titleKey: TextKey; links: NavLink[]
     links: [
       { label: "Our story", labelKey: "footerOurStory", href: "/about" },
       { label: "Archive", labelKey: "footerArchive", href: "/about" },
+      { label: "Blog", labelKey: "navBlog", href: "/blog" },
     ],
   },
   {

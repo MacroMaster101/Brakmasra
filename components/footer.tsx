@@ -25,6 +25,7 @@ export function Footer() {
       title: t.storeInformation,
       links: [
         { label: t.navAbout, href: "/about" },
+        { label: t.navBlog, href: "/blog" },
         { label: t.navContact, href: "/contact" },
         { label: t.navMyProfile, href: "/account" },
         { label: t.legalTerms, href: "/terms" },

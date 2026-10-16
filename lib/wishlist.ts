@@ -33,10 +33,11 @@ function subscribe(callback: () => void) {
   };
 }
 export function useWishlist() {
-  const raw = useSyncExternalStore(subscribe, read, () => "[]");
-  const slugs = parseWishlist(raw);
+  const raw = useSyncExternalStore(subscribe, read, () => null);
+  const slugs = parseWishlist(raw ?? "[]");
   return {
     slugs,
+    ready: raw !== null,
     toggle(slug: string) {
       const current = parseWishlist(read());
       try {

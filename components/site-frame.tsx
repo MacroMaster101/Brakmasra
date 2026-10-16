@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 
 import { CartProvider } from "@/components/cart-provider";
+import { ContentScope } from "@/components/content-provider";
 import { CurrencyProvider } from "@/components/currency-provider";
 import { FloatingActions } from "@/components/floating-actions";
 import { Footer } from "@/components/footer";
@@ -12,6 +13,7 @@ import { ScrollRestoration } from "@/components/scroll-restoration";
 import type { Language } from "@/lib/i18n";
 import type { StoreCurrency } from "@/lib/currency";
 import type { MemberSummary } from "@/lib/member";
+import type { ShopMenu } from "@/data/shop-menu";
 
 const focusedAuthRoutes = new Set([
   "/forgot-password",
@@ -27,6 +29,7 @@ export function SiteFrame({
   usdRate,
   launchMode,
   member,
+  shopMenu,
 }: Readonly<{
   children: React.ReactNode;
   initialLang: Language;
@@ -34,11 +37,14 @@ export function SiteFrame({
   usdRate: number | null;
   launchMode: boolean;
   member: MemberSummary | null;
+  shopMenu: ShopMenu;
 }>) {
   const pathname = usePathname();
   const isFocusedAuthPage = focusedAuthRoutes.has(pathname);
+  const isDashboard = pathname === "/admin" || pathname.startsWith("/admin/");
 
   return (
+    <ContentScope pathname={pathname}>
     <LanguageProvider initialLang={initialLang}>
       <CurrencyProvider
         initialCurrency={initialCurrency}
@@ -47,22 +53,23 @@ export function SiteFrame({
       >
         <CartProvider>
           <ScrollRestoration />
-          {!isFocusedAuthPage && (
-            <Header commerceEnabled={!launchMode} member={member} />
+          {!isFocusedAuthPage && !isDashboard && (
+            <Header commerceEnabled={!launchMode} member={member} shopMenu={shopMenu} />
           )}
           <main
             id="content"
-            className={isFocusedAuthPage ? "auth-main" : undefined}
+            className={isFocusedAuthPage ? "auth-main" : isDashboard ? "dashboard-main" : undefined}
           >
             {children}
           </main>
-          {!isFocusedAuthPage && <Footer />}
+          {!isFocusedAuthPage && !isDashboard && <Footer />}
           {/* Staff screens skip the customer chat button. */}
-          {!isFocusedAuthPage && (
+          {!isFocusedAuthPage && !isDashboard && (
             <FloatingActions showWhatsApp={!pathname.startsWith("/admin")} />
           )}
         </CartProvider>
       </CurrencyProvider>
     </LanguageProvider>
+    </ContentScope>
   );
 }

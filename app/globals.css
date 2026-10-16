@@ -1741,10 +1741,6 @@ html[lang="si"] .legal-toc > span { font-size: .8rem; font-weight: 600; }
   min-height: 40px;
 }
 
-body:has(.nav-links.is-open) {
-  overflow: hidden;
-}
-
 @media (min-width: 1024px) {
   .nav-lang-desktop {
     display: inline-flex;

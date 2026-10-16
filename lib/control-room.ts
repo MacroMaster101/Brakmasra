@@ -118,6 +118,7 @@ async function countRows(table: string, column?: string, values?: readonly strin
 export function countNewMessages() {
   return countRows("contact_messages", "status", ["new"]);
 }
+export function countCatalogProducts() { return countRows("products"); }
 
 export async function orderCounts(): Promise<{ total: number | null; paid: number | null }> {
   const [total, paid] = await Promise.all([

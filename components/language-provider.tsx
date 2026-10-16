@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useContent } from "@/components/content-provider";
 import { LANGUAGE_COOKIE, parseLanguage, translations, type Language, type TranslationDictionary } from "@/lib/i18n";
 
 type LanguageContextType = {
@@ -42,6 +43,7 @@ export function LanguageProvider({
   initialLang: Language;
 }) {
   const router = useRouter();
+  const content = useContent();
   const [chosenLang, setChosenLang] = useState<Language | null>(null);
   const lang = chosenLang ?? initialLang;
 
@@ -83,8 +85,11 @@ export function LanguageProvider({
   }, [lang, setLang]);
 
   const value = useMemo(
-    () => ({ lang, setLang, toggleLang, t: translations[lang] }),
-    [lang, setLang, toggleLang],
+    () => {
+      const edits = Object.assign({}, ...Object.values(content.pages).map((page) => Object.fromEntries(Object.entries(page[lang]).filter(([key]) => key.startsWith("text.")).map(([key, value]) => [key.slice(5), value]))));
+      return { lang, setLang, toggleLang, t: { ...translations[lang], ...edits } };
+    },
+    [lang, setLang, toggleLang, content.pages],
   );
 
   return (

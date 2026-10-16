@@ -11,6 +11,7 @@ import { can, type MemberRole } from "@/lib/roles";
 
 /** Only the numbers the viewer's role may see are present. */
 export type OverviewStats = {
+  totalProducts?: number | null;
   newMessages?: number | null;
   totalOrders?: number | null;
   paidOrders?: number | null;
@@ -19,6 +20,7 @@ export type OverviewStats = {
 };
 
 const statCards: { key: keyof OverviewStats; label: TextKey; hint?: TextKey; href: string }[] = [
+  { key: "totalProducts", label: "crTabProducts", href: "/admin/products" },
   { key: "newMessages", label: "crStatNewMessages", href: "/admin/messages?status=new" },
   { key: "totalOrders", label: "crStatTotalOrders", href: "/admin/orders" },
   { key: "paidOrders", label: "crStatPaidOrders", hint: "crStatPaidOrdersHint", href: "/admin/orders" },
@@ -35,6 +37,7 @@ function accessItems(role: MemberRole): TextKey[] {
   const items: TextKey[] = [];
   if (can(role, "view_messages")) items.push("crAccessMessages");
   if (can(role, "view_orders")) items.push("crAccessOrders");
+  if (can(role, "manage_catalog")) items.push("crAccessCatalog");
   if (can(role, "view_newsletter")) items.push("crAccessNewsletter");
   if (can(role, "manage_team")) items.push(role === "web_dev" ? "crAccessTeamWebDev" : "crAccessTeamOwner");
   if (can(role, "manage_site")) items.push("crAccessSite");
@@ -67,6 +70,14 @@ export function ControlRoomOverview({ role, stats }: { role: MemberRole; stats: 
             </ul>
           )}
         </SectionGate>
+      </SectionPanel>
+
+      <SectionPanel id="cr-quick-title" title="crQuickTitle" desc="crQuickDesc">
+        <div className="dashboard-shortcuts">
+          {can(role, "manage_catalog") && <><Link href="/admin/products/new">{t.crsNewProduct} <span aria-hidden="true">→</span></Link><Link href="/admin/collections/new">{t.crsNewCollection} <span aria-hidden="true">→</span></Link></>}
+          {can(role, "manage_site") && <Link href="/admin/content">{t.crTabContent} <span aria-hidden="true">→</span></Link>}
+          {can(role, "view_orders") && <Link href="/admin/orders">{t.crTabOrders} <span aria-hidden="true">→</span></Link>}
+        </div>
       </SectionPanel>
 
       <SectionPanel id="cr-access-title" title="crAccessTitle" desc="crAccessDesc">

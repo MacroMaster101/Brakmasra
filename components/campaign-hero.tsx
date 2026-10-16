@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/store-image";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -9,12 +9,7 @@ import {
   Pause,
   Play,
 } from "lucide-react";
-import {
-  AnimatePresence,
-  motion,
-  useIsPresent,
-  useReducedMotion,
-} from "motion/react";
+import { useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useLanguage } from "@/components/language-provider";
 
@@ -36,23 +31,19 @@ type Slide = {
 function CampaignSlide({
   slide,
   index,
-  reducedMotion,
+  active,
 }: {
   slide: Slide;
   index: number;
-  reducedMotion: boolean | null;
+  active: boolean;
 }) {
-  const present = useIsPresent();
   const { t } = useLanguage();
   return (
-    <motion.div
+    <div
       className="campaign-stage"
       data-slide={index}
-      aria-hidden={!present}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: reducedMotion ? 0 : 0.8, ease: "easeInOut" }}
+      aria-hidden={!active}
+      inert={!active}
     >
       <div className="campaign-photograph">
         <Image
@@ -67,28 +58,20 @@ function CampaignSlide({
       </div>
       <div className="campaign-overlay" />
       <div className="campaign-inner">
-        <motion.div
-          className="campaign-copy"
-          initial={reducedMotion ? false : { opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            duration: reducedMotion ? 0 : 0.6,
-            delay: reducedMotion ? 0 : 0.12,
-          }}
-        >
+        <div className="campaign-copy">
           <h1>{slide.title}</h1>
           <p>{slide.description}</p>
           <Link
             className="button button-primary campaign-cta"
             href={slide.href}
-            tabIndex={present ? 0 : -1}
+            tabIndex={active ? 0 : -1}
           >
             {t.homeExploreBtn}
             <ArrowRight aria-hidden="true" />
           </Link>
-        </motion.div>
+        </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -109,21 +92,21 @@ export function CampaignHero() {
     !paused && !keyboardPaused && !reducedMotion && inView && pageVisible;
   const slides: Slide[] = [
     {
-      image: "/images/campaign-wide-4k.webp",
+      image: "/images/campaign/wide-cutout.webp",
       title: t.storeCampaignTitle,
       description: t.storeCampaignDesc,
       alt: t.storeCampaignAlt,
       href: "/shop",
     },
     {
-      image: "/images/campaign-black-4k.webp",
+      image: "/images/campaign/black-cutout.webp",
       title: t.storeSecondTitle,
       description: t.storeSecondDesc,
       alt: t.productPhotoAlt("Intoxicated Medusa Tee"),
       href: "/shop?color=black",
     },
     {
-      image: "/images/campaign-white-4k.webp",
+      image: "/images/campaign/white-cutout.webp",
       title: t.storeWhiteDesc,
       description: t.storeEditorialDesc,
       alt: t.productPhotoAlt("Vigorous Archangel Tee"),
@@ -178,14 +161,14 @@ export function CampaignHero() {
         loading="eager"
         style={{ opacity: 0, pointerEvents: "none" }}
       />
-      <AnimatePresence initial={false}>
+      {slides.map((slide, item) => (
         <CampaignSlide
-          key={index}
-          slide={slides[index]}
-          index={index}
-          reducedMotion={reducedMotion}
+          key={slide.image}
+          slide={slide}
+          index={item}
+          active={index === item}
         />
-      </AnimatePresence>
+      ))}
       <button
         className="campaign-side-arrow campaign-prev"
         type="button"

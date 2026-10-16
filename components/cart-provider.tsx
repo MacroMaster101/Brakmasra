@@ -32,7 +32,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
       setLines(storedLines);
       setHydrated(true);
     });
-    return () => { active = false; };
+    const onStorage = (event: StorageEvent) => {
+      if (event.storageArea === localStorage && (event.key === cartKey || event.key === null)) {
+        setLines(parseStoredCart(event.newValue));
+      }
+    };
+    window.addEventListener("storage", onStorage);
+    return () => { active = false; window.removeEventListener("storage", onStorage); };
   }, []);
 
   useEffect(() => {

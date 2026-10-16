@@ -2,11 +2,11 @@ import { describe, expect, it } from "vitest";
 import { authNav, controlRoomNav, footerColumns, joinNav, memberNav, primaryNav } from "@/data/navigation";
 import { translations } from "@/lib/i18n";
 
-const storeRoutes = ["/", "/shop", "/about", "/contact", "/cart"];
+const storeRoutes = ["/", "/shop", "/about", "/blog", "/contact", "/cart"];
 
 describe("site navigation", () => {
   it("offers only the store pages in the primary menu", () => {
-    expect(primaryNav.map((link) => link.href)).toEqual(["/", "/shop", "/about", "/contact"]);
+    expect(primaryNav.map((link) => link.href)).toEqual(["/", "/shop", "/about", "/blog", "/contact"]);
   });
 
   it("offers clear log in and join actions in the site navigation", () => {

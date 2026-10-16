@@ -5,7 +5,7 @@ import { ProductDetails } from "@/components/product-details";
 import { getSiteUrl } from "@/lib/auth";
 import { commerceEnabled } from "@/lib/features";
 import { pageMetadata } from "@/lib/seo";
-import { getCatalogProduct } from "@/lib/store";
+import { getCatalog, getCatalogProduct } from "@/lib/store";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -21,7 +21,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ProductPage({ params }: Props) {
   const [{ slug }, requestHeaders] = await Promise.all([params, headers()]);
   const nonce = requestHeaders.get("x-nonce") ?? undefined;
-  const product = await getCatalogProduct(slug);
+  const catalog = await getCatalog();
+  const product = catalog.find(item => item.slug === slug);
   if (!product) notFound();
 
   const siteUrl = getSiteUrl();
@@ -50,7 +51,7 @@ export default async function ProductPage({ params }: Props) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
         />
       )}
-      <ProductDetails product={product} commerceEnabled={commerceEnabled} />
+      <ProductDetails key={product.slug} product={product} related={catalog.filter(item => item.slug !== product.slug).sort((a, b) => Number(b.category === product.category) - Number(a.category === product.category)).slice(0, 4)} commerceEnabled={commerceEnabled} />
     </div>
   );
 }

@@ -1,227 +1,49 @@
 "use client";
 
-import Image from "next/image";
-import { AuthShell } from "@/components/auth-shell";
-
+import Link from "next/link";
+import { LoaderCircle } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useLanguage } from "@/components/language-provider";
 import type { TextKey } from "@/lib/i18n";
 
-const productPlaceholders = ["first", "second", "third"];
-
-function LoadingStatus({ label, children, className = "" }: {
-  children: React.ReactNode;
-  className?: string;
-  label: TextKey;
-}) {
+function LoadingStatus({ label, children, className = "" }: { children: React.ReactNode; className?: string; label: TextKey }) {
   const { t } = useLanguage();
-
-  return (
-    <section className={className} role="status" aria-busy="true" aria-live="polite">
-      <span className="sr-only">{t[label]}</span>
-      <div aria-hidden="true">{children}</div>
-    </section>
-  );
+  return <section className={className} role="status" aria-busy="true" aria-live="polite"><span className="sr-only">{t[label]}</span><div aria-hidden="true">{children}</div></section>;
 }
-
 function Line({ size = "medium" }: { size?: "short" | "medium" | "long" | "full" }) {
   return <span className={`loading-block loading-line is-${size}`} />;
 }
 
-function ProductPlaceholder() {
-  return (
-    <div className="loading-product">
-      <div className="loading-block loading-product-image" />
-      <div className="loading-product-copy">
-        <div><Line size="medium" /><Line size="short" /></div>
-        <Line size="short" />
-      </div>
-    </div>
-  );
+/** A quiet navigation fallback. There is no simulated percentage or artificial wait. */
+export function PageLoadingState({ label = "loadingPage", compact = false }: { label?: TextKey; compact?: boolean }) {
+  const { t } = useLanguage();
+  return <section className={`route-pending${compact ? " is-compact" : ""}`} role="status" aria-busy="true" aria-live="polite"><div className="route-pending-indicator"><LoaderCircle aria-hidden="true" /><span>{t[label]}</span></div></section>;
 }
+export function HomeLoadingState() { return <PageLoadingState />; }
 
-export function HomeLoadingState() {
-  return (
-    <LoadingStatus className="loading-home" label="loadingStore">
-      <Image className="loading-home-image" src="/images/brakmasra-hero.png" alt="" fill sizes="100vw" />
-      <div className="loading-home-scrim" />
-      <div className="page-shell loading-home-inner">
-        <div className="loading-home-copy">
-          <Line size="short" />
-          <div className="loading-block loading-display-line" />
-          <div className="loading-block loading-display-line is-shorter" />
-          <div className="loading-copy-lines"><Line size="long" /><Line size="medium" /></div>
-          <div className="loading-actions">
-            <div className="loading-block loading-button" />
-            <div className="loading-block loading-button is-secondary" />
-          </div>
-        </div>
-      </div>
-    </LoadingStatus>
-  );
+export function ProductGridSkeleton() {
+  return <div className="loading-product-grid">{[0, 1, 2, 3].map((index) => <div className="loading-product" key={index}><div className="loading-block loading-product-image" /><div className="loading-product-copy"><div><Line size="long" /><Line size="short" /></div></div></div>)}</div>;
 }
-
 export function ShopLoadingState() {
-  return (
-    <LoadingStatus className="page-shell page-top shop-page loading-page" label="loadingCollection">
-      <header className="loading-page-hero">
-        <Line size="short" />
-        <div className="loading-block loading-title" />
-        <Line size="long" />
-      </header>
-      <div className="loading-block loading-notice" />
-      <div className="loading-shop-tools">
-        <div className="loading-block loading-search" />
-        <div className="loading-block loading-filters" />
-      </div>
-      <Line size="short" />
-      <div className="loading-product-grid">
-        {productPlaceholders.map((item) => <ProductPlaceholder key={item} />)}
-      </div>
-    </LoadingStatus>
-  );
+  const params = useSearchParams();
+  // A saved list may be empty, and upcoming categories are editorial screens.
+  // Avoid showing a product grid that those destinations will not contain.
+  if (params.get("saved") === "1" || (params.get("category") && params.get("category") !== "tees")) return <PageLoadingState label="loadingCollection" />;
+  return <LoadingStatus className="page-shell page-top shop-page loading-page" label="loadingCollection"><div className="loading-shop-heading"><div className="loading-block loading-title is-compact" /><Line size="long" /></div><div className="loading-shop-tools"><div className="loading-block loading-search" /><div className="loading-block loading-filters" /></div><ProductGridSkeleton /></LoadingStatus>;
 }
-
 export function ProductLoadingState({ comingSoon = false }: { comingSoon?: boolean }) {
-  return (
-    <LoadingStatus className="page-shell page-top product-page loading-page" label="loadingProduct">
-      <Line size="short" />
-      <div className="loading-product-detail">
-        <div className="loading-block loading-product-portrait" />
-        <div className="loading-product-panel">
-          <Line size="short" />
-          <div className="loading-block loading-product-title" />
-          <Line size="short" />
-          <div className="loading-copy-lines is-spaced"><Line size="full" /><Line size="long" /><Line size="medium" /></div>
-          <div className={`loading-block loading-product-note${comingSoon ? " is-launch" : ""}`} />
-          {!comingSoon && <><div className="loading-block loading-form-control" /><div className="loading-block loading-form-control" /></>}
-          <div className="loading-spec-grid">
-            <div className="loading-block loading-spec" />
-            <div className="loading-block loading-spec" />
-          </div>
-        </div>
-      </div>
-    </LoadingStatus>
-  );
+  return <LoadingStatus className="page-shell page-top product-page loading-page" label="loadingProduct"><Line size="short" /><div className="loading-product-detail"><div className="loading-block loading-product-portrait" /><div className="loading-product-panel"><div className="loading-block loading-product-title" /><Line size="short" /><div className="loading-copy-lines"><Line size="full" /><Line size="long" /></div><div className="loading-size-options">{[0,1,2,3].map((index) => <span className="loading-block" key={index} />)}</div><div className="loading-block loading-button" />{!comingSoon && <div className="loading-block loading-button is-wide" />}</div></div></LoadingStatus>;
 }
-
 export function CartLoadingState({ embedded = false }: { embedded?: boolean }) {
-  const content = (
-    <div className="loading-cart-layout">
-      <div className="loading-cart-lines">
-        {["first", "second"].map((item) => (
-          <div className="loading-cart-line" key={item}>
-            <div className="loading-block loading-cart-image" />
-            <div className="loading-cart-copy"><Line size="medium" /><Line size="short" /><div className="loading-block loading-quantity" /></div>
-            <Line size="short" />
-          </div>
-        ))}
-      </div>
-      <div className="loading-cart-summary">
-        <Line size="medium" />
-        <div className="loading-summary-row"><Line size="short" /><Line size="short" /></div>
-        <Line size="long" />
-        <div className="loading-block loading-form-control" />
-      </div>
-    </div>
-  );
-
-  if (embedded) {
-    return <LoadingStatus className="loading-data-section" label="loadingCart">{content}</LoadingStatus>;
-  }
-
-  return (
-    <LoadingStatus className="page-shell page-top loading-page" label="loadingCart">
-      <header className="loading-page-hero is-compact"><Line size="short" /><div className="loading-block loading-title is-compact" /><Line size="long" /></header>
-      {content}
-    </LoadingStatus>
-  );
+  return <LoadingStatus className={embedded ? "loading-data-section" : "page-shell page-top loading-page"} label="loadingCart"><div className="loading-cart-layout"><div className="loading-cart-lines">{[0,1].map((index) => <div className="loading-cart-line" key={index}><div className="loading-block loading-cart-image" /><div className="loading-cart-copy"><Line size="long" /><Line size="short" /><div className="loading-block loading-quantity" /></div></div>)}</div><div className="loading-cart-summary"><Line size="medium" /><div className="loading-summary-row"><Line size="short" /><Line size="short" /></div><div className="loading-block loading-button is-wide" /></div></div></LoadingStatus>;
 }
-
-export function CheckoutLoadingState({ embedded = false }: { embedded?: boolean }) {
-  const form = (
-    <div className="loading-checkout-form">
-      <Line size="medium" />
-      <div className="loading-copy-lines"><Line size="full" /><Line size="long" /></div>
-      <div className="loading-block loading-form-control" />
-      <Line size="medium" />
-    </div>
-  );
-
-  if (embedded) {
-    return <LoadingStatus className="loading-data-section" label="loadingCheckoutDetails">{form}</LoadingStatus>;
-  }
-
-  return (
-    <LoadingStatus className="checkout-page loading-page" label="loadingCheckout">
-      <div className="checkout-shell">
-        <header className="loading-checkout-header">
-          <div className="loading-block loading-icon" />
-          <div>
-            <Line size="short" />
-            <div className="loading-block loading-checkout-title" />
-          </div>
-        </header>
-        {form}
-      </div>
-    </LoadingStatus>
-  );
+export function CheckoutLoadingState({ embedded = false }: { embedded?: boolean }) { return <PageLoadingState label="loadingCheckoutDetails" compact={embedded} />; }
+export function AuthLoadingState({ compact = false }: { compact?: boolean } = {}) {
+  const { t } = useLanguage();
+  return <div className="auth-route-pending"><Link href="/" aria-label={t.brandHomeLabel}>BRAKMASRA</Link><PageLoadingState label={compact ? "loadingMemberAccess" : "loadingAuth"} /></div>;
 }
-
-export function AuthLoadingState({
-  compact = false,
-}: { compact?: boolean } = {}) {
-  return (
-    <AuthShell compact={compact}>
-      <LoadingStatus className="loading-auth-panel" label="loadingAuth">
-        <div className="loading-block loading-auth-title" />
-        <div className="loading-copy-lines">
-          <Line size="full" />
-          <Line size="medium" />
-        </div>
-        <div className="loading-block loading-form-control" />
-        <div className="loading-auth-divider">
-          <span />
-          <span />
-        </div>
-        <div className="loading-block loading-field" />
-        <div className="loading-block loading-field" />
-        <div className="loading-block loading-form-control" />
-      </LoadingStatus>
-    </AuthShell>
-  );
-}
-
-export function AuthComingSoonLoadingState({
-  compact = false,
-}: { compact?: boolean } = {}) {
-  return (
-    <AuthShell compact={compact}>
-      <LoadingStatus className="loading-auth-panel" label="loadingMemberAccess">
-        <div className="loading-block loading-auth-title" />
-        <div className="loading-copy-lines">
-          <Line size="full" />
-          <Line size="medium" />
-        </div>
-        <div className="loading-block loading-product-note" />
-        <div className="loading-block loading-form-control" />
-        <div className="loading-block loading-form-control" />
-      </LoadingStatus>
-    </AuthShell>
-  );
-}
-
-export function LaunchLoadingState() {
-  return (
-    <LoadingStatus className="launch-page loading-page" label="loadingLaunch">
-      <div className="page-shell launch-layout">
-        <div className="launch-copy loading-launch-copy">
-          <Line size="short" />
-          <div className="loading-block loading-launch-title" />
-          <div className="loading-copy-lines"><Line size="full" /><Line size="long" /></div>
-          <div className="loading-actions"><div className="loading-block loading-button" /><div className="loading-block loading-button is-secondary" /></div>
-        </div>
-        <div className="loading-block loading-launch-visual" />
-      </div>
-    </LoadingStatus>
-  );
+export function AuthComingSoonLoadingState({ compact = false }: { compact?: boolean } = {}) { return <AuthLoadingState compact={compact} />; }
+export function LaunchLoadingState() { return <PageLoadingState />; }
+export function DashboardLoadingState() {
+  return <LoadingStatus className="dashboard-loading panel" label="loadingDashboard"><div className="loading-dashboard-heading"><Line size="medium" /><div className="loading-block loading-button" /></div><div className="loading-dashboard-table">{[0,1,2,3].map((index) => <div key={index}><span className="loading-block loading-dashboard-icon" /><Line size="long" /><Line size="short" /></div>)}</div></LoadingStatus>;
 }

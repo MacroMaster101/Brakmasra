@@ -63,7 +63,7 @@ AUTH_DEMO_MODE=
 ```
 
 - **`BRAKMASRA_LAUNCH_MODE=on`**: Enables the public "coming-soon" release. It is a server-only fail-safe that blocks access to authentication, cart, checkout, and purchasing.
-- **`BRAKMASRA_LAUNCH_MODE=off`**: Flips the switch! Unlocks the complete e-commerce experience.
+- **`BRAKMASRA_LAUNCH_MODE=off`**: Opens the implemented account, cart and checkout screens. It does not complete payment integration: the checkout API currently fails closed until the payment adapter, order creation and inventory reservation are implemented.
 - **`AUTH_DEMO_MODE=on`**: For local testing only! With launch mode off, it creates a fake member session without hitting Supabase. (Automatically disabled in production).
 
 ---
@@ -130,3 +130,9 @@ npm audit --omit=dev --audit-level=high  # Production dependency security gate
 ## 🎨 Visual Assets
 
 All bespoke hero images, account artwork, and product photography live in `public/images/`. The official brand mark is `logo.png`.
+
+## Repository files
+
+Commit application source, migrations, tests and the website assets in `public/`. Keep `.env` credentials, dependencies, build output, AI assistant configuration and the local `design/` workspace out of Git. The `design/` folder contains generation prompts, inspection reports and preview screenshots; references to it in older verification notes refer to local evidence. Ignoring it does not remove files already present in earlier commits.
+
+Image preparation scripts can use local generation manifests when available. The website uses the committed images directly and does not require those manifests to build or run.

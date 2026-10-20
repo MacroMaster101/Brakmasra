@@ -85,6 +85,7 @@ button { color: inherit; }
 img { max-width: 100%; }
 ::selection { background: var(--accent); color: var(--text); }
 :focus-visible { outline: 2px solid var(--accent-bright); outline-offset: 4px; }
+html.theme-switching *, html.theme-switching *::before, html.theme-switching *::after { transition: none !important; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
 .skip-link { position: fixed; z-index: 300; left: 1rem; top: -5rem; background: var(--text); color: var(--background); padding: .7rem 1rem; }
 .skip-link:focus { top: 1rem; }
@@ -192,8 +193,9 @@ img { max-width: 100%; }
 .nav-join[aria-current="page"] { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .2), 0 0 0 2px rgba(223, 52, 64, .35); }
 
 .member-menu { position: relative; }
-.member-trigger { min-height: 44px; display: inline-flex; align-items: center; gap: .35rem; padding: 3px .55rem 3px 3px; border: 1px solid var(--border); border-radius: 999px; background: rgba(21, 21, 21, .72); cursor: pointer; transition: border-color .25s, background .25s; }
+.member-trigger { min-height: 44px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 3px; border: 1px solid var(--border); border-radius: 999px; background: rgba(21, 21, 21, .72); cursor: pointer; transition: border-color .25s, background .25s; }
 .member-trigger:hover, .member-trigger[aria-expanded="true"] { border-color: var(--border-light); background: var(--surface-raised); }
+.member-trigger:focus-visible { outline: 2px solid var(--accent-bright); outline-offset: 2px; }
 .member-trigger-chevron { width: 16px; height: 16px; color: var(--text-secondary); transition: transform .25s cubic-bezier(.16, 1, .3, 1); }
 .member-trigger[aria-expanded="true"] .member-trigger-chevron { transform: rotate(180deg); }
 .member-avatar { flex: 0 0 auto; display: grid; place-items: center; border-radius: 50%; background: radial-gradient(circle at 30% 25%, var(--accent-bright), var(--accent) 48%, var(--accent-dark) 100%); color: #fff; font: 700 .72rem/1 var(--body); letter-spacing: .04em; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .16); user-select: none; }
@@ -2033,6 +2035,12 @@ html[lang="si"] .nav-links > a { font-weight: 600; line-height: 1.4; }
 /* Profile photos */
 .avatar-photo-frame { position: relative; overflow: hidden; }
 .avatar-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: inherit; background: var(--surface); }
+/* With a photo, the red initials fill would bleed round the anti-aliased edge as a pink halo:
+   use a neutral fill, hide the initials, and draw one hairline ring over the photo instead. */
+.avatar-photo-frame:has(> .avatar-photo) { background: var(--surface-raised); border-color: var(--border); color: transparent; box-shadow: none; }
+.avatar-photo-frame:has(> .avatar-photo)::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgb(0 0 0 / .1); pointer-events: none; }
+:root[data-theme="dark"] .avatar-photo-frame:has(> .avatar-photo)::after { box-shadow: inset 0 0 0 1px rgb(255 255 255 / .16); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .avatar-photo-frame:has(> .avatar-photo)::after { box-shadow: inset 0 0 0 1px rgb(255 255 255 / .16); } }
 
 .avatar-editor { display: flex; align-items: center; gap: clamp(1.1rem, 3vw, 1.8rem); }
 .avatar-editor-visual { position: relative; flex: 0 0 auto; }

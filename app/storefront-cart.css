@@ -34,13 +34,13 @@
 .cart-summary-line > span:first-child, .cart-summary-total > span { min-width: 0; overflow-wrap: anywhere; }
 .cart-summary-total { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 20px; font-weight: 600; }
 .cart-summary > p { margin: 16px 0 0; color: var(--text-secondary); font-size: 15px; line-height: 1.5; }
-.cart-summary .button { min-height: 52px; margin-top: 24px; border-radius: 99px; gap: 10px; font: 600 17px/1.4 var(--body); text-transform: none; letter-spacing: 0; }
+.cart-summary .button { margin-top: 24px; gap: 10px; }
 .cart-empty { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 24px 0 48px; }
 .cart-empty-icon { display: grid; place-items: center; width: 80px; height: 80px; border-radius: 50%; background: var(--surface); margin-bottom: 20px; }
 .cart-empty-icon svg { width: 34px; height: 34px; stroke-width: 1.25; }
 .cart-empty h2 { margin: 0 0 12px; font: 600 clamp(26px, 3vw, 36px)/1.25 var(--body); letter-spacing: -.025em; }
 .cart-empty p { margin: 0 0 24px; max-width: 35ch; font-size: 18px; line-height: 1.6; color: var(--text-secondary); }
-.cart-empty .button { min-height: 50px; border-radius: 99px; gap: 16px; font: 600 17px/1.4 var(--body); text-transform: none; letter-spacing: 0; }
+.cart-empty .button { gap: 16px; }
 .store-cart :is(a, button):focus-visible { outline: 2px solid var(--text); outline-offset: 4px; }
 .store-cart .loading-cart-line, .store-cart .loading-cart-summary { background: var(--surface); border-color: var(--border); box-shadow: none; }
 .store-cart .loading-block { background: var(--surface-raised); }

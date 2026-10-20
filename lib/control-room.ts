@@ -9,6 +9,7 @@ import {
   type MessageStatus,
   type SubscriberStatus,
 } from "@/lib/control-room-validation";
+import { bucketByDay, DASHBOARD_DAYS, recentDays, seriesStart, type DayPoint } from "@/lib/dashboard-series";
 import { memberFromUser } from "@/lib/member";
 import { ORDER_STATUSES, type OrderStatus } from "@/lib/orders";
 import { parseRole, type MemberRole } from "@/lib/roles";
@@ -52,6 +53,8 @@ export type AuditEntry = {
   targetEmail: string | null;
   from: string | null;
   to: string | null;
+  /** What was changed, such as a product slug or a discount code, when the log recorded one. */
+  subject: string | null;
   createdAt: string;
 };
 
@@ -155,6 +158,76 @@ export async function listOrders(): Promise<AdminOrder[] | null> {
   }
 }
 
+// Overview charts. Each read is capped; the overview only ever charts the last 30 days.
+const ACTIVITY_ROW_LIMIT = 5000;
+
+export type OrderActivity = {
+  orders: DayPoint[];
+  /** Paid and fulfilled orders only, in `currency`. */
+  revenueMinor: DayPoint[];
+  currency: string;
+  /** Every order in the store, not just the window. */
+  statuses: Record<OrderStatus, number>;
+};
+
+async function rowsSince(table: string, columns: string, timeColumn: string, since: string) {
+  const supabase = getSupabaseServerClient();
+  if (!supabase) return null;
+  try {
+    const { data, error } = await supabase
+      .from(table)
+      .select(columns)
+      .gte(timeColumn, since)
+      .order(timeColumn, { ascending: true })
+      .limit(ACTIVITY_ROW_LIMIT);
+    return error || !data ? null : (data as unknown as Record<string, unknown>[]);
+  } catch {
+    return null;
+  }
+}
+
+export async function orderActivity(now = new Date()): Promise<OrderActivity | null> {
+  const days = recentDays(DASHBOARD_DAYS, now);
+  const [rows, counts] = await Promise.all([
+    rowsSince("orders", "status, currency, total_minor, created_at", "created_at", seriesStart(DASHBOARD_DAYS, now)),
+    Promise.all(ORDER_STATUSES.map((status) => countRows("orders", "status", [status]))),
+  ]);
+  if (!rows || counts.some((count) => count === null)) return null;
+
+  const paid = rows.filter((row) => row.status === "paid" || row.status === "fulfilled");
+  // Revenue is charted in the currency most paid orders use; the store prices in LKR.
+  const tally = new Map<string, number>();
+  for (const row of paid) {
+    const code = text(row.currency).trim().toUpperCase() || "LKR";
+    tally.set(code, (tally.get(code) ?? 0) + 1);
+  }
+  const currency = [...tally].sort((a, b) => b[1] - a[1])[0]?.[0] ?? "LKR";
+
+  return {
+    orders: bucketByDay(rows, (row) => text(row.created_at), days),
+    revenueMinor: bucketByDay(
+      paid.filter((row) => (text(row.currency).trim().toUpperCase() || "LKR") === currency),
+      (row) => text(row.created_at),
+      days,
+      (row) => Number(row.total_minor) || 0,
+    ),
+    currency,
+    statuses: Object.fromEntries(ORDER_STATUSES.map((status, index) => [status, counts[index] ?? 0])) as Record<OrderStatus, number>,
+  };
+}
+
+export async function subscriberActivity(now = new Date()): Promise<DayPoint[] | null> {
+  const rows = await rowsSince("newsletter_subscribers", "consented_at, status", "consented_at", seriesStart(DASHBOARD_DAYS, now));
+  if (!rows) return null;
+  return bucketByDay(rows.filter((row) => row.status !== "unsubscribed"), (row) => text(row.consented_at), recentDays(DASHBOARD_DAYS, now));
+}
+
+export async function messageActivity(now = new Date()): Promise<DayPoint[] | null> {
+  const rows = await rowsSince("contact_messages", "created_at, status", "created_at", seriesStart(DASHBOARD_DAYS, now));
+  if (!rows) return null;
+  return bucketByDay(rows.filter((row) => row.status !== "spam"), (row) => text(row.created_at), recentDays(DASHBOARD_DAYS, now));
+}
+
 export async function listSubscribers(): Promise<Subscriber[] | null> {
   const supabase = getSupabaseServerClient();
   if (!supabase) return null;
@@ -254,7 +327,7 @@ export async function getAccountById(id: string): Promise<AccountSummary | null>
   }
 }
 
-export async function recentAuditLogs(): Promise<AuditEntry[] | null> {
+export async function recentAuditLogs(limit = 20): Promise<AuditEntry[] | null> {
   const supabase = getSupabaseServerClient();
   if (!supabase) return null;
 
@@ -263,7 +336,7 @@ export async function recentAuditLogs(): Promise<AuditEntry[] | null> {
       .from("admin_audit_logs")
       .select("id, action, entity_type, entity_id, metadata, created_at")
       .order("created_at", { ascending: false })
-      .limit(20);
+      .limit(limit);
     if (error || !data) return null;
     return data.map((row) => {
       const metadata = (row.metadata && typeof row.metadata === "object" ? row.metadata : {}) as Record<string, unknown>;
@@ -277,6 +350,7 @@ export async function recentAuditLogs(): Promise<AuditEntry[] | null> {
         targetEmail: optional(metadata.target_email),
         from: optional(metadata.from),
         to: optional(metadata.to),
+        subject: optional(metadata.slug) ?? optional(metadata.code) ?? (row.entity_type === "page" || row.entity_type === "post" ? optional(row.entity_id) : null),
         createdAt: text(row.created_at),
       };
     });

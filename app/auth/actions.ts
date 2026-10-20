@@ -87,7 +87,7 @@ async function authRateLimit(scope: string, limit: number, windowMs: number, sub
 function googleFailureUrl(returnTo: string, notice: string, next: string) {
   const destination = returnTo === "/signup" ? "/signup" : "/login";
   const params = new URLSearchParams({ notice });
-  if (next !== "/account") params.set("next", next);
+  if (next !== "/") params.set("next", next);
   return `${destination}?${params.toString()}`;
 }
 
@@ -199,7 +199,7 @@ export async function signupAction(
       password: parsed.data.password,
       options: {
         data: { display_name: parsed.data.displayName, ...parsed.data.phone },
-        emailRedirectTo: getAuthCallbackUrl("/account"),
+        emailRedirectTo: getAuthCallbackUrl("/"),
       },
     });
 
@@ -221,7 +221,7 @@ export async function signupAction(
 
   if (signedIn) {
     revalidatePath("/", "layout");
-    redirect("/account?welcome=1");
+    redirect("/");
   }
 
   return {

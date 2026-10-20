@@ -19,6 +19,7 @@ import { getPublicContent } from "@/lib/content";
 import "./control-room.css";
 import "./storefront-loading.css";
 import "./storefront-visibility.css";
+import "./storefront-not-found.css";
 import { SiteFrame } from "@/components/site-frame";
 import { site } from "@/data/site";
 import { getSiteUrl } from "@/lib/auth";

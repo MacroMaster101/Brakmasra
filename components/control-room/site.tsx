@@ -3,14 +3,12 @@
 import { ExternalLink, ScrollText } from "lucide-react";
 import Link from "next/link";
 
-import { messageStatusLabels } from "@/components/control-room/messages";
+import { AuditAction, AuditChange } from "@/components/control-room/audit";
 import { EmptyState, SectionGate, SectionPanel, StatusPill } from "@/components/control-room/shared";
 import { useLanguage } from "@/components/language-provider";
-import { roleLabelKey } from "@/components/role-badge";
 import type { AuditEntry } from "@/lib/control-room";
-import { MESSAGE_STATUSES, type MessageStatus, type SectionData } from "@/lib/control-room-validation";
+import type { SectionData } from "@/lib/control-room-validation";
 import { formatDate, type TextKey } from "@/lib/i18n";
-import { parseRole } from "@/lib/roles";
 
 /** A yes/no fact about the setup. Never a value. */
 export type SiteCheck = { label: TextKey; value: boolean; kind: "configured" | "switch" };
@@ -20,23 +18,6 @@ const dashboards = [
   { label: "Vercel", href: "https://vercel.com/dashboard" },
   { label: "Resend", href: "https://resend.com/emails" },
 ];
-
-const auditActions: Record<string, TextKey> = {
-  "role.change": "crAuditRoleChange",
-  "message.status": "crAuditMessageStatus",
-};
-
-function AuditValue({ action, value }: { action: string; value: string | null }) {
-  const { t } = useLanguage();
-  if (action === "role.change") {
-    const role = parseRole(value);
-    return <>{role ? t[roleLabelKey(role)] : t.crRoleNone}</>;
-  }
-  if (action === "message.status" && (MESSAGE_STATUSES as readonly string[]).includes(value ?? "")) {
-    return <>{t[messageStatusLabels[value as MessageStatus]]}</>;
-  }
-  return <>{value ?? "–"}</>;
-}
 
 export function ControlRoomSite({ checks, audit }: { checks: SiteCheck[]; audit: SectionData<AuditEntry[]> }) {
   const { t, lang } = useLanguage();
@@ -87,20 +68,9 @@ export function ControlRoomSite({ checks, audit }: { checks: SiteCheck[]; audit:
                 <tbody>
                   {entries.map((entry) => (
                     <tr key={entry.id}>
-                      <td data-label={t.crAuditAction}>
-                        <span className={Object.hasOwn(auditActions, entry.action) ? undefined : "cr-mono"}>
-                          {Object.hasOwn(auditActions, entry.action) ? t[auditActions[entry.action]] : entry.action}
-                        </span>
-                      </td>
+                      <td data-label={t.crAuditAction}><AuditAction action={entry.action} /></td>
                       <td data-label={t.crAuditBy} className="cr-break">{entry.actorEmail ?? "–"}</td>
-                      <td data-label={t.crAuditChange}>
-                        <span>
-                          <AuditValue action={entry.action} value={entry.from} />
-                          {" → "}
-                          <AuditValue action={entry.action} value={entry.to} />
-                          {entry.targetEmail && <small className="cr-audit-target cr-break">{entry.targetEmail}</small>}
-                        </span>
-                      </td>
+                      <td data-label={t.crAuditChange}><AuditChange entry={entry} /></td>
                       <td data-label={t.crAuditWhen}>
                         <time dateTime={entry.createdAt}>{formatDate(entry.createdAt, lang)}</time>
                       </td>

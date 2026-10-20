@@ -9,11 +9,20 @@ import { getAdminOrder } from "@/lib/store-admin";
 export const metadata: Metadata = { title: "Order", robots: noIndex };
 export const dynamic = "force-dynamic";
 
+/** A malformed escape such as "%E0%A4%A" is a missing order, not a server error. */
+function safeDecode(value: string) {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return null;
+  }
+}
+
 export default async function ControlRoomOrderPage({ params }: { params: Promise<{ publicId: string }> }) {
   const { publicId: raw } = await params;
   const viewer = await requireControlRoom("view_orders", "/admin/orders");
-  const publicId = decodeURIComponent(raw);
-  if (!/^[A-Za-z0-9_-]{1,64}$/.test(publicId)) notFound();
+  const publicId = safeDecode(raw);
+  if (!publicId || !/^[A-Za-z0-9_-]{1,64}$/.test(publicId)) notFound();
 
   const order = await loadSection(async () => {
     const result = await getAdminOrder(publicId);

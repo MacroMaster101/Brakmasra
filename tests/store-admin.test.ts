@@ -139,6 +139,8 @@ describe("store form rules", () => {
     expect(csvCell("+94771234567")).toBe("'+94771234567");
     expect(csvCell("plain@example.com")).toBe("plain@example.com");
     expect(csvCell("a,b")).toBe("\"a,b\"");
+    expect(csvCell("  =1+1")).toBe("'  =1+1");
+    expect(csvCell("\n=1+1")).toBe("\"'\n=1+1\"");
   });
 });
 

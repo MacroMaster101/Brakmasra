@@ -27,7 +27,7 @@ export default async function SignupPage({ searchParams }: SignupPageProps) {
   const params = await searchParams;
   const supabase = await createAuthClient();
   const { data } = await supabase.auth.getClaims();
-  if (data?.claims) redirect("/account");
+  if (data?.claims) redirect("/");
 
   const notice = typeof params.notice === "string" ? params.notice : "";
   const noticeKey =
@@ -46,7 +46,7 @@ export default async function SignupPage({ searchParams }: SignupPageProps) {
       )}
       <GoogleAuthButton
         action={googleAuthAction}
-        next="/account?welcome=1"
+        next="/"
         returnTo="/signup"
       />
       <AuthForm action={signupAction} mode="signup" />

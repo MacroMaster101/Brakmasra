@@ -8,7 +8,8 @@ import { usePageCopy } from "@/components/content-provider";
 import { LEGAL_UPDATED, legalDocuments, type LegalBlock, type LegalDocumentId } from "@/data/legal";
 import { formatDate } from "@/lib/i18n";
 
-const INLINE_LINK = /\[([^\]]+)\]\(((?:\/|mailto:)[^)\s]*)\)/g;
+// "//host" and "/\host" are protocol-relative off-site links in browsers, so only a single leading slash counts.
+const INLINE_LINK = /\[([^\]]+)\]\(((?:\/(?![/\\])|mailto:)[^)\s]*)\)/g;
 
 /** Renders text with [label](/path) links to site pages and [label](mailto:…) links. */
 function RichText({ text }: { text: string }) {

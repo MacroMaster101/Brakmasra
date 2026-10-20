@@ -30,7 +30,7 @@ const inputs = directories.flatMap((directory) => fs.readdirSync(path.join(root,
   .filter((file) => /\.webp$/.test(file))
   .map((file) => `public/images/${directory}/${file}`));
 inputs.push("public/images/auth/members-medusa-cutout.webp", "public/images/auth/members-paradise-cutout.webp",
-  "public/images/404-haunted-path.png", "public/images/brakmasra-hero.png");
+  "public/images/brakmasra-hero.png");
 // Preserve legacy campaign URLs saved by the page editor, using alpha cutouts.
 const mapping = Object.fromEntries(["wide", "black", "white"].map((key) => [
   `/images/campaign-${key}-4k.webp`, `/images/campaign/${key}-cutout.webp`,

@@ -48,7 +48,11 @@ export function ThemeToggle() {
       type="button"
       onClick={() => {
         const next = dark ? "light" : "dark";
-        document.documentElement.dataset.theme = next;
+        const root = document.documentElement;
+        // Colour transitions would fade old-theme fills under new-theme text, so switch in one frame.
+        root.classList.add("theme-switching");
+        root.dataset.theme = next;
+        requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove("theme-switching")));
         try {
           localStorage.setItem("brakmasra_theme", next);
         } catch {

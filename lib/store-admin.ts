@@ -167,6 +167,47 @@ export async function listAdminProducts(): Promise<AdminProductSummary[] | null>
   }
 }
 
+/** Gaps a Web Dev should fix before launch; archived products are left out. */
+export type CatalogHealth = {
+  total: number;
+  active: number;
+  drafts: number;
+  archived: number;
+  noPhotos: { id: string; name: string }[];
+  missingAlt: { id: string; name: string }[];
+  outOfStock: { id: string; name: string }[];
+};
+
+export async function catalogHealth(): Promise<CatalogHealth | null> {
+  const supabase = getSupabaseServerClient();
+  if (!supabase) return null;
+  try {
+    const { data, error } = await supabase
+      .from("products")
+      .select(PRODUCT_SELECT)
+      .order("position", { ascending: true })
+      .limit(300);
+    if (error || !data) return null;
+    const products = (data as unknown as Row[]).map(adminProduct);
+    const live = products.filter((product) => product.status !== "archived");
+    const pick = ({ id, name }: AdminProduct) => ({ id, name });
+    return {
+      total: products.length,
+      active: products.filter((product) => product.status === "active").length,
+      drafts: products.filter((product) => product.status === "draft").length,
+      archived: products.length - live.length,
+      noPhotos: live.filter((product) => product.images.length === 0).map(pick),
+      missingAlt: live.filter((product) => product.images.some((image) => !image.altText.trim())).map(pick),
+      // Coming-soon products aren't on sale yet, so empty stock is expected.
+      outOfStock: live
+        .filter((product) => !product.comingSoon && product.variants.filter((variant) => variant.active).reduce((total, variant) => total + variant.inventory, 0) === 0)
+        .map(pick),
+    };
+  } catch {
+    return null;
+  }
+}
+
 /** The product, "missing" when there is no such product, or null on a load error. */
 export async function getAdminProduct(id: string): Promise<AdminProduct | "missing" | null> {
   const supabase = getSupabaseServerClient();

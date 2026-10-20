@@ -22,7 +22,7 @@ describe("auth confirmation callback", () => {
   });
   it("rejects external redirect destinations", async () => {
     const response = await GET(new NextRequest("https://store.example/auth/confirm?code=test-code&next=https://evil.example"));
-    expect(response.headers.get("location")).toBe("https://store.example/account");
+    expect(response.headers.get("location")).toBe("https://store.example/");
   });
   it("does not trust recovery flags attached to an OAuth callback", async () => {
     await GET(new NextRequest("https://store.example/auth/confirm?code=test-code&token_hash=fake&type=recovery"));

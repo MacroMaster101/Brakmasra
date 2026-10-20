@@ -13,9 +13,8 @@ export function CheckoutHeader() {
 
   return (
     <header className="checkout-header">
-      <LockKeyhole />
       <div>
-        <span className="eyebrow">{t.checkoutEyebrow}</span>
+        <span className="eyebrow checkout-eyebrow"><LockKeyhole aria-hidden="true" />{t.checkoutEyebrow}</span>
         <h1>{t.checkoutTitle}</h1>
       </div>
     </header>

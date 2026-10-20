@@ -65,6 +65,15 @@
 /* The illustrated 404 keeps a dark backdrop in either site theme. */
 .not-found .not-found-brand { color: #f5f5f6; font-size: 16px; line-height: 1.4; }
 .not-found .not-found-brand:hover { color: #fff; }
+
+/* One page-title system: the same space under the header and the same title style on every storefront and account page.
+   Account and checkout used to reserve room for an overlaid header; the header now sits in the page flow. */
+:root { --page-top-space: clamp(40px, 5vw, 72px); }
+:is(.page-top, .cart-page, .contact-editorial, .journal-page, .journal-article-page, .checkout-page, .account-page) { padding-top: var(--page-top-space); }
+:is(.page-hero, .editorial-page-heading, .cart-heading, .account-identity-copy, .checkout-header) h1 { font: 600 clamp(36px, 5vw, 72px)/1.06 var(--display); letter-spacing: -.035em; }
+.checkout-header { display: block; }
+.checkout-eyebrow { display: inline-flex; align-items: center; gap: 8px; }
+.checkout-eyebrow svg { width: 16px; height: 16px; color: var(--accent-bright); }
 /* Scroll dialog content inside its rounded frame; keep the close control fixed. */
 .store-dialog.quick-view-dialog { overflow: hidden; }
 .quick-view-dialog .quick-view-grid { max-height: calc(90dvh - 2px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--border-light) transparent; }

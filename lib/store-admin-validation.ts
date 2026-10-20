@@ -240,8 +240,8 @@ export const imageAltSchema = z.object({
   altText: z.string().trim().min(2, "Describe the photo in a few words.").max(160, "Keep the description under 160 characters."),
 });
 
-/** Cells a spreadsheet would run as a formula get a leading apostrophe. */
+/** Cells a spreadsheet would run as a formula (even after leading whitespace) get a leading apostrophe. */
 export function csvCell(value: string) {
-  const safe = /^[=+\-@\t\r]/.test(value) ? `'${value}` : value;
+  const safe = /^\s*[=+\-@]|^[\t\r\n]/.test(value) ? `'${value}` : value;
   return /[",\r\n]/.test(safe) ? `"${safe.replace(/"/g, '""')}"` : safe;
 }

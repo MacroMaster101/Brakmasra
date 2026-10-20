@@ -5,7 +5,7 @@ export function getSiteUrl() {
   return new URL(value.startsWith("http") ? value : `https://${value}`).origin;
 }
 
-export function safeRedirectPath(value: FormDataEntryValue | string | null | undefined, fallback = "/account") {
+export function safeRedirectPath(value: FormDataEntryValue | string | null | undefined, fallback = "/") {
   if (typeof value !== "string" || !value.startsWith("/")) {
     return fallback;
   }

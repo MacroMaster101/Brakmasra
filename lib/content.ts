@@ -24,7 +24,14 @@ export async function listContentEntries(): Promise<ContentEntry[] | null> {
   } catch { return null; }
 }
 
-export type PublicContent = { pages: Record<string, CopyValues>; posts: JournalPost[] };
+/** Saved pages and posts whose draft differs from what visitors see. Admin only. */
+export function unpublishedDrafts(entries: ContentEntry[]) {
+  return entries
+    .filter(({ document }) => !document.deleted && JSON.stringify(document.draft) !== JSON.stringify(document.published))
+    .map(({ key }) => key);
+}
+
+export type PublicContent ={ pages: Record<string, CopyValues>; posts: JournalPost[] };
 export function publishedContent(entries: ContentEntry[]): PublicContent {
   const pages: Record<string, CopyValues> = {};
   const posts = new Map(journalPosts.map((post) => [post.slug, post]));

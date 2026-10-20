@@ -54,7 +54,7 @@
   line-height: 1.5;
   color: var(--text-secondary);
 }
-.about-editorial .button { min-height: 54px; font-size: 18px; gap: 18px; }
+.about-editorial .button { gap: 18px; }
 .about-editorial .button svg, .about-editorial .text-link svg { width: 20px; height: 20px; flex-shrink: 0; }
 .about-editorial .text-link { font-size: 17px; line-height: 1.5; }
 .about-origin { padding-block: var(--section-space); }
@@ -144,7 +144,6 @@
   .about-campaign-copy { max-width: 100%; width: 100%; }
   .about-campaign-copy h1 { max-width: 12ch; font-size: clamp(42px, 11.5vw, 58px); }
   .about-campaign-copy p { max-width: 30ch; margin: 16px 0 24px; font-size: 18px; line-height: 1.5; }
-  .about-editorial .button { min-height: 50px; font-size: 17px; }
   .about-introduction { margin-top: 28px; }
   .about-introduction > p { font-size: 18px; }
   .about-origin-content { padding: 20px; }

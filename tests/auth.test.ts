@@ -12,14 +12,15 @@ describe("authentication helpers", () => {
   it("accepts only same-site redirect paths", () => {
     expect(safeRedirectPath("/account")).toBe("/account");
     expect(safeRedirectPath("/shop/unknown-mark-tee")).toBe("/shop/unknown-mark-tee");
-    expect(safeRedirectPath("https://malicious.example")).toBe("/account");
-    expect(safeRedirectPath("//malicious.example")).toBe("/account");
-    expect(safeRedirectPath("/\\malicious.example")).toBe("/account");
-    expect(safeRedirectPath("/%5cmalicious.example")).toBe("/account");
-    expect(safeRedirectPath("/%255cmalicious.example")).toBe("/account");
-    expect(safeRedirectPath("/%2f%2fmalicious.example")).toBe("/account");
+    expect(safeRedirectPath("https://malicious.example")).toBe("/");
+    expect(safeRedirectPath("//malicious.example")).toBe("/");
+    expect(safeRedirectPath("/\\malicious.example")).toBe("/");
+    expect(safeRedirectPath("/%5cmalicious.example")).toBe("/");
+    expect(safeRedirectPath("/%255cmalicious.example")).toBe("/");
+    expect(safeRedirectPath("/%2f%2fmalicious.example")).toBe("/");
     expect(safeRedirectPath("/account\u0000", "/login")).toBe("/login");
     expect(safeRedirectPath(null, "/login")).toBe("/login");
+    expect(safeRedirectPath(null)).toBe("/");
   });
 
   it("recognizes only server-controlled staff roles", () => {
@@ -43,7 +44,7 @@ describe("authentication helpers", () => {
       "https://store.example/auth/confirm?next=%2Faccount%3Fwelcome%3D1",
     );
     expect(getAuthCallbackUrl("https://malicious.example")).toBe(
-      "https://store.example/auth/confirm?next=%2Faccount",
+      "https://store.example/auth/confirm?next=%2F",
     );
   });
 

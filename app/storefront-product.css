@@ -53,7 +53,7 @@
 .pdp-quantity button svg { width: 15px; height: 15px; }
 .pdp-quantity input { width: 42px; min-width: 0; height: 50px; padding: 0; border: 0; border-radius: 0; background: transparent; color: var(--text); font: 500 17px/1 var(--body); text-align: center; box-shadow: none; appearance: textfield; }
 .pdp-quantity input::-webkit-inner-spin-button, .pdp-quantity input::-webkit-outer-spin-button { appearance: none; margin: 0; }
-.pdp-buy-form .button { min-height: 52px; padding: 12px 18px; border-radius: 99px; font: 600 17px/1.4 var(--body); letter-spacing: 0; text-transform: none; gap: 10px; }
+.pdp-buy-form .button { gap: 10px; }
 .pdp-add svg { width: 19px; height: 19px; flex-shrink: 0; }
 .pdp-buy-form .pdp-buy-now { background: var(--accent); color: #fff; border-color: var(--accent); }
 .pdp-buy-form .pdp-buy-now:hover { background: var(--accent-bright); }
@@ -105,7 +105,7 @@
 .pdp-sizing-dialog h2 { margin: 0 0 16px; font: 600 30px/1.25 var(--body); }
 .pdp-sizing-dialog p { font-size: 18px; color: var(--text-secondary); line-height: 1.6; }
 .pdp-available-sizes strong { display: block; color: var(--text); margin-bottom: 8px; }
-.pdp-sizing-dialog .button { min-height: 48px; border-radius: 99px; gap: 12px; font: 600 17px/1.4 var(--body); text-transform: none; letter-spacing: 0; }
+.pdp-sizing-dialog .button { gap: 12px; }
 html[lang="si"] .pdp-copy h1 { line-height: 1.4; }
 @media (max-width: 1199px) { .pdp-gallery:has(.pdp-thumbnails) { grid-template-columns: 58px minmax(0, 1fr); gap: 12px; } .pdp-thumbnails button { width: 58px; height: 78px; } }
 @media (max-width: 1023px) { .pdp-gallery { position: static; } .pdp-layout { gap: 28px; } .pdp-copy h1 { font-size: 32px; } .pdp-purchase-row { grid-template-columns: 124px minmax(0, 1fr) 48px; gap: 8px; } .pdp-save { width: 48px; } }

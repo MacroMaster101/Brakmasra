@@ -41,6 +41,18 @@ GEMINI.md
 .superpowers/
 docs/superpowers/
 graphify-out/
+.mcp.json
+.windsurf/
+.junie/
+.augment/
+.amazonq/
+.kilocode/
+.zed/
+.specstory/
+.goose/
+.crush/
+.github/chatmodes/
+memory-bank/
 # Local AI generation prompts, QA reports and browser preview screenshots.
 # Website source, public image assets and project documentation stay versioned.
 /design/

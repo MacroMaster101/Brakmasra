@@ -58,7 +58,8 @@ describe("profile photo rules", () => {
   });
 
   it("accepts Google photos only over https from Google's photo host", () => {
-    expect(googlePhotoUrl("https://lh3.googleusercontent.com/a/abc=s96-c")).toBe("https://lh3.googleusercontent.com/a/abc=s96-c");
+    expect(googlePhotoUrl("https://lh3.googleusercontent.com/a/abc=s96-c")).toBe("https://lh3.googleusercontent.com/a/abc=s256-c");
+    expect(googlePhotoUrl("https://lh3.googleusercontent.com/a/abc")).toBe("https://lh3.googleusercontent.com/a/abc");
     expect(googlePhotoUrl("http://lh3.googleusercontent.com/a/abc")).toBeNull();
     expect(googlePhotoUrl("https://googleusercontent.com.evil.example/a")).toBeNull();
     expect(googlePhotoUrl("javascript:alert(1)")).toBeNull();

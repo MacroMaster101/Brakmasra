@@ -38,12 +38,17 @@ export function publicAvatarUrl(supabaseUrl: string, path: string) {
   return `${new URL(supabaseUrl).origin}/storage/v1/object/public/${AVATAR_BUCKET}/${path}`;
 }
 
+// Google serves sign-in photos at 96px; the largest avatar is 124px, so ask for enough for sharp 2x screens.
+const GOOGLE_PHOTO_SIZE = 256;
+
 /** The photo Google supplied at sign-in, only if it is an https URL on Google's photo host. */
 export function googlePhotoUrl(value: unknown): string | null {
   if (typeof value !== "string") return null;
   try {
     const url = new URL(value);
-    return url.protocol === "https:" && url.hostname.endsWith(GOOGLE_PHOTO_HOST_SUFFIX) ? url.toString() : null;
+    if (url.protocol !== "https:" || !url.hostname.endsWith(GOOGLE_PHOTO_HOST_SUFFIX)) return null;
+    url.pathname = url.pathname.replace(/=s\d+(-c)?$/, `=s${GOOGLE_PHOTO_SIZE}-c`);
+    return url.toString();
   } catch {
     return null;
   }

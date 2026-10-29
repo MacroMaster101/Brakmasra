@@ -1,4 +1,5 @@
 "use client";
+import { RoundedSelect } from "@/components/control-room/rounded-select";
 
 import { useActionState } from "react";
 import { Info, Search, Users } from "lucide-react";
@@ -7,16 +8,11 @@ import { changeRoleAction, findMemberAction, type ControlRoomActionState, type F
 import { ActionStatus, EmptyState, SectionGate, SectionPanel } from "@/components/control-room/shared";
 import { useLanguage } from "@/components/language-provider";
 import { RoleBadge, roleLabelKey } from "@/components/role-badge";
-import { choiceFromRole, type RoleChoice, type SectionData } from "@/lib/control-room-validation";
+import { choiceFromRole, type SectionData } from "@/lib/control-room-validation";
 
 export type TeamData = { members: FoundAccount[]; truncated: boolean };
 
 const idleState: ControlRoomActionState = { status: "idle", message: "" };
-
-function RoleOption({ choice }: { choice: RoleChoice }) {
-  const { t } = useLanguage();
-  return <option value={choice}>{choice === "none" ? t.crRoleNone : t[roleLabelKey(choice)]}</option>;
-}
 
 /** Picks a new role for one account. The server re-checks every rule; `choices` only shapes the menu. */
 function RoleChangeForm({ account, showCurrent = false }: { account: FoundAccount; showCurrent?: boolean }) {
@@ -38,13 +34,14 @@ function RoleChangeForm({ account, showCurrent = false }: { account: FoundAccoun
       )}
       <label>
         <span>{t.crChangeRole}</span>
-        <select key={current.role ?? "none"} name="role" defaultValue={choiceFromRole(current.role)}>
-          {current.choices.map((choice) => <RoleOption key={choice} choice={choice} />)}
-        </select>
+        <RoundedSelect key={current.role ?? "none"} name="role" defaultValue={choiceFromRole(current.role)}>
+          {current.choices.map((choice) => <option key={choice} value={choice}>{choice === "none" ? t.crRoleNone : t[roleLabelKey(choice)]}</option>)}
+        </RoundedSelect>
       </label>
       <button className="button button-primary" type="submit" disabled={pending}>
         {pending ? t.crChangeRolePending : t.crChangeRoleIdle}
       </button>
+      <button className="button button-secondary" type="reset" disabled={pending}>{t.crResetSection}</button>
       <ActionStatus state={state} />
     </form>
   );

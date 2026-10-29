@@ -21,6 +21,7 @@ import { authDemoMode, authEnabled } from "@/lib/features";
 import { memberFromUser } from "@/lib/member";
 import { rateLimit } from "@/lib/rate-limit";
 import { clientAddress } from "@/lib/request";
+import { getSupabaseServerClient } from "@/lib/supabase";
 import { createAuthClient } from "@/lib/supabase-auth";
 
 export type AccountActionState = {
@@ -199,10 +200,16 @@ export async function updatePasswordAction(
       if (check === "wrong") return { status: "error", message: "Your current password is incorrect." };
     }
 
+    // A first password is recorded in app_metadata, which only the server can
+    // write. Without the service client it could not be recorded, so refuse.
+    const admin = member.hasPassword ? null : getSupabaseServerClient();
+    if (!member.hasPassword && !admin) {
+      return { status: "error", message: "Password change is unavailable right now. Please try again." };
+    }
+
     const { error } = await supabase.auth.updateUser({
       password,
       ...(nonce ? { nonce } : {}),
-      ...(member.hasPassword ? {} : { data: { password_set: true } }),
     });
 
     if (error && isServiceOutage(error)) {
@@ -227,6 +234,11 @@ export async function updatePasswordAction(
       return { status: "error", message: "Choose a password you haven't used for this account." };
     }
     if (error) return { status: "error", message: "Your password could not be updated. Please try again." };
+
+    if (admin) {
+      const { error: flagError } = await admin.auth.admin.updateUserById(user.id, { app_metadata: { password_set: true } });
+      if (flagError) return { status: "error", message: "Your password was set, but your account could not be updated. Please try again." };
+    }
 
     revalidatePath("/", "layout");
     return member.hasPassword

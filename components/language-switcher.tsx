@@ -9,24 +9,27 @@ export function LanguageSwitcher({
   className = "",
   showLabels = false,
   placement = "down",
+  variant = "default",
 }: {
   className?: string;
   showLabels?: boolean;
   placement?: "down" | "up";
+  variant?: "default" | "dashboard";
 }) {
   const { lang, setLang, t } = useLanguage();
   return (
     <PreferenceMenu
-      className={`language-select ${className}`}
+      className={`language-select${variant === "dashboard" ? " dashboard-language-picker" : ""} ${className}`}
       label={t.languageSelection}
       value={lang}
       options={[
-        { value: "en", label: "English" },
-        { value: "si", label: "සිංහල" },
+        { value: "en", label: "English", ...(variant === "dashboard" ? { flag: "/images/flags/gb.svg" } : {}) },
+        { value: "si", label: "සිංහල", ...(variant === "dashboard" ? { flag: "/images/flags/lk.svg" } : {}) },
       ]}
       onChange={(value) => setLang(parseLanguage(value))}
       icon={showLabels ? <Globe aria-hidden="true" /> : undefined}
       placement={placement}
+      iconOnly={variant === "dashboard"}
     />
   );
 }

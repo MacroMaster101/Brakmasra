@@ -106,7 +106,7 @@ Before going live on **Vercel**, ensure you have:
 2. [ ] Keep `BRAKMASRA_LAUNCH_MODE=on` until payments, stock, and policies are ready.
 3. [ ] Add server-only Supabase secrets in Vercel, never in GitHub source. Set `BRAKMASRA_AUTH_MODE=on` only when member sign-in is ready.
 4. [ ] Apply and verify the Supabase migrations, RLS, email templates, and exact allowed callback URLs in the production project.
-5. [ ] Verify real email confirmation and the six-digit password-recovery flow. Recovery grants require `RECOVERY_SIGNING_SECRET` (32+ random characters) or the existing server-only Supabase secret.
+5. [ ] Verify real email confirmation and the six-digit password-recovery flow. Recovery grants require a dedicated `RECOVERY_SIGNING_SECRET` (32+ random characters); there is no fallback to the Supabase secret.
 6. [ ] Verify production routes, security headers, and access controls after deployment.
 
 These are deployment checks to perform, not a claim that the remote project has already been configured. See the [security review](docs/security-review-2026-10-15.md) for local checks and outstanding development-tool advisories.

@@ -64,3 +64,9 @@
   .cart-summary h2 { font-size: 24px; }
   .cart-empty { padding-block: 20px 36px; }
 }
+
+.checkout-currency { display: grid; gap: 10px; margin-block: 20px; }
+.checkout-currency > span { color: var(--text-secondary); font-size: 14px; }
+.checkout-quote { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-block: 20px; padding-block: 16px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.checkout-quote strong { font-variant-numeric: tabular-nums; }
+.checkout-quote-note { font-size: 14px; color: var(--text-secondary); }

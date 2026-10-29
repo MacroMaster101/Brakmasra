@@ -1,3 +1,4 @@
+import { alternatePrices, salePriceMinor } from "@/lib/product-pricing";
 import type { Product, ProductCategory } from "@/data/products";
 
 // Turns database rows into the storefront's Product shape. Pure, so it is tested
@@ -14,6 +15,9 @@ export type ProductRow = {
   description: string;
   currency: string;
   price_minor: number;
+  alternate_price_minor?: number | null;
+  discount_kind?: string | null;
+  discount_value?: number | null;
   fabric: string | null;
   care: unknown;
   category: string | null;
@@ -67,12 +71,15 @@ export function productFromRow(row: ProductRow, supabaseUrl: string | undefined)
   const siDescription = row.si_description?.trim();
   const badge = BADGES.find((value) => value === row.badge);
 
+  const price = salePriceMinor(row.price_minor, row.discount_kind, row.discount_value);
   return {
     id: row.id,
     slug: row.slug,
     name: row.name,
     description: row.description,
-    price: row.price_minor,
+    price,
+    ...alternatePrices(row.price_minor, price, row.currency, row.alternate_price_minor, row.discount_kind ?? undefined, row.discount_value ?? undefined),
+    compareAtPrice: price < row.price_minor ? row.price_minor : undefined,
     currency: row.currency.trim().toUpperCase(),
     images,
     sizes: unique(variants.map((variant) => variant.size)),
@@ -81,7 +88,7 @@ export function productFromRow(row: ProductRow, supabaseUrl: string | undefined)
     care: strings(row.care),
     stock: variants.reduce((total, variant) => total + Math.max(0, variant.inventory ?? 0), 0),
     category: row.category === "Apparel" || row.category === "Headwear" ? (row.category as ProductCategory) : undefined,
-    badge,
+    badge: price < row.price_minor ? "SALE" : badge,
     preview: row.coming_soon === true,
     featured: row.featured === true,
     si: siDescription

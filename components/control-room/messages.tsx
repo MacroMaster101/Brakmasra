@@ -1,4 +1,5 @@
 "use client";
+import { RoundedSelect } from "@/components/control-room/rounded-select";
 
 import Link from "next/link";
 import { useActionState } from "react";
@@ -81,13 +82,14 @@ function MessageStatusForm({ id, status }: { id: string; status: MessageStatus }
       <label>
         <span>{t.crSetStatus}</span>
         {/* Remounts when the saved status changes, so the form reset never shows a stale value. */}
-        <select key={status} name="status" defaultValue={status}>
+        <RoundedSelect key={status} name="status" defaultValue={status}>
           {MESSAGE_STATUSES.map((value) => <option key={value} value={value}>{t[messageStatusLabels[value]]}</option>)}
-        </select>
+        </RoundedSelect>
       </label>
       <button className="button button-secondary" type="submit" disabled={pending}>
         {pending ? t.crSaving : t.crSaveStatus}
       </button>
+      <button className="button button-secondary" type="reset" disabled={pending}>{t.crResetSection}</button>
       <ActionStatus state={state} />
     </form>
   );

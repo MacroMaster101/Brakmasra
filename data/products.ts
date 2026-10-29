@@ -1,3 +1,4 @@
+import type { CurrencyPrices } from "@/lib/product-pricing";
 export type ProductCategory = "Apparel" | "Headwear";
 
 /** Customer-facing copy that changes with the page language. */
@@ -13,6 +14,9 @@ export type Product = {
   name: string;
   description: string;
   price: number;
+  compareAtPrice?: number;
+  prices?: CurrencyPrices;
+  compareAtPrices?: CurrencyPrices;
   currency: string;
   images: string[];
   sizes: string[];

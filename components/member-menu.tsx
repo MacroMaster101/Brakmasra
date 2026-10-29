@@ -1,14 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronDown, LayoutDashboard, LogIn, LogOut, Package, Settings, Sparkles, UserRound, type LucideIcon } from "lucide-react";
+import { ChevronDown, Inbox, LayoutDashboard, LogIn, LogOut, Package, Settings, Sparkles, UserRound, type LucideIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 
 import { logoutAction } from "@/app/auth/actions";
 import { AvatarPhoto } from "@/components/avatar-photo";
 import { useLanguage } from "@/components/language-provider";
-import { RoleBadge } from "@/components/role-badge";
+import { LanguageSwitcher } from "@/components/language-switcher";
+import { RoleBadge, roleLabelKey } from "@/components/role-badge";
 import { authNav, controlRoomNav, joinNav, memberNav } from "@/data/navigation";
 import type { MemberSummary } from "@/lib/member";
 import { can } from "@/lib/roles";
@@ -32,10 +33,11 @@ export function MemberAvatar({ member, size = "sm" }: { member: MemberSummary; s
 }
 
 /** Desktop avatar button and dropdown for a signed-in member. */
-export function MemberMenu({ member }: { member: MemberSummary }) {
+export function MemberMenu({ member, variant = "store" }: { member: MemberSummary; variant?: "store" | "dashboard" }) {
   const [open, setOpen] = useState(false);
   const { t } = useLanguage();
   const pathname = usePathname();
+  const links = variant === "dashboard" ? [...memberNav.filter(item => item.href !== "/account/orders"), ...(can(member.role, "view_messages") ? [{ href: "/admin/messages", labelKey: "crTabMessages" as const }] : []), ...(can(member.role, "manage_site") ? [{ href: "/admin/site", labelKey: "crTabSite" as const }] : [])] : memberNav;
   const menuId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -69,7 +71,7 @@ export function MemberMenu({ member }: { member: MemberSummary }) {
 
   return (
     <div
-      className="member-menu"
+      className={`member-menu${variant === "dashboard" ? " dashboard-member-menu" : ""}`}
       ref={rootRef}
       onBlur={(event) => {
         // Tabbing out of the menu closes it once focus has actually left.
@@ -93,6 +95,7 @@ export function MemberMenu({ member }: { member: MemberSummary }) {
         }}
       >
         <MemberAvatar member={member} />
+        {variant === "dashboard" && <span className="dashboard-member-copy"><strong>{member.name}</strong><small>{member.role ? t[roleLabelKey(member.role)] : t.navAccount}</small></span>}
         <ChevronDown className="member-trigger-chevron" aria-hidden="true" />
       </button>
       {open && (
@@ -105,9 +108,10 @@ export function MemberMenu({ member }: { member: MemberSummary }) {
               <RoleBadge role={member.role} />
             </div>
           </div>
+          {variant === "dashboard" && <div className="dashboard-account-language"><span>{t.crLanguage}</span><LanguageSwitcher variant="dashboard" /></div>}
           <div className="member-panel-menu" id={menuId} role="menu" aria-label={t.navAccountMenu} ref={menuRef}>
             {/* Only decides whether the link shows; /admin checks the role again on the server. */}
-            {can(member.role, "control_room") && (
+            {variant !== "dashboard" && can(member.role, "control_room") && (
               <>
                 <Link
                   href={controlRoomNav.href}
@@ -122,8 +126,8 @@ export function MemberMenu({ member }: { member: MemberSummary }) {
                 <div className="member-panel-divider" role="separator" />
               </>
             )}
-            {memberNav.map(({ href, labelKey }) => {
-              const Icon = memberNavIcons[href] ?? UserRound;
+            {links.map(({ href, labelKey }) => {
+              const Icon = href === "/admin/messages" ? Inbox : href === "/admin/site" ? Settings : memberNavIcons[href] ?? UserRound;
               return (
                 <Link
                   key={href}

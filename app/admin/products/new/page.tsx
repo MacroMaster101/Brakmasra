@@ -8,6 +8,13 @@ export const dynamic = "force-dynamic";
 
 export default async function NewProductPage() {
   // Only people who can add products see the empty form.
-  await requireControlRoom("manage_catalog", "/admin/products/new");
-  return <ProductEditor data={{ kind: "ready", data: null }} canManage notice={null} />;
+  const viewer = await requireControlRoom("manage_catalog", "/admin/products/new");
+  return (
+    <ProductEditor
+      data={{ kind: "ready", data: null }}
+      canManage
+      canCustomizeAddress={viewer.role === "web_dev"}
+      notice={null}
+    />
+  );
 }

@@ -76,12 +76,19 @@ function firstIssue(result: { error: { issues: { message: string }[] } }) {
   return result.error.issues[0]?.message || "Check the form and try again.";
 }
 
+function subjectKeyOf(subject: string) {
+  return createHash("sha256").update(subject.trim().toLowerCase()).digest("hex").slice(0, 24);
+}
+
 async function authRateLimit(scope: string, limit: number, windowMs: number, subject?: string) {
   const requestHeaders = await headers();
-  const subjectKey = subject
-    ? createHash("sha256").update(subject.trim().toLowerCase()).digest("hex").slice(0, 24)
-    : "request";
+  const subjectKey = subject ? subjectKeyOf(subject) : "request";
   return rateLimit(`auth:${scope}:${clientAddress(requestHeaders)}:${subjectKey}`, limit, windowMs);
+}
+
+/** One budget per address across every client, so guesses spread over many IPs still run out. */
+function addressRateLimit(scope: string, limit: number, windowMs: number, email: string) {
+  return rateLimit(`auth:${scope}:${subjectKeyOf(email)}`, limit, windowMs);
 }
 
 function googleFailureUrl(returnTo: string, notice: string, next: string) {
@@ -146,7 +153,8 @@ export async function loginAction(
   if (!parsed.success) return { status: "error", message: firstIssue(parsed) };
 
   const accountAttempt = await authRateLimit("login-account", 8, 15 * 60_000, parsed.data.email);
-  if (!accountAttempt.allowed) {
+  // Generous enough that strangers can't easily lock a member out of sign-in.
+  if (!accountAttempt.allowed || !(await addressRateLimit("login-address", 30, 15 * 60_000, parsed.data.email)).allowed) {
     return { status: "error", message: "Too many attempts. Wait a few minutes and try again." };
   }
 
@@ -288,7 +296,7 @@ export async function verifyResetCodeAction(
 
   // A handful of guesses per address, well short of what a 6-digit code needs.
   const accountAttempt = await authRateLimit("reset-verify-account", 5, 15 * 60_000, parsed.data.email);
-  if (!accountAttempt.allowed) {
+  if (!accountAttempt.allowed || !(await addressRateLimit("reset-verify-address", 10, 15 * 60_000, parsed.data.email)).allowed) {
     return { status: "error", message: "Too many attempts. Wait a few minutes and try again." };
   }
 

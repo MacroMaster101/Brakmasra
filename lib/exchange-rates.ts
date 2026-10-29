@@ -1,7 +1,7 @@
 import "server-only";
 import { parseUsdRate } from "@/lib/currency";
 
-/** Daily indicative rates, cached hourly. Only used for browsing estimates. */
+/** Daily indicative rates, cached hourly. Used for automatic catalog conversion and server-validated checkout quotes. */
 export async function getUsdRate(): Promise<number | null> {
   try {
     const response = await fetch("https://open.er-api.com/v6/latest/LKR", {

@@ -138,3 +138,6 @@ html[lang="si"] .pdp-copy h1 { line-height: 1.4; }
   .pdp-save { grid-column: 2; grid-row: 1; width: 52px; }
   .pdp-add { grid-column: 1 / -1; grid-row: 2; }
 }
+
+:is(.product-card-price, .product-price, .pdp-price) del { margin-inline-start: 12px; font-size: .75em; font-weight: 400; color: var(--text-muted); }
+.cr-price-before { display: block; color: var(--text-muted); font-size: 13px; }

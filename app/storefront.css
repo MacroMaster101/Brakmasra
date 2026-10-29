@@ -1540,13 +1540,6 @@ html[lang="si"] .store-nav-row > a {
 .campaign-controls {
   gap: 0.9rem;
 }
-.campaign-controls .campaign-play {
-  margin-left: 0.4rem;
-}
-.campaign-play svg {
-  width: 13px;
-  height: 13px;
-}
 .store-services {
   padding-block: clamp(3rem, 6vw, 5.5rem);
   display: grid;

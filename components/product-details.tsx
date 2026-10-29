@@ -58,7 +58,7 @@ export function ProductDetails({ product, commerceEnabled, related = [] }: { pro
       <div className="pdp-copy">
         {category && <span className="pdp-category">{category}</span>}
         <h1 id={`${id}-title`}>{product.name}</h1>
-        <p className="pdp-price">{commerceEnabled ? formatPrice(product.price, product.currency) : t.shopPriceAnnounced}</p>
+        <p className="pdp-price">{commerceEnabled ? formatPrice(product.price, product.currency, product.prices) : t.shopPriceAnnounced}{commerceEnabled && product.compareAtPrice && <del>{formatPrice(product.compareAtPrice, product.currency, product.compareAtPrices)}</del>}</p>
         <CurrencyConversionNote />
         <p className="pdp-intro">{copy.description}</p>
         {commerceEnabled ? <AddToCart product={product} /> : <ProductComingSoon />}

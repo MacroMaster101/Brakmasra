@@ -2,12 +2,14 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ArrowDown, ArrowUp, Layers, Plus } from "lucide-react";
+import { ArrowDown, ArrowUp, Layers, Pencil, Plus } from "lucide-react";
 
-import { deleteCollectionAction, saveCollectionAction } from "@/app/admin/store-actions";
+import { deleteCollectionAction, saveCollectionAction, saveCollectionSectionAction } from "@/app/admin/store-actions";
 import { productStatusLabels } from "@/components/control-room/products";
 import { EmptyState, SectionGate, SectionPanel, StatusPill } from "@/components/control-room/shared";
 import { BackLink, DeleteForm, Field, Notice, SaveBar, Toggle, useCrForm } from "@/components/control-room/store-shared";
+import { editorChanged } from "@/components/control-room/editor-dialog";
+import { Resettable } from "@/components/control-room/resettable";
 import { useLanguage } from "@/components/language-provider";
 import type { SectionData } from "@/lib/control-room-validation";
 import type { TextKey } from "@/lib/i18n";
@@ -45,6 +47,7 @@ export function ControlRoomCollections({ collections, canManage, notice }: {
                   <th scope="col">{t.crsName}</th>
                   <th scope="col">{t.crStatus}</th>
                   <th scope="col" className="is-end">{t.crsProductCount}</th>
+                  {canManage && <th scope="col" className="is-end">{t.crsProductActions}</th>}
                 </tr>
               </thead>
               <tbody>
@@ -62,6 +65,7 @@ export function ControlRoomCollections({ collections, canManage, notice }: {
                       </StatusPill>
                     </td>
                     <td data-label={t.crsProductCount} className="is-end">{collection.productIds.length}</td>
+                    {canManage && <td data-label={t.crsProductActions} className="is-end"><Link className="crs-edit-product" href={`/admin/collections/${collection.id}`} aria-label={`${t.crEditRecord}: ${collection.name}`}><Pencil size={16} aria-hidden="true" />{t.crEditRecord}</Link></td>}
                   </tr>
                 ))}
               </tbody>
@@ -72,13 +76,16 @@ export function ControlRoomCollections({ collections, canManage, notice }: {
   );
 }
 
-function CollectionForm({ collection, products, canManage }: {
+function CollectionForm({ collection, products, canManage, section, reset }: {
   collection: AdminCollection | null;
   products: ProductChoice[];
   canManage: boolean;
+  section?: "basics" | "products";
+  reset: () => void;
 }) {
   const { t } = useLanguage();
-  const { state, formAction, pending, onSubmit } = useCrForm(saveCollectionAction);
+  const { state, formAction, pending, onSubmit } = useCrForm(section ? saveCollectionSectionAction : saveCollectionAction);
+  const [query, setQuery] = useState("");
   const [slug, setSlug] = useState(collection?.slug ?? "");
   const [slugEdited, setSlugEdited] = useState(Boolean(collection));
   // Chosen products in display order.
@@ -97,9 +104,11 @@ function CollectionForm({ collection, products, canManage }: {
   return (
     <form className="crs-form" action={formAction} onSubmit={onSubmit}>
       {collection && <input type="hidden" name="id" value={collection.id} />}
+      {section && <input type="hidden" name="section" value={section} />}
       {chosen.map((id) => <input key={id} type="hidden" name="productIds" value={id} />)}
-      <fieldset className="crs-fieldset" disabled={!canManage}>
+      {(!section || section === "basics") && (<fieldset className="crs-fieldset" disabled={!canManage || pending}>
         <legend>{t.crsBasics}</legend>
+          <div className="crs-section-fields">
         <div className="crs-grid">
           <Field label="crsName">
             <input
@@ -126,16 +135,19 @@ function CollectionForm({ collection, products, canManage }: {
           </Field>
         </div>
         <Toggle name="active" label="crsCollectionVisible" hint="crsCollectionVisibleHint" defaultChecked={collection?.active ?? false} />
-      </fieldset>
 
-      <fieldset className="crs-fieldset" disabled={!canManage}>
+          </div></fieldset>)}
+
+      {(!section || section === "products") && (<fieldset className="crs-fieldset" disabled={!canManage || pending}>
         <legend>{t.crsCollectionProducts}</legend>
+          <div className="crs-section-fields">
+        <input className="crs-choice-search" type="search" aria-label={t.crSearchChoices} placeholder={t.crSearchChoices} value={query} onChange={event => setQuery(event.target.value)} />
         {products.length === 0
           ? <p className="crs-legend-note">{t.crsNoProductsYet}</p>
           : (
             <div className="crs-picker">
               <ul className="crs-choices">
-                {products.map((product) => (
+                {products.filter(product => product.name.toLowerCase().includes(query.toLowerCase())).map((product) => (
                   <li key={product.id}>
                     <label>
                       <input type="checkbox" checked={chosen.includes(product.id)} onChange={() => toggle(product.id)} />
@@ -152,7 +164,7 @@ function CollectionForm({ collection, products, canManage }: {
                 {chosen.length === 0
                   ? <p className="crs-legend-note">{t.crsCollectionNoneChosen}</p>
                   : (
-                    <ol className="crs-order">
+                    <ol className="crs-order" onClickCapture={event => { if ((event.target as HTMLElement).closest("button")) editorChanged(event.currentTarget); }}>
                       {chosen.map((id, index) => (
                         <li key={id}>
                           <span>{byId.get(id)?.name ?? id}</span>
@@ -171,9 +183,10 @@ function CollectionForm({ collection, products, canManage }: {
               </div>
             </div>
           )}
-      </fieldset>
 
-      <SaveBar pending={pending} state={state} canManage={canManage} label={collection ? "crSave" : "crsCreateCollection"} />
+          </div></fieldset>)}
+
+      <SaveBar pending={pending} state={state} canManage={canManage} label={collection ? "crSaveSection" : "crsCreateCollection"} onReset={reset} />
     </form>
   );
 }
@@ -196,7 +209,7 @@ export function CollectionEditor({ data, canManage, notice }: {
           >
             <Notice text={notice} />
             {collection?.active && <Link className="cms-link" href={`/shop?collection=${collection.slug}`} target="_blank" rel="noopener">{t.navShop} ↗</Link>}
-            <CollectionForm key={collection ? `${collection.id}:${collection.productIds.join(",")}` : "new"} collection={collection} products={products} canManage={canManage} />
+            {(collection ? ["basics", "products"] as const : [undefined]).map(section => <Resettable key={`${collection?.id ?? "new"}:${section ?? "all"}`}>{reset => <CollectionForm collection={collection} products={products} canManage={canManage} section={section} reset={reset} />}</Resettable>)}
             {collection && canManage && (
               <section className="crs-danger" aria-labelledby="crs-delete-collection">
                 <div>

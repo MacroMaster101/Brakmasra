@@ -48,7 +48,7 @@ export function ProductCard({
             ? t.shopBadgeSale
             : null;
   const price = commerceEnabled
-    ? formatPrice(product.price, product.currency)
+    ? formatPrice(product.price, product.currency, product.prices)
     : t.shopComingSoon;
   return (
     <article className={`product-card ${className}`}>
@@ -108,7 +108,7 @@ export function ProductCard({
         <Link href={`/shop/${product.slug}`}>
           <h3>{product.name}</h3>
         </Link>
-        <p className="product-card-price">{price}</p>
+        <p className="product-card-price">{price}{commerceEnabled && product.compareAtPrice && <del>{formatPrice(product.compareAtPrice, product.currency, product.compareAtPrices)}</del>}</p>
         <div className="product-card-variants">
           <span
             className={`color-swatch ${product.colors[0]?.toLowerCase().includes("white") ? "swatch-white" : "swatch-black"}`}
@@ -147,7 +147,7 @@ export function ProductCard({
           </div>
           <div className="quick-view-copy">
             <h2 id={headingId}>{product.name}</h2>
-            <p className="product-price">{price}</p>
+            <p className="product-price">{price}{commerceEnabled && product.compareAtPrice && <del>{formatPrice(product.compareAtPrice, product.currency, product.compareAtPrices)}</del>}</p>
             <p>{productCopy(product, lang).description}</p>
             <div className="quick-view-sizes">
               {product.sizes.map((size) => (

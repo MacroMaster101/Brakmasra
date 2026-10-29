@@ -1,12 +1,14 @@
 "use client";
+import { RoundedSelect } from "@/components/control-room/rounded-select";
 
 import Link from "next/link";
 import { useState } from "react";
-import { Plus, TicketPercent } from "lucide-react";
+import { Pencil, Plus, TicketPercent } from "lucide-react";
 
 import { deleteDiscountAction, saveDiscountAction } from "@/app/admin/store-actions";
 import { EmptyState, SectionGate, SectionPanel, StatusPill } from "@/components/control-room/shared";
 import { BackLink, DeleteForm, Field, Notice, SaveBar, Toggle, useCrForm } from "@/components/control-room/store-shared";
+import { Resettable } from "@/components/control-room/resettable";
 import { useLanguage } from "@/components/language-provider";
 import { formatMoney } from "@/lib/cart";
 import type { SectionData } from "@/lib/control-room-validation";
@@ -75,6 +77,7 @@ export function ControlRoomDiscounts({ discounts, canManage, notice }: {
                   <th scope="col">{t.crsDates}</th>
                   <th scope="col">{t.crsUsageLimit}</th>
                   <th scope="col" className="is-end">{t.crsDiscountValue}</th>
+                  {canManage && <th scope="col" className="is-end">{t.crsProductActions}</th>}
                 </tr>
               </thead>
               <tbody>
@@ -91,6 +94,7 @@ export function ControlRoomDiscounts({ discounts, canManage, notice }: {
                       <td data-label={t.crsDates}>{dateRange(discount, lang, t.crsAlways)}</td>
                       <td data-label={t.crsUsageLimit}>{discount.usageLimit ?? t.crsUnlimited}</td>
                       <td data-label={t.crsDiscountValue} className="is-end"><strong>{discountValue(discount)}</strong></td>
+                      {canManage && <td data-label={t.crsProductActions} className="is-end"><Link className="crs-edit-product" href={`/admin/discounts/${discount.id}`} aria-label={`${t.crEditRecord}: ${discount.code}`}><Pencil size={16} aria-hidden="true" />{t.crEditRecord}</Link></td>}
                     </tr>
                   );
                 })}
@@ -102,7 +106,7 @@ export function ControlRoomDiscounts({ discounts, canManage, notice }: {
   );
 }
 
-function DiscountForm({ discount, canManage }: { discount: AdminDiscount | null; canManage: boolean }) {
+function DiscountForm({ discount, canManage, reset }: { discount: AdminDiscount | null; canManage: boolean; reset: () => void }) {
   const { t } = useLanguage();
   const { state, formAction, pending, onSubmit } = useCrForm(saveDiscountAction);
   const [kind, setKind] = useState<DiscountKind>(discount?.kind ?? "percent");
@@ -111,8 +115,9 @@ function DiscountForm({ discount, canManage }: { discount: AdminDiscount | null;
   return (
     <form className="crs-form" action={formAction} onSubmit={onSubmit}>
       {discount && <input type="hidden" name="id" value={discount.id} />}
-      <fieldset className="crs-fieldset" disabled={!canManage}>
+      <fieldset className="crs-fieldset" disabled={!canManage || pending}>
         <legend>{t.crsDiscountDetails}</legend>
+          <div className="crs-section-fields">
         <div className="crs-grid">
           <Field label="crsCode" hint="crsCodeHint">
             <input
@@ -127,10 +132,10 @@ function DiscountForm({ discount, canManage }: { discount: AdminDiscount | null;
             />
           </Field>
           <Field label="crsDiscountKind">
-            <select name="kind" value={kind} onChange={(event) => setKind(event.target.value as DiscountKind)}>
+            <RoundedSelect name="kind" value={kind} onValueChange={(value) => setKind(value as DiscountKind)}>
               <option value="percent">{t.crsKindPercent}</option>
               <option value="fixed">{t.crsKindFixed}</option>
-            </select>
+            </RoundedSelect>
           </Field>
           <Field label={kind === "percent" ? "crsPercentOff" : "crsAmountOff"} hint={kind === "percent" ? "crsPercentHint" : "crsAmountHint"}>
             <input key={kind} name="value" required inputMode="decimal" defaultValue={kind === discount?.kind ? initialValue : ""} />
@@ -146,8 +151,9 @@ function DiscountForm({ discount, canManage }: { discount: AdminDiscount | null;
           </Field>
         </div>
         <Toggle name="active" label="crsDiscountActive" hint="crsDiscountActiveHint" defaultChecked={discount?.active ?? false} />
-      </fieldset>
-      <SaveBar pending={pending} state={state} canManage={canManage} label={discount ? "crSave" : "crsCreateDiscount"} />
+
+          </div></fieldset>
+      <SaveBar pending={pending} state={state} canManage={canManage} label={discount ? "crSaveSection" : "crsCreateDiscount"} onReset={reset} />
     </form>
   );
 }
@@ -164,7 +170,7 @@ export function DiscountEditor({ data, canManage }: { data: SectionData<AdminDis
             title={discount ? (canManage ? "crsEditDiscount" : "crsViewDiscount") : "crsNewDiscount"}
             desc="crsDiscountFormDesc"
           >
-            <DiscountForm key={discount ? JSON.stringify(discount) : "new"} discount={discount} canManage={canManage} />
+            <Resettable key={discount?.id ?? "new"}>{reset => <DiscountForm discount={discount} canManage={canManage} reset={reset} />}</Resettable>
             {discount && canManage && (
               <section className="crs-danger" aria-labelledby="crs-delete-discount">
                 <div>

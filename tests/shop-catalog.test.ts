@@ -10,6 +10,7 @@ vi.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams(navigation.query),
   useRouter: () => ({ push: vi.fn(), replace: vi.fn() }),
 }));
+vi.mock("@/components/currency-provider", () => ({ useCurrency: () => ({ currency: "LKR" }) }));
 vi.mock("@/components/language-provider", () => ({ useLanguage: () => ({ t: translations.en }) }));
 vi.mock("@/lib/wishlist", () => ({ useWishlist: () => wishlist }));
 vi.mock("@/components/product-card", () => ({

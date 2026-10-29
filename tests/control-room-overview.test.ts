@@ -29,7 +29,12 @@ describe("Control Room overview", () => {
   it("charts every day and only shows what the data includes", () => {
     const html = renderToStaticMarkup(createElement(ControlRoomOverview, { name: "Kavisha Liyanage", role: "web_dev", data: { kind: "ready", data } }));
     expect(html).toContain("Welcome back, Kavisha");
-    expect(html.match(/class="cr-chart-bar/g)).toHaveLength(60);
+    expect(html.match(/class="cr-chart-bar/g)).toHaveLength(30);
+    expect(html).toContain("cr-secondary-line");
+    expect(html.match(/<th scope="row">/g)).toHaveLength(30);
+    expect(html).toContain("cr-donut-ring");
+    expect(html).toContain(translations.en.crPeriodDays(7));
+    expect(html).toContain(translations.en.crPeriodDays(30));
     expect(html).toContain("LKR");
     expect(html).toContain("Naga Guard Tee");
     expect(html).toContain("Content published");

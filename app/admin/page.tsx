@@ -9,6 +9,8 @@ import {
   countCatalogProducts,
   countNewMessages,
   listTeam,
+  listOrders,
+  productSalesActivity,
   messageActivity,
   orderActivity,
   orderCounts,
@@ -29,7 +31,7 @@ export default async function ControlRoomOverviewPage() {
   // Only the numbers this role may see are loaded at all.
   const data = await loadSection<OverviewData>(async () => {
     const now = new Date();
-    const [newMessages, orders, activeSubscribers, team, totalProducts, orderSeries, subscriberSeries, messageSeries, catalog, content, activity] = await Promise.all([
+    const [newMessages, orders, activeSubscribers, team, totalProducts, orderSeries, subscriberSeries, messageSeries, catalog, content, activity, recentOrders, sales] = await Promise.all([
       allowed("view_messages", countNewMessages),
       allowed("view_orders", orderCounts),
       allowed("view_newsletter", countActiveSubscribers),
@@ -41,9 +43,13 @@ export default async function ControlRoomOverviewPage() {
       allowed("manage_catalog", catalogHealth),
       allowed("manage_site", listContentEntries),
       allowed("manage_site", () => recentAuditLogs(6)),
+      allowed("view_orders", listOrders),
+      allowed("view_orders", () => productSalesActivity(now)),
     ]);
 
     const values: OverviewData = { stats: {} };
+    if (recentOrders !== undefined) values.recentOrders = recentOrders?.slice(0, 5) ?? null;
+    if (sales !== undefined) values.sales = sales;
     if (totalProducts !== undefined) values.stats.totalProducts = totalProducts;
     if (newMessages !== undefined) values.stats.newMessages = newMessages;
     if (orders) {

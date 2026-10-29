@@ -6,7 +6,9 @@ import { ArrowRight, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import { useCart } from "@/components/cart-provider";
 import { useLanguage } from "@/components/language-provider";
 import { CartLoadingState } from "@/components/loading-states";
-import { cartCount, cartSubtotal } from "@/lib/cart";
+import { priceInCurrency } from "@/lib/product-pricing";
+import { cartCount, type CartLine } from "@/lib/cart";
+import { cartSubtotalInCurrency } from "@/lib/cart-currency";
 import { MAX_LINE_QUANTITY } from "@/lib/catalog";
 import { useCurrency } from "@/components/currency-provider";
 import { CurrencyConversionNote } from "@/components/currency-switcher";
@@ -41,7 +43,13 @@ type CartState = ReturnType<typeof useCart>;
 
 function CartLines({ lines, update, remove }: Pick<CartState, "lines" | "update" | "remove">) {
   const { t } = useLanguage();
-  const { formatPrice } = useCurrency();
+  const { formatPrice, currency = "LKR", usdRate = null } = useCurrency();
+  const subtotal = cartSubtotalInCurrency(lines, currency, usdRate);
+  const total = subtotal === null ? t.cartCurrencyUnavailable : formatPrice(subtotal, currency);
+  const lineTotal = (line: CartLine) => {
+    const unit = priceInCurrency(line.unitPrice, line.currency, currency, usdRate, line.prices);
+    return unit === null ? formatPrice(line.unitPrice * line.quantity, line.currency) : formatPrice(unit * line.quantity, currency);
+  };
 
   return (
     <div className="cart-layout store-cart-layout">
@@ -54,10 +62,10 @@ function CartLines({ lines, update, remove }: Pick<CartState, "lines" | "update"
               <div className="cart-item-copy">
                 <Link href={`/shop/${encodeURIComponent(line.slug)}`}><h2>{line.name}</h2></Link>
                 <p>{[line.size, line.color].filter(Boolean).join(" / ")}</p>
-                <span className="cart-unit-mobile">{formatPrice(line.unitPrice, line.currency)}</span>
+                <span className="cart-unit-mobile">{formatPrice(line.unitPrice, line.currency, line.prices)}</span>
               </div>
             </div>
-            <div className="cart-unit-price"><span className="sr-only">{t.cartUnitPrice}: </span>{formatPrice(line.unitPrice, line.currency)}</div>
+            <div className="cart-unit-price"><span className="sr-only">{t.cartUnitPrice}: </span>{formatPrice(line.unitPrice, line.currency, line.prices)}</div>
             <div className="cart-quantity-cell">
               <span className="cart-cell-label">{t.cartQuantity}</span>
               <div className="quantity" role="group" aria-label={t.cartQuantityFor(line.name)}>
@@ -72,7 +80,7 @@ function CartLines({ lines, update, remove }: Pick<CartState, "lines" | "update"
             </div>
             <div className="cart-line-total">
               <span className="cart-cell-label">{t.cartLineTotal}</span>
-              <strong>{formatPrice(line.unitPrice * line.quantity, line.currency)}</strong>
+              <strong>{lineTotal(line)}</strong>
             </div>
             <button className="cart-remove" type="button" onClick={() => remove(index)} aria-label={t.cartRemove(line.name)}><Trash2 aria-hidden="true" /></button>
           </article>
@@ -82,10 +90,10 @@ function CartLines({ lines, update, remove }: Pick<CartState, "lines" | "update"
         <h2>{t.cartSummaryTitle}</h2>
         <div className="cart-summary-line">
           <span>{t.cartSubtotal}</span>
-          <strong>{formatPrice(cartSubtotal(lines), lines[0].currency)}</strong>
+          <strong>{total}</strong>
         </div>
         <div className="cart-summary-line"><span>{t.cartDeliveryLabel}</span><span>{t.cartAtCheckout}</span></div>
-        <div className="cart-summary-total"><span>{t.cartEstimatedTotal}</span><strong>{formatPrice(cartSubtotal(lines), lines[0].currency)}</strong></div>
+        <div className="cart-summary-total"><span>{t.cartEstimatedTotal}</span><strong>{total}</strong></div>
         <p>{t.cartShippingNote}</p>
         <CurrencyConversionNote />
         <Link className="button button-primary full" href="/checkout">{t.cartContinueCheckout}<ArrowRight aria-hidden="true" /></Link>

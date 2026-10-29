@@ -52,5 +52,6 @@ export function toCartLine(product: Product, choice: VariantChoice): CartLine | 
     quantity: choice.quantity,
     unitPrice: product.price,
     currency: product.currency,
+    prices: product.prices,
   };
 }

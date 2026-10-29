@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { PRODUCT_CURRENCIES, SALE_DISCOUNT_KINDS, alternateSalePrice, salePriceMinor } from "@/lib/product-pricing";
 import { ORDER_STATUS_VALUES } from "@/lib/order-status";
 
 // Pure rules for the Control Room store forms, shared by the forms, the server
@@ -16,7 +17,7 @@ export const MAX_SIZES = 12;
 export const MAX_COLORS = 12;
 export const MAX_STOCK = 100_000;
 export const MAX_PRODUCT_IMAGES = 8;
-const MAX_PRICE_MINOR = 100_000_000; // LKR 1,000,000.00
+const MAX_PRICE_MINOR = 100_000_000; // 1,000,000.00 in either supported two-decimal currency
 
 const invalid = "Check the form and try again.";
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -32,7 +33,7 @@ export function slugify(value: string) {
     .replace(/-+$/g, "");
 }
 
-/** "6,900.50" or "6900" in rupees to cents; null when it isn't a valid amount. */
+/** A two-decimal currency amount to integer minor units; null for invalid input. */
 export function parseMoney(value: string): number | null {
   const cleaned = value.replace(/,/g, "").trim();
   if (!/^\d{1,7}(\.\d{1,2})?$/.test(cleaned)) return null;
@@ -79,7 +80,7 @@ const lines = (maxLines: number, maxLength: number) =>
   z.string().max(maxLines * (maxLength + 2), invalid).transform(parseLines)
     .refine((items) => items.length <= maxLines && items.every((item) => item.length <= maxLength), invalid);
 
-export const productSchema = z
+const productFields = z
   .object({
     name: z.string().trim().min(2, "Enter a product name.").max(120, "Keep the name under 120 characters."),
     slug: z.string().trim().toLowerCase().regex(slugPattern, "Use lower-case letters, numbers, and hyphens for the web address.").max(80, invalid),
@@ -89,10 +90,19 @@ export const productSchema = z
     comingSoon: z.boolean(),
     featured: z.boolean(),
     position: z.coerce.number({ message: invalid }).int(invalid).min(0, invalid).max(9999, invalid),
+    currency: z.enum(PRODUCT_CURRENCIES).default("LKR"),
+    alternatePrice: z.string().default("").transform((value, context) => {
+      if (!value.trim()) return null;
+      const minor = parseMoney(value);
+      if (minor === null || minor <= 0) { context.addIssue({ code: "custom", message: "Enter a custom price greater than zero, with up to two decimal places." }); return z.NEVER; }
+      return minor;
+    }),
+    discountKind: z.enum(SALE_DISCOUNT_KINDS).default("none"),
+    discountValue: z.string().default(""),
     price: z.string().transform((value, context) => {
       const minor = parseMoney(value);
       if (minor === null) {
-        context.addIssue({ code: "custom", message: "Enter a price in rupees, like 6900 or 6900.50." });
+        context.addIssue({ code: "custom", message: "Enter a price in the selected currency, with up to two decimal places." });
         return z.NEVER;
       }
       return minor;
@@ -108,9 +118,37 @@ export const productSchema = z
     colors: z.string().max(600, invalid).transform(parseList)
       .refine((items) => items.length <= MAX_COLORS && items.every((item) => item.length <= 40), "Use up to 12 colours, each under 40 characters."),
     stock: z.record(z.string(), z.coerce.number({ message: invalid }).int(invalid).min(0, invalid).max(MAX_STOCK, invalid)),
-  })
-  .transform((product) => ({
-    ...product,
+  });
+
+function normalizePricing<T extends { price: number; alternatePrice: number | null; discountKind: string; discountValue: string }>(product: T, context: z.RefinementCtx): Omit<T, "discountValue"> & { discountValue: number } {
+  if (product.alternatePrice !== null && product.price <= 0) context.addIssue({ code: "custom", path: ["price"], message: "Enter a regular price greater than zero before setting a custom currency price." });
+  let discount = 0;
+  if (product.discountKind === "percent") {
+    discount = Number(product.discountValue.trim());
+    if (!/^\d{1,2}$/.test(product.discountValue.trim()) || discount < 1 || discount > 99) context.addIssue({ code: "custom", path: ["discountValue"], message: "Enter a sale percentage from 1 to 99." });
+  } else if (product.discountKind === "fixed") {
+    const amount = parseMoney(product.discountValue);
+    if (amount === null || amount <= 0 || amount >= product.price) context.addIssue({ code: "custom", path: ["discountValue"], message: "The sale discount must be greater than zero and less than the regular price." });
+    discount = amount ?? 0;
+  }
+  if (product.discountKind !== "none" && product.price <= 0) context.addIssue({ code: "custom", path: ["price"], message: "Enter a regular price before adding a sale discount." });
+  if (product.discountKind !== "none" && product.price > 0 && salePriceMinor(product.price, product.discountKind, discount) <= 0) context.addIssue({ code: "custom", path: ["discountValue"], message: "The sale price must be greater than zero." });
+  if (product.alternatePrice !== null && alternateSalePrice(product.price, salePriceMinor(product.price, product.discountKind, discount), product.alternatePrice, product.discountKind, discount) <= 0) context.addIssue({ code: "custom", path: ["alternatePrice"], message: "The custom sale price must be greater than zero." });
+  return { ...product, discountValue: discount };
+}
+export const PRODUCT_SECTIONS = ["basics", "pricing", "details", "sinhala", "stock"] as const;
+export type ProductSection = (typeof PRODUCT_SECTIONS)[number];
+export const productSectionSchemas = {
+  basics: productFields.pick({ name: true, slug: true, status: true, category: true, badge: true, comingSoon: true, featured: true, position: true }),
+  pricing: productFields.pick({ price: true, currency: true, alternatePrice: true, discountKind: true, discountValue: true }).transform(normalizePricing),
+  details: productFields.pick({ description: true, fabric: true, care: true }),
+  sinhala: productFields.pick({ siDescription: true, siFabric: true, siCare: true }),
+  stock: productFields.pick({ sizes: true, colors: true, stock: true }).transform(product => ({ variants: variantCombos(product.sizes, product.colors).map(combo => ({ ...combo, inventory: product.stock[stockField(combo.size, combo.color)] ?? 0 })) })),
+};
+
+export const productSchema = productFields
+  .transform((product, context) => ({
+    ...normalizePricing(product, context),
     variants: variantCombos(product.sizes, product.colors).map((combo) => ({
       ...combo,
       inventory: product.stock[stockField(combo.size, combo.color)] ?? 0,
@@ -138,6 +176,10 @@ export function productFormValues(formData: FormData) {
     featured: formData.get("featured") === "on",
     position: text("position") || "0",
     price: text("price"),
+    alternatePrice: text("alternatePrice"),
+    currency: text("currency") || "LKR",
+    discountKind: text("discountKind") || "none",
+    discountValue: text("discountValue"),
     description: text("description"),
     fabric: text("fabric"),
     care: text("care"),
@@ -245,3 +287,5 @@ export function csvCell(value: string) {
   const safe = /^\s*[=+\-@]|^[\t\r\n]/.test(value) ? `'${value}` : value;
   return /[",\r\n]/.test(safe) ? `"${safe.replace(/"/g, '""')}"` : safe;
 }
+
+export const collectionSectionSchemas = { basics: collectionSchema.pick({name: true, slug: true, description: true, active: true}), products: collectionSchema.pick({productIds: true}) };

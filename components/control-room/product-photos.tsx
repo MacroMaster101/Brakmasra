@@ -54,7 +54,8 @@ function PhotoAlt({ image }: { image: AdminImage }) {
         <span className="sr-only">{t.crsPhotoAlt}</span>
         <input name="altText" required minLength={2} maxLength={160} defaultValue={image.altText} placeholder={t.crsPhotoAlt} />
       </label>
-      <button className="button button-secondary" type="submit" disabled={pending}>{pending ? t.crSaving : t.crSave}</button>
+      <button className="button button-primary" type="submit" disabled={pending}>{pending ? t.crSaving : t.crSave}</button>
+      <button className="button button-secondary" type="reset" disabled={pending}>{t.crResetSection}</button>
       <ActionStatus state={state} />
     </form>
   );

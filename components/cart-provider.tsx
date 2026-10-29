@@ -15,7 +15,9 @@ type CartContextValue = {
 
 const CartContext = createContext<CartContextValue | null>(null);
 
-export function CartProvider({ children }: { children: ReactNode }) {
+export type CartPrice = { id: string; price: number; currency: string; prices?: CartLine["prices"] };
+
+export function CartProvider({ children, prices = [] }: { children: ReactNode; prices?: CartPrice[] }) {
   const [lines, setLines] = useState<CartLine[]>([]);
   const [hydrated, setHydrated] = useState(false);
 
@@ -50,8 +52,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [hydrated, lines]);
 
+  const liveLines = useMemo(() => { const byId = new Map(prices.map(product => [product.id, product])); return lines.map(line => { const current = byId.get(line.productId); return current ? { ...line, unitPrice: current.price, currency: current.currency, prices: current.prices } : line; }); }, [lines, prices]);
   const value = useMemo<CartContextValue>(() => ({
-    lines,
+    lines: liveLines,
     count: cartCount(lines),
     hydrated,
     add: (line) => setLines((current) => {
@@ -62,7 +65,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     update: (index, quantity) => setLines((current) => current.map((line, itemIndex) => itemIndex === index ? { ...line, quantity: Math.max(1, Math.min(10, quantity)) } : line)),
     remove: (index) => setLines((current) => current.filter((_, itemIndex) => itemIndex !== index)),
     clear: () => setLines([]),
-  }), [hydrated, lines]);
+  }), [hydrated, lines, liveLines]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

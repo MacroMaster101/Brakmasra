@@ -63,3 +63,40 @@ export function fieldLabel(key: string) {
   const label = key.replace(/^(text|copy)\./, "").replace(/([a-z])([A-Z])/g, "$1 $2").replace(/\./g, " · ");
   return label.charAt(0).toUpperCase() + label.slice(1);
 }
+
+/** Stable editing groups derived from existing field keys, never arbitrary object paths. */
+export function pageFieldGroup(field: string) {
+  if (field.startsWith("image.")) return "Images";
+  if (field.startsWith("copy.")) return field.split(".").slice(0, 2).join(".");
+  const key = field.replace(/^text\./, "");
+  if (key.startsWith("store")) {
+    const groups: [string, RegExp][] = [
+      ["Currency & preferences", /^store(?:Currency|Lkr|Usd|Exchange|LightTheme|DarkTheme)/],
+      ["Hero carousel", /^store(?:Campaign|Second|NextSlide|PrevSlide|PauseSlides|PlaySlides|Collection$)/],
+      ["Reviews", /^store(?:Testimonials|Sample|Review)/],
+      ["Search & quick view", /^store(?:RecentSearch|ClearHistory|NoSearchHistory|Search|QuickView|ViewDetails|Close$|ViewAll$)/],
+      ["Wishlist", /^store(?:Saved$|Wishlist|Save$|Unsave|EmptySaved)/],
+      ["Footer", /^store(?:Information|QuickShop|CustomerServices|Footer|Payment|Subscribe)/],
+      ["Collection categories & filters", /^store(?:NewArrivals|AllTees|Clothing|Accessories|Tees|Hoodies|Sweatshirts|Headwear|Bags|BrowseAll|Category|WhileYouWait|ExploreTees|AllCategories|Color|AllColors|ClearFilters|NoFilter|ShopMenu|BlackTees|WhiteTees|Sort|Featured|Name$|Price)/],
+      ["Campaign sections", /^store(?:Explore|BlackDesc|WhiteDesc|AllDesc|Editorial|Lookbook)/],
+      ["Services", /^store(?:Services|CustomerService|Returns|OriginalDesign|Delivery|Cotton|Fit|Support)/],
+    ];
+    return groups.find(([, pattern]) => pattern.test(key))?.[0] ?? "Store navigation";
+  }
+  return key.split(/(?=[A-Z])/).slice(0, key.startsWith("home") ? 2 : 1).join(" ");
+}
+export function mergePageSection(id: ContentPageId, baseline: CopyValues, input: unknown, section: string): CopyValues | null {
+  const match = /^page:(en|si):(.+)$/.exec(section);
+  if (!match || !input || typeof input !== "object") return null;
+  const lang = match[1] as Language;
+  const keys = Object.keys(pageDefaults(id)[lang]).filter(key => pageFieldGroup(key) === match[2]);
+  if (!keys.length) return null;
+  const source = input as CopyValues;
+  if (!source[lang] || keys.some(key => typeof source[lang][key] !== "string")) return null;
+  const result = { en: { ...baseline.en }, si: { ...baseline.si } };
+  for (const key of keys) {
+    result[lang][key] = source[lang][key];
+    if (key.startsWith("image.")) result[lang === "en" ? "si" : "en"][key] = source[lang][key];
+  }
+  return result;
+}

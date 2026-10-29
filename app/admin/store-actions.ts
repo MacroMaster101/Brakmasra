@@ -16,6 +16,9 @@ import type { Permission } from "@/lib/roles";
 import { CATALOG_TAG } from "@/lib/store";
 import {
   collectionSchema,
+  collectionSectionSchemas,
+  productSectionSchemas,
+  type ProductSection,
   discountSchema,
   idSchema,
   imageAltSchema,
@@ -27,6 +30,7 @@ import {
   type ProductInput,
   variantCombos,
 } from "@/lib/store-admin-validation";
+import { automaticProductSlug, productAddressPolicy, suffixedProductSlug } from "@/lib/product-address";
 import { PRODUCT_IMAGE_BUCKET } from "@/lib/store-mapping";
 import { getSupabaseServerClient } from "@/lib/supabase";
 
@@ -76,6 +80,10 @@ function productRow(input: ProductInput) {
     name: input.name,
     description: input.description,
     price_minor: input.price,
+    alternate_price_minor: input.alternatePrice,
+    currency: input.currency,
+    discount_kind: input.discountKind,
+    discount_value: input.discountValue,
     fabric: input.fabric,
     care: input.care,
     status: input.status,
@@ -91,6 +99,31 @@ function productRow(input: ProductInput) {
   };
 }
 
+/** Resolve role restrictions on the server; a hidden or forged field cannot change an owner's product link. */
+async function productAddress(viewer: Member, supabase: Admin, form: FormData, id: string | null) {
+  const policy = productAddressPolicy(viewer.role, formText(form.get("slugMode")), form.get("regenerateSlug") === "on", Boolean(id));
+  if (policy.custom) { const slug = formText(form.get("slug")); const fallback = formText(form.get("slugMode")) !== "custom" && !slug; return { slug: fallback ? automaticProductSlug(formText(form.get("name"))) : slug, generated: fallback, preserve: false }; }
+  if (policy.preserve) {
+    try {
+      const { data, error } = await supabase.from("products").select("slug").eq("id", id!).maybeSingle();
+      if (error || !data) return null;
+      return { slug: String(data.slug), generated: false, preserve: true };
+    } catch { return null; }
+  }
+  return { slug: automaticProductSlug(formText(form.get("name"))), generated: true, preserve: false };
+}
+
+/** A name collision gets an automatic suffix; the unique database constraint settles concurrent creates. */
+async function saveAtProductAddress<T extends { error: { code?: string } | null }>(address: { slug: string; generated: boolean }, save: (slug: string) => PromiseLike<T>) {
+  let slug = address.slug;
+  let result = await save(slug);
+  for (let attempt = 0; address.generated && isDuplicate(result.error) && attempt < 3; attempt++) {
+    slug = suffixedProductSlug(address.slug, randomBytes(3).toString("hex"));
+    result = await save(slug);
+  }
+  return { result, slug };
+}
+
 export async function saveProductAction(
   _previousState: ControlRoomActionState,
   formData: FormData,
@@ -103,13 +136,17 @@ export async function saveProductAction(
   const id = idValue ? idSchema.safeParse({ id: idValue }) : null;
   if (id && !id.success) return { status: "error", message: firstIssue(id) };
 
-  const parsed = productSchema.safeParse(productFormValues(formData));
+  const address = await productAddress(viewer, supabase, formData, id?.data.id ?? null);
+  if (!address) return notSaved;
+  const parsed = productSchema.safeParse({ ...productFormValues(formData), slug: address.slug });
   if (!parsed.success) return { status: "error", message: firstIssue(parsed) };
   const input = parsed.data;
 
   let productId = id?.data.id ?? "";
   try {
-    const result = await supabase.rpc("admin_save_product", { p_id: productId || null, p_product: productRow(input), p_variants: input.variants });
+    const saved = await saveAtProductAddress(address, slug => supabase.rpc("admin_save_product", { p_id: productId || null, p_product: productRow({ ...input, slug }), p_variants: input.variants }));
+    const result = saved.result;
+    input.slug = saved.slug;
     if (isDuplicate(result.error)) return { status: "error", message: "Another product already uses that web address." };
     if (result.error?.code === "P0002") return { status: "error", message: "That product no longer exists." };
     if (result.error || !result.data) return notSaved;
@@ -123,6 +160,55 @@ export async function saveProductAction(
   revalidatePath("/admin/products");
   if (!id) redirect(`/admin/products/${productId}?created=1`);
   return { status: "success", message: "Product saved." };
+}
+
+/** Each section is validated independently; the database merges it under a row lock. */
+export async function saveProductSectionAction(_state: ControlRoomActionState, form: FormData): Promise<ControlRoomActionState> {
+  const checked = await guard("manage_catalog", "product-save");
+  if ("error" in checked) return checked.error;
+  const id = idSchema.safeParse({ id: formText(form.get("id")) });
+  const section = formText(form.get("section"));
+  if (!id.success || !Object.hasOwn(productSectionSchemas, section)) return { status: "error", message: "Check the section and try again." };
+  const address = section === "basics" ? await productAddress(checked.viewer, checked.supabase, form, id.data.id) : null;
+  if (section === "basics" && !address) return notSaved;
+  const values = productFormValues(form);
+  const parsed = productSectionSchemas[section as ProductSection].safeParse(address ? { ...values, slug: address.slug } : values);
+  if (!parsed.success) return { status: "error", message: firstIssue(parsed) };
+  const columns: Record<string, string> = { price: "price_minor", alternatePrice: "alternate_price_minor", discountKind: "discount_kind", discountValue: "discount_value", comingSoon: "coming_soon", siDescription: "si_description", siFabric: "si_fabric", siCare: "si_care" };
+  const patch = Object.fromEntries(Object.entries(parsed.data).map(([key, value]) => [columns[key] ?? key, value]));
+  // Exclude an unchanged automatic address so concurrent developer changes are preserved by the row-locking RPC.
+  if (address?.preserve) delete patch.slug;
+  try {
+    const result = address && !address.preserve
+      ? (await saveAtProductAddress(address, slug => checked.supabase.rpc("admin_save_product_section", { p_id: id.data.id, p_section: section, p_patch: { ...patch, slug } }))).result
+      : await checked.supabase.rpc("admin_save_product_section", { p_id: id.data.id, p_section: section, p_patch: patch });
+    if (isDuplicate(result.error)) return { status: "error", message: "Another product already uses that web address." };
+    if (result.error?.code === "P0002") return { status: "error", message: "That product no longer exists." };
+    if (result.error || !result.data) return notSaved;
+  } catch { return notSaved; }
+  await audit(checked.viewer, "product.update", "product", id.data.id, { section });
+  refreshStore();
+  revalidatePath("/admin/products");
+  return { status: "success", message: "Section saved. Other sections are unchanged." };
+}
+
+export async function saveCollectionSectionAction(_state: ControlRoomActionState, form: FormData): Promise<ControlRoomActionState> {
+  const checked = await guard("manage_catalog", "collection-save");
+  if ("error" in checked) return checked.error;
+  const id = idSchema.safeParse({ id: formText(form.get("id")) });
+  const section = formText(form.get("section"));
+  if (!id.success || (section !== "basics" && section !== "products")) return { status: "error", message: "Check the section and try again." };
+  const parsed = collectionSectionSchemas[section].safeParse({ name: formText(form.get("name")), slug: formText(form.get("slug")), description: formText(form.get("description")), active: form.get("active") === "on", productIds: form.getAll("productIds") });
+  if (!parsed.success) return { status: "error", message: firstIssue(parsed) };
+  try {
+    const result = await checked.supabase.rpc("admin_save_collection_section", { p_id: id.data.id, p_section: section, p_patch: parsed.data });
+    if (isDuplicate(result.error)) return { status: "error", message: "Another collection already uses that web address." };
+    if (result.error?.code === "23503") return { status: "error", message: "A selected product no longer exists. Reload and try again." };
+    if (result.error || !result.data) return notSaved;
+  } catch { return notSaved; }
+  await audit(checked.viewer, "collection.update", "collection", id.data.id, { section });
+  refreshStore(); revalidatePath("/admin/collections");
+  return { status: "success", message: "Section saved. Other sections are unchanged." };
 }
 
 export async function deleteProductAction(

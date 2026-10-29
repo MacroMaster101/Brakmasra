@@ -104,7 +104,7 @@ export function ControlRoomProducts({ products, canManage, notice }: {
                       {product.updatedAt && <time dateTime={product.updatedAt}>{formatDate(product.updatedAt, lang)}</time>}
                     </td>
                     <td data-label={t.crsPrice} className="is-end">
-                      <strong>{formatMoney(product.priceMinor, product.currency)}</strong>
+                      <strong>{formatMoney(product.priceMinor, product.currency)}</strong>{product.compareAtMinor && product.compareAtMinor > product.priceMinor && <del className="cr-price-before">{formatMoney(product.compareAtMinor, product.currency)}</del>}
                     </td>
                     {canManage && (
                       <td data-label={t.crsProductActions} className="is-end">

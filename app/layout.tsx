@@ -20,6 +20,7 @@ import "./control-room.css";
 import "./storefront-loading.css";
 import "./storefront-visibility.css";
 import "./storefront-not-found.css";
+import "./control-room-workspace.css";
 import { SiteFrame } from "@/components/site-frame";
 import { site } from "@/data/site";
 import { getSiteUrl } from "@/lib/auth";
@@ -104,6 +105,7 @@ export default async function RootLayout({
           launchMode={launchMode}
           member={member}
           shopMenu={shopMenu}
+          catalogPrices={catalog.map(({ id, price, currency, prices }) => ({ id, price, currency, prices }))}
         >
           {children}
         </SiteFrame>

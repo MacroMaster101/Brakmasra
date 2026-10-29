@@ -436,25 +436,6 @@
 .campaign-hero .campaign-pagination {
   gap: 6px;
 }
-.campaign-hero > .campaign-play {
-  position: absolute;
-  z-index: 3;
-  right: 24px;
-  bottom: 10px;
-  width: 32px;
-  height: 32px;
-  background: rgb(250 250 250 / 0.82);
-  color: #171719;
-  opacity: 0.65;
-}
-.campaign-hero > .campaign-play:hover,
-.campaign-hero > .campaign-play:focus-visible {
-  opacity: 1;
-}
-.campaign-hero > .campaign-play svg {
-  width: 13px;
-  height: 13px;
-}
 .campaign-hero .campaign-pagination button {
   width: 24px;
   height: 24px;
@@ -755,12 +736,6 @@ html[lang="si"] .store-nav-row > a {
   .campaign-side-arrow svg {
     width: 18px;
     height: 18px;
-  }
-  .campaign-hero > .campaign-play {
-    right: 58px;
-    bottom: 7px;
-    width: 32px;
-    height: 32px;
   }
   .campaign-hero .campaign-controls {
     bottom: 9px;

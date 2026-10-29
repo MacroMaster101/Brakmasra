@@ -2,13 +2,7 @@
 
 import Image from "@/components/store-image";
 import Link from "next/link";
-import {
-  ArrowRight,
-  ChevronLeft,
-  ChevronRight,
-  Pause,
-  Play,
-} from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useLanguage } from "@/components/language-provider";
@@ -78,7 +72,6 @@ function CampaignSlide({
 export function CampaignHero() {
   const { t } = useLanguage();
   const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
   const [keyboardPaused, setKeyboardPaused] = useState(false);
   const [inView, setInView] = useState(true);
   const hero = useRef<HTMLElement>(null);
@@ -88,8 +81,7 @@ export function CampaignHero() {
     () => document.visibilityState === "visible",
     () => true,
   );
-  const autoplay =
-    !paused && !keyboardPaused && !reducedMotion && inView && pageVisible;
+  const autoplay = !keyboardPaused && !reducedMotion && inView && pageVisible;
   const slides: Slide[] = [
     {
       image: "/images/campaign/wide-cutout.webp",
@@ -198,17 +190,6 @@ export function CampaignHero() {
           ))}
         </div>
       </div>
-      <button
-        className="campaign-play icon-button"
-        type="button"
-        aria-label={paused ? t.storePlaySlides : t.storePauseSlides}
-        onClick={() => {
-          setPaused(!paused);
-          setKeyboardPaused(false);
-        }}
-      >
-        {paused ? <Play /> : <Pause />}
-      </button>
     </section>
   );
 }

@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { startTransition, useActionState, useState, type FormEvent, type ReactNode } from "react";
+import { cloneElement, isValidElement, startTransition, useActionState, useId, useState, type FormEvent, type ReactNode } from "react";
 import { ArrowLeft, Trash2 } from "lucide-react";
 
 import type { ControlRoomActionState } from "@/app/admin/actions";
 import { ActionStatus } from "@/components/control-room/shared";
 import { useDashboardNotify } from "@/components/control-room/notifications";
 import { ConfirmDialog } from "@/components/control-room/confirm-dialog";
+import { editorReset, formIdentity, useEditorLifecycle } from "@/components/control-room/editor-dialog";
 import { useLanguage } from "@/components/language-provider";
 import type { TextKey } from "@/lib/i18n";
 
@@ -21,18 +22,24 @@ export const idleState: ControlRoomActionState = { status: "idle", message: "" }
  */
 export function useCrForm(action: CrAction) {
   const notify = useDashboardNotify();
+  const editor = useEditorLifecycle();
   const [state, formAction, pending] = useActionState(async (previous: ControlRoomActionState, data: FormData) => {
+    editor?.start();
+    let saved = false;
+    try {
     const reply = await action(previous, data);
-    // Product/collection forms remount after their server data is refreshed.
-    // The layout owns the notification so successful saves remain visible.
+    // The layout keeps successful feedback visible across route refreshes.
     notify(reply);
+    saved = reply.status === "success";
     return reply;
+    } finally { editor?.finish(saved && data.get("__keepDirty") !== "1", String(data.get("__editorForm") ?? "")); }
   }, idleState);
 
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const submitter = (event.nativeEvent as SubmitEvent).submitter;
     const formData = new FormData(event.currentTarget, submitter);
+    formData.set("__editorForm", formIdentity(event.currentTarget));
     startTransition(() => formAction(formData));
   };
 
@@ -58,12 +65,13 @@ type FieldProps = {
 
 export function Field({ label, hint, wide, children }: FieldProps) {
   const { t } = useLanguage();
+  const id = useId();
   return (
-    <label className={`crs-field${wide ? " is-wide" : ""}`}>
-      <span className="crs-label">{t[label]}</span>
-      {children}
-      {hint && <small className="crs-hint">{t[hint]}</small>}
-    </label>
+    <div className={`crs-field${wide ? " is-wide" : ""}`}>
+      <label htmlFor={id} className="crs-label">{t[label]}</label>
+      {isValidElement<{ id?: string }>(children) ? cloneElement(children, { id, ...(hint ? { "aria-describedby": `${id}-hint` } : {}) }) : children}
+      {hint && <small id={`${id}-hint`} className="crs-hint">{t[hint]}</small>}
+    </div>
   );
 }
 
@@ -87,11 +95,12 @@ export function Toggle({ name, label, hint, defaultChecked, disabled }: {
 }
 
 /** Save button with the action's reply beside it; hidden for view-only roles. */
-export function SaveBar({ pending, state, canManage, label = "crSave" }: {
+export function SaveBar({ pending, state, canManage, label = "crSave", onReset }: {
   pending: boolean;
   state: ControlRoomActionState;
   canManage: boolean;
   label?: TextKey;
+  onReset?: () => void;
 }) {
   const { t } = useLanguage();
   if (!canManage) return <p className="crs-readonly">{t.crsViewOnly}</p>;
@@ -100,12 +109,13 @@ export function SaveBar({ pending, state, canManage, label = "crSave" }: {
       <button className="button button-primary" type="submit" disabled={pending}>
         {pending ? t.crSaving : t[label]}
       </button>
+      {onReset && <button className="button button-secondary" type="reset" disabled={pending} onClick={event => { const form = event.currentTarget.form; if (form) editorReset(form); onReset(); }}>{t.crResetSection}</button>}
       <ActionStatus state={state} />
     </div>
   );
 }
 
-/** A delete button in its own form; the browser asks before anything is removed. */
+/** A delete button in its own form, protected by a themed confirmation dialog. */
 export function DeleteForm({ action, id, confirm, label = "crsDelete", compact }: {
   action: CrAction;
   id: string;

@@ -1,3 +1,4 @@
+import type { CurrencyPrices } from "@/lib/product-pricing";
 export type CartLine = {
   productId: string;
   slug: string;
@@ -8,6 +9,7 @@ export type CartLine = {
   quantity: number;
   unitPrice: number;
   currency: string;
+  prices?: CurrencyPrices;
 };
 
 export const cartKey = "brakmasra-cart-v1";

@@ -16,10 +16,13 @@ import {
   type StoreCurrency,
 } from "@/lib/currency";
 
+import { priceInCurrency, type CurrencyPrices } from "@/lib/product-pricing";
+import { formatMoney } from "@/lib/cart";
+
 type CurrencyContextValue = {
   currency: StoreCurrency;
   setCurrency: (value: StoreCurrency) => void;
-  formatPrice: (amount: number, source?: string) => string;
+  formatPrice: (amount: number, source?: string, prices?: CurrencyPrices) => string;
   usdRate: number | null;
   commerceEnabled: boolean;
 };
@@ -66,8 +69,11 @@ export function CurrencyProvider({
       setCurrency,
       usdRate,
       commerceEnabled,
-      formatPrice: (amount: number, source = "LKR") =>
-        formatDisplayMoney(amount, source, currency, usdRate),
+      formatPrice: (amount: number, source = "LKR", prices?: CurrencyPrices) => {
+        const custom = prices?.[currency];
+        const resolved = priceInCurrency(amount, source, currency, usdRate, prices);
+        return custom !== undefined && resolved !== null ? formatMoney(resolved, currency) : formatDisplayMoney(amount, source, currency, usdRate);
+      },
     }),
     [currency, setCurrency, usdRate, commerceEnabled],
   );

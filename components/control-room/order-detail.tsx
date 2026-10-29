@@ -1,5 +1,7 @@
 "use client";
+import { RoundedSelect } from "@/components/control-room/rounded-select";
 
+import { Resettable } from "@/components/control-room/resettable";
 import { updateOrderAction } from "@/app/admin/store-actions";
 import { orderStatusLabels } from "@/components/control-room/orders";
 import { SectionGate, SectionPanel, StatusPill } from "@/components/control-room/shared";
@@ -11,19 +13,20 @@ import { formatDate } from "@/lib/i18n";
 import { ORDER_STATUS_VALUES } from "@/lib/order-status";
 import type { AdminOrderDetail } from "@/lib/store-admin";
 
-function OrderManageForm({ order, canManage }: { order: AdminOrderDetail; canManage: boolean }) {
+function OrderManageForm({ order, canManage, reset }: { order: AdminOrderDetail; canManage: boolean; reset: () => void }) {
   const { t } = useLanguage();
   const { state, formAction, pending, onSubmit } = useCrForm(updateOrderAction);
   return (
     <form className="crs-form" action={formAction} onSubmit={onSubmit}>
       <input type="hidden" name="publicId" value={order.publicId} />
-      <fieldset className="crs-fieldset" disabled={!canManage}>
+      <fieldset className="crs-fieldset" disabled={!canManage || pending}>
         <legend>{t.crsFulfilment}</legend>
+          <div className="crs-section-fields">
         <div className="crs-grid">
           <Field label="crStatus" hint="crsOrderStatusHint">
-            <select name="status" defaultValue={order.status}>
+            <RoundedSelect name="status" defaultValue={order.status}>
               {ORDER_STATUS_VALUES.map((value) => <option key={value} value={value}>{t[orderStatusLabels[value]]}</option>)}
-            </select>
+            </RoundedSelect>
           </Field>
           <Field label="crsTracking" hint="crsTrackingHint">
             <input name="trackingNumber" maxLength={100} defaultValue={order.trackingNumber} />
@@ -32,8 +35,9 @@ function OrderManageForm({ order, canManage }: { order: AdminOrderDetail; canMan
             <textarea name="adminNote" maxLength={1000} rows={3} defaultValue={order.adminNote} />
           </Field>
         </div>
-      </fieldset>
-      <SaveBar pending={pending} state={state} canManage={canManage} />
+
+          </div></fieldset>
+      <SaveBar pending={pending} state={state} canManage={canManage} label="crSaveSection" onReset={reset} />
     </form>
   );
 }
@@ -109,7 +113,7 @@ export function ControlRoomOrderDetail({ data, canManage }: { data: SectionData<
             </SectionPanel>
 
             <SectionPanel id="crs-order-manage" title="crsFulfilment" desc={canManage ? "crsFulfilmentDesc" : "crsFulfilmentViewDesc"}>
-              <OrderManageForm key={`${order.status}:${order.trackingNumber}:${order.adminNote}`} order={order} canManage={canManage} />
+              <Resettable key={order.id}>{reset => <OrderManageForm order={order} canManage={canManage} reset={reset} />}</Resettable>
             </SectionPanel>
           </>
         )}

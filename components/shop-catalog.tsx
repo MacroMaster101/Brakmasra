@@ -1,5 +1,7 @@
 "use client";
 
+import { compareProductPrices, priceInCurrency } from "@/lib/product-pricing";
+import { useCurrency } from "@/components/currency-provider";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowRight, Bell, Search, X } from "lucide-react";
@@ -17,13 +19,16 @@ export function ShopCatalog({
   commerceEnabled,
   collections = [],
   collection,
+  usdRate = null,
 }: {
+  usdRate?: number | null;
   products: Product[];
   commerceEnabled: boolean;
   collections?: { slug: string; name: string }[];
   collection?: { name: string; description: string };
 }) {
   const { t } = useLanguage();
+  const { currency } = useCurrency();
   const params = useSearchParams();
   const router = useRouter();
   const initialQuery = params.get("q") ?? "";
@@ -61,13 +66,15 @@ export function ShopCatalog({
       (color === "all" ||
         product.colors.some((value) => value.toLowerCase().includes(color))),
   );
+  const canSortPrices = products.every(product => priceInCurrency(product.price, product.currency, currency, usdRate, product.prices) !== null);
+  const activeSort = !canSortPrices && (sort === "low" || sort === "high") ? "featured" : sort;
   const results = [...searchProducts(query, filtered)].sort((a, b) =>
-    sort === "name"
+    activeSort === "name"
       ? a.name.localeCompare(b.name)
-      : sort === "low"
-        ? a.price - b.price
-        : sort === "high"
-          ? b.price - a.price
+      : activeSort === "low"
+        ? compareProductPrices(a, b, usdRate, currency)
+        : activeSort === "high"
+          ? compareProductPrices(b, a, usdRate, currency)
           : Number(Boolean(b.featured)) - Number(Boolean(a.featured)),
   );
   if (savedOnly) return <WishlistView products={products} commerceEnabled={commerceEnabled} />;
@@ -134,10 +141,10 @@ export function ShopCatalog({
         </label>
         <label className="catalog-control catalog-sort">
           <span>{t.storeSort}</span>
-          <select value={sort} onChange={(event) => setSort(event.target.value)}>
+          <select value={activeSort} onChange={(event) => setSort(event.target.value)}>
             <option value="featured">{t.storeFeatured}</option>
             <option value="name">{t.storeName}</option>
-            {commerceEnabled && <><option value="low">{t.storePriceLow}</option><option value="high">{t.storePriceHigh}</option></>}
+            {commerceEnabled && <><option value="low" disabled={!canSortPrices}>{t.storePriceLow}</option><option value="high" disabled={!canSortPrices}>{t.storePriceHigh}</option></>}
           </select>
         </label>
       </div>

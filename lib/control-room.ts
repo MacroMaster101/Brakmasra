@@ -14,6 +14,9 @@ import { memberFromUser } from "@/lib/member";
 import { ORDER_STATUSES, type OrderStatus } from "@/lib/orders";
 import { parseRole, type MemberRole } from "@/lib/roles";
 import { getSupabaseServerClient } from "@/lib/supabase";
+import type { ProductSale } from "@/lib/dashboard-sales";
+import { storeDay } from "@/lib/dashboard-series";
+import { isAllowedProductImage } from "@/lib/store-mapping";
 
 // Control Room reads. Every table here has RLS with no policies, so only the
 // service role can read it. Callers must check the viewer's permission first.
@@ -195,7 +198,7 @@ export async function orderActivity(now = new Date()): Promise<OrderActivity | n
   if (!rows || counts.some((count) => count === null)) return null;
 
   const paid = rows.filter((row) => row.status === "paid" || row.status === "fulfilled");
-  // Revenue is charted in the currency most paid orders use; the store prices in LKR.
+  // Revenue is charted in the currency most paid orders use.
   const tally = new Map<string, number>();
   for (const row of paid) {
     const code = text(row.currency).trim().toUpperCase() || "LKR";
@@ -220,6 +223,31 @@ export async function subscriberActivity(now = new Date()): Promise<DayPoint[] |
   const rows = await rowsSince("newsletter_subscribers", "consented_at, status", "consented_at", seriesStart(DASHBOARD_DAYS, now));
   if (!rows) return null;
   return bucketByDay(rows.filter((row) => row.status !== "unsubscribed"), (row) => text(row.consented_at), recentDays(DASHBOARD_DAYS, now));
+}
+
+/** Paid product units only; callers must require view_orders. No customer data is returned. */
+export async function productSalesActivity(now = new Date()): Promise<ProductSale[] | null> {
+  const supabase = getSupabaseServerClient();
+  if (!supabase) return null;
+  try {
+    const { data, error } = await supabase.from("orders")
+      .select("status, created_at, order_items(product_name, quantity, variant_id, product_variants(product_id, products(id, name, slug, product_images(url, position))))")
+      .in("status", ["paid", "fulfilled"]).gte("created_at", seriesStart(DASHBOARD_DAYS, now))
+      .order("created_at", { ascending: false }).limit(ACTIVITY_ROW_LIMIT + 1);
+    if (error || !data || data.length > ACTIVITY_ROW_LIMIT) return null;
+    const relation = (value: unknown): Record<string, unknown> => (Array.isArray(value) ? value[0] : value) as Record<string, unknown> ?? {};
+    return data.flatMap(row => {
+      const day = storeDay(row.created_at);
+      if (!day) return [];
+      return row.order_items.flatMap(item => {
+        const variant = relation(item.product_variants);
+        const product = relation(variant.products);
+        const images = Array.isArray(product.product_images) ? product.product_images as Record<string, unknown>[] : [];
+        const image = images.filter(image => isAllowedProductImage(text(image.url), process.env.SUPABASE_URL)).sort((a, b) => Number(a.position) - Number(b.position))[0];
+        return [{ day, productId: text(product.id) || text(item.variant_id), name: text(product.name) || text(item.product_name), href: product.id ? `/admin/products/${encodeURIComponent(text(product.id))}` : null, image: image ? text(image.url) : null, quantity: Number(item.quantity) }];
+      });
+    });
+  } catch { return null; }
 }
 
 export async function messageActivity(now = new Date()): Promise<DayPoint[] | null> {

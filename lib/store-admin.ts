@@ -1,4 +1,5 @@
 import "server-only";
+import { salePriceMinor, type SaleDiscountKind } from "@/lib/product-pricing";
 
 import type { DiscountKind, ProductStatus } from "@/lib/store-admin-validation";
 import { ORDER_STATUSES, type OrderStatus } from "@/lib/orders";
@@ -20,6 +21,9 @@ export type AdminProduct = {
   description: string;
   currency: string;
   priceMinor: number;
+  alternatePriceMinor?: number | null;
+  discountKind: SaleDiscountKind;
+  discountValue: number;
   fabric: string;
   care: string[];
   category: string;
@@ -37,6 +41,7 @@ export type AdminProduct = {
 };
 
 export type AdminProductSummary = Pick<AdminProduct, "id" | "slug" | "name" | "status" | "priceMinor" | "currency" | "comingSoon" | "featured" | "updatedAt"> & {
+  compareAtMinor?: number;
   stock: number;
   image: string | null;
 };
@@ -110,6 +115,9 @@ function adminProduct(row: Row): AdminProduct {
     description: text(row.description),
     currency: text(row.currency).trim().toUpperCase() || "LKR",
     priceMinor: num(row.price_minor),
+    alternatePriceMinor: row.alternate_price_minor == null ? null : num(row.alternate_price_minor),
+    discountKind: row.discount_kind === "percent" || row.discount_kind === "fixed" ? row.discount_kind : "none",
+    discountValue: num(row.discount_value),
     fabric: text(row.fabric),
     care: strings(row.care),
     category: text(row.category),
@@ -154,7 +162,8 @@ export async function listAdminProducts(): Promise<AdminProductSummary[] | null>
       slug: product.slug,
       name: product.name,
       status: product.status,
-      priceMinor: product.priceMinor,
+      priceMinor: salePriceMinor(product.priceMinor, product.discountKind, product.discountValue),
+      compareAtMinor: product.discountKind !== "none" ? product.priceMinor : undefined,
       currency: product.currency,
       comingSoon: product.comingSoon,
       featured: product.featured,

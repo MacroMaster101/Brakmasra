@@ -4,7 +4,7 @@ import { audit, controlRoomLimit, viewerWith } from "@/app/admin/action-helpers"
 import type { ControlRoomActionState } from "@/app/admin/actions";
 import { journalPosts } from "@/data/journal";
 import { formText } from "@/lib/account-validation";
-import { pageDefinition } from "@/lib/content-fields";
+import { mergePageSection, pageDefaults, pageDefinition, type CopyValues } from "@/lib/content-fields";
 import { contentKeySchema, isContentImage, parseContentDocument, postSchema, revisionSchema, validatePageCopy, type ContentDocument } from "@/lib/content-validation";
 import { authDemoMode } from "@/lib/features";
 import { getSupabaseServerClient } from "@/lib/supabase";
@@ -15,7 +15,9 @@ export async function saveContentAction(_state: ControlRoomActionState, form: Fo
   if (authDemoMode) return { status: "error", message: "Preview mode. Changes are not saved." };
   const key = contentKeySchema.safeParse(formText(form.get("key")));
   const revision = revisionSchema.safeParse(formText(form.get("revision")));
-  const intent = formText(form.get("intent"));
+  const section = formText(form.get("section"));
+  const intent = formText(form.get("intent")) || (section ? "draft" : "");
+  if (section && intent !== "draft") return { status: "error", message: "Save individual sections as drafts before publishing." };
   if (!key.success || !revision.success || !["draft", "publish", "unpublish", "delete", "restore", "reset"].includes(intent))
     return { status: "error", message: "Check the form and try again." };
   const attempt = await controlRoomLimit("content-save", 60, 10 * 60_000, viewer.id);
@@ -42,7 +44,21 @@ export async function saveContentAction(_state: ControlRoomActionState, form: Fo
     } else {
       const raw = formText(form.get("payload"));
       if (raw.length > 250_000) return { status: "error", message: "This document is too large." };
-      const input: unknown = JSON.parse(raw);
+      let input: unknown = JSON.parse(raw);
+      if (section) {
+        if (page) input = mergePageSection(page.id, previous?.draft as CopyValues ?? pageDefaults(page.id), input, section);
+        else {
+          if (!previous) return { status: "error", message: "Complete and save the story first." };
+          const base = previous.draft as typeof journalPosts[number];
+          const candidate = input as typeof base;
+          if (section === "story:details") input = { ...base, category: candidate.category, image: candidate.image, width: candidate.width, height: candidate.height, productSlug: candidate.productSlug };
+          else if (/^story:(en|si):(summary|body)$/.test(section)) {
+            const [, lang, group] = section.split(":") as [string, "en" | "si", string];
+            const copy = candidate.copy[lang];
+            input = { ...base, copy: { ...base.copy, [lang]: { ...base.copy[lang], ...(group === "body" ? { sections: copy.sections } : { title: copy.title, excerpt: copy.excerpt, imageAlt: copy.imageAlt, lead: copy.lead }) } } };
+          } else return { status: "error", message: "Unknown section." };
+        }
+      }
       const draft = page ? validatePageCopy(page.id, input, process.env.SUPABASE_URL) : postSchema.safeParse(input);
       const parsedPost = !page && draft && "success" in draft ? draft : null;
       const content = page ? draft : parsedPost?.success ? parsedPost.data : null;

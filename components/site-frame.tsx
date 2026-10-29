@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 
-import { CartProvider } from "@/components/cart-provider";
+import { CartProvider, type CartPrice } from "@/components/cart-provider";
 import { ContentScope } from "@/components/content-provider";
 import { CurrencyProvider } from "@/components/currency-provider";
 import { FloatingActions } from "@/components/floating-actions";
@@ -30,6 +30,7 @@ export function SiteFrame({
   launchMode,
   member,
   shopMenu,
+  catalogPrices,
 }: Readonly<{
   children: React.ReactNode;
   initialLang: Language;
@@ -38,6 +39,7 @@ export function SiteFrame({
   launchMode: boolean;
   member: MemberSummary | null;
   shopMenu: ShopMenu;
+  catalogPrices?: CartPrice[];
 }>) {
   const pathname = usePathname();
   const isFocusedAuthPage = focusedAuthRoutes.has(pathname);
@@ -51,7 +53,7 @@ export function SiteFrame({
         usdRate={usdRate}
         commerceEnabled={!launchMode}
       >
-        <CartProvider>
+        <CartProvider prices={catalogPrices}>
           <ScrollRestoration />
           {!isFocusedAuthPage && !isDashboard && (
             <Header commerceEnabled={!launchMode} member={member} shopMenu={shopMenu} />

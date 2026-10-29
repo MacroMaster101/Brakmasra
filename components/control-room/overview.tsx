@@ -1,15 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Check, CircleAlert, Info, ScrollText, type LucideIcon } from "lucide-react";
+import { useState, type ReactNode } from "react";
+import { ArrowRight, Check, CircleAlert, Info, ScrollText, Package, Wallet, Users, Mail, Shirt, UserRound, Plus, type LucideIcon } from "lucide-react";
 
 import { AuditAction, AuditChange, hasAuditDetail } from "@/components/control-room/audit";
-import { BarChart, Breakdown, Sparkline, type BreakdownItem, type ChartTone } from "@/components/control-room/charts";
+import { BarChart, DonutChart, Sparkline, type BreakdownItem, type ChartTone } from "@/components/control-room/charts";
+import { TopProducts, RecentOrders } from "@/components/control-room/overview-commerce";
+import { ChartPreview } from "@/components/control-room/chart-preview";
+import { rankProducts, type ProductSale } from "@/lib/dashboard-sales";
 import { orderStatusLabels } from "@/components/control-room/orders";
 import { EmptyState, SectionGate, SectionPanel } from "@/components/control-room/shared";
 import { useLanguage } from "@/components/language-provider";
 import { formatMoney } from "@/lib/cart";
-import type { AuditEntry, OrderActivity } from "@/lib/control-room";
+import type { AdminOrder, AuditEntry, OrderActivity } from "@/lib/control-room";
 import type { SectionData } from "@/lib/control-room-validation";
 import { seriesTotal, type DayPoint } from "@/lib/dashboard-series";
 import { formatDate, type TextKey } from "@/lib/i18n";
@@ -37,6 +41,8 @@ export type OverviewData = {
   drafts?: number | null;
   setup?: { ready: number; total: number; missing: TextKey[] };
   activity?: AuditEntry[] | null;
+  recentOrders?: AdminOrder[] | null;
+  sales?: ProductSale[] | null;
 };
 
 const statusTones: Record<OrderStatusValue, ChartTone> = {
@@ -71,23 +77,24 @@ function accessItems(role: MemberRole): TextKey[] {
 
 type Kpi = { key: string; label: string; value: string | null; hint?: string; href: string; series?: DayPoint[] | null; tone?: ChartTone };
 
-function KpiCards({ items }: { items: Kpi[] }) {
+function KpiCards({ items, days }: { items: Kpi[]; days: number }) {
   const { t } = useLanguage();
-  return (
-    // Rows stay even: every card on one wide row, otherwise rows of two or three.
-    <ul className="cr-kpis" style={{ "--kpi-count": items.length, "--kpi-mid": items.length % 3 === 0 || items.length > 4 ? 3 : 2 } as React.CSSProperties}>
-      {items.map(({ key, label, value, hint, href, series, tone }) => (
-        <li key={key}>
-          <Link href={href} className="cr-kpi">
-            <span className="cr-kpi-label">{label}</span>
-            <strong className={value === null ? "is-unavailable" : undefined}>{value ?? t.crUnavailable}</strong>
-            {hint && <small>{hint}</small>}
-            {series && <Sparkline points={series} tone={tone} />}
-          </Link>
-        </li>
-      ))}
+  const primary = items.filter(item => !["products", "team"].includes(item.key));
+  const operations = items.filter(item => ["products", "team"].includes(item.key));
+  const icons: Record<string, LucideIcon> = { orders: Package, revenue: Wallet, subscribers: Users, messages: Mail, products: Shirt, team: UserRound };
+  return <>
+    <ul className="cr-kpis cr-analytics-kpis">
+      {primary.map(({ key, label, value, hint, href, series, tone }) => {
+        const Icon = icons[key];
+        return <li key={key}><Link href={href} className={`cr-kpi cr-kpi-${key}`} data-tone={tone ?? "accent"}>
+          <div className="cr-kpi-summary"><span className="cr-kpi-icon"><Icon size={23} aria-hidden="true" /></span><div><span className="cr-kpi-label">{label}</span><strong className={value === null ? "is-unavailable" : undefined}>{value ?? t.crUnavailable}</strong></div><span className="cr-kpi-period">{t.crPeriodDays(days)}<ArrowRight size={14} /></span></div>
+          {hint && <small>{hint}</small>}
+          {series && <Sparkline points={series} tone={tone} />}
+        </Link></li>;
+      })}
     </ul>
-  );
+    {operations.length > 0 && <ul className="cr-operational-stats">{operations.map(item => { const Icon = icons[item.key]; return <li key={item.key}><Link href={item.href}><Icon size={19} /><span>{item.label}</span><strong>{item.value ?? t.crUnavailable}</strong>{item.hint && <small>{item.hint}</small>}<ArrowRight size={15} /></Link></li>; })}</ul>}
+  </>;
 }
 
 function Unavailable() {
@@ -167,13 +174,12 @@ function RecentActivity({ entries }: { entries: AuditEntry[] | null }) {
   );
 }
 
-function Hero({ name }: { name: string }) {
+function Hero({ name, children }: { name: string; children?: ReactNode }) {
   const { t } = useLanguage();
   return (
     <header className="cr-hero">
-      <span className="eyebrow">{t.crOverviewEyebrow}</span>
-      <h2 id="cr-overview-title">{t.crWelcome(name.split(" ")[0] || name)}</h2>
-      <p>{t.crWelcomeDesc}</p>
+      <div><h2 id="cr-overview-title">{t.crWelcome(name.split(" ")[0] || name)}</h2><p>{t.crWelcomeDesc}</p></div>
+      {children}
     </header>
   );
 }
@@ -181,6 +187,8 @@ function Hero({ name }: { name: string }) {
 function Dashboard({ name, role, data }: { name: string; role: MemberRole; data: OverviewData }) {
   const { t } = useLanguage();
   const { stats, orders, subscribers, messages, catalog } = data;
+  const [days, setDays] = useState<7 | 14 | 30>(30);
+  const period = (points: DayPoint[]) => points.slice(-days);
   const money = (minor: number) => formatMoney(minor, orders?.currency ?? "LKR");
 
   const kpis: Kpi[] = [];
@@ -189,17 +197,17 @@ function Dashboard({ name, role, data }: { name: string; role: MemberRole; data:
       key: "orders",
       label: t.crStatTotalOrders,
       value: stats.totalOrders == null ? null : formatCount(stats.totalOrders),
-      hint: orders ? t.crKpiOrders30(seriesTotal(orders.orders)) : undefined,
+      hint: orders ? t.crPeriodActivity(seriesTotal(period(orders.orders)), days) : undefined,
       href: "/admin/orders",
-      series: orders?.orders,
+      series: orders ? period(orders.orders) : undefined,
     });
     kpis.push({
       key: "revenue",
       label: t.crKpiRevenue,
-      value: orders ? money(seriesTotal(orders.revenueMinor)) : null,
-      hint: t.crKpiRevenueHint,
+      value: orders ? money(seriesTotal(period(orders.revenueMinor))) : null,
+      hint: t.crPeriodPaid(days),
       href: "/admin/orders",
-      series: orders?.revenueMinor,
+      series: orders ? period(orders.revenueMinor) : undefined,
       tone: "success",
     });
   }
@@ -208,9 +216,9 @@ function Dashboard({ name, role, data }: { name: string; role: MemberRole; data:
       key: "subscribers",
       label: t.crStatActiveSubscribers,
       value: stats.activeSubscribers == null ? null : formatCount(stats.activeSubscribers),
-      hint: subscribers ? t.crKpiSubscribers30(seriesTotal(subscribers)) : undefined,
+      hint: subscribers ? t.crPeriodActivity(seriesTotal(period(subscribers)), days) : undefined,
       href: "/admin/subscribers",
-      series: subscribers,
+      series: subscribers ? period(subscribers) : undefined,
       tone: "info",
     });
   }
@@ -219,9 +227,9 @@ function Dashboard({ name, role, data }: { name: string; role: MemberRole; data:
       key: "messages",
       label: t.crStatNewMessages,
       value: stats.newMessages == null ? null : formatCount(stats.newMessages),
-      hint: messages ? t.crKpiMessages30(seriesTotal(messages)) : undefined,
+      hint: messages ? t.crPeriodActivity(seriesTotal(period(messages)), days) : undefined,
       href: "/admin/messages?status=new",
-      series: messages,
+      series: messages ? period(messages) : undefined,
       tone: "warning",
     });
   }
@@ -276,49 +284,43 @@ function Dashboard({ name, role, data }: { name: string; role: MemberRole; data:
 
   return (
     <>
-      <Hero name={name} />
+      <Hero name={name}><div className="cr-overview-actions"><div className="cr-period-switch" role="group" aria-label={t.crOverviewPeriod}>{([7, 14, 30] as const).map(value => <button key={value} type="button" aria-pressed={days === value} onClick={() => setDays(value)}>{t.crPeriodDays(value)}</button>)}</div>{can(role, "manage_catalog") && <Link className="button button-primary" href="/admin/products/new"><Plus size={17} aria-hidden="true" />{t.crsNewProduct}</Link>}</div></Hero>
 
-      {kpis.length > 0 && <KpiCards items={kpis} />}
+      {kpis.length > 0 && <KpiCards items={kpis} days={days} />}
+      <div className="cr-period-note"><span>{t.crChartPeriodNote}</span>{role === "web_dev" && <ChartPreview />}</div>
 
-      {orders !== undefined && (
-        <div className="cr-grid">
-          <SectionPanel id="cr-orders-chart" title="crChartOrdersTitle" desc="crChartOrdersDesc">
-            {orders ? <BarChart points={orders.orders} title={t.crChartOrdersTitle} empty={t.crChartOrdersEmpty} format={formatCount} formatAxis={formatCompact} /> : <Unavailable />}
-          </SectionPanel>
-          <SectionPanel id="cr-revenue-chart" title="crChartRevenueTitle" desc="crChartRevenueDesc">
-            {orders
-              ? <BarChart points={orders.revenueMinor} title={t.crChartRevenueTitle} empty={t.crChartRevenueEmpty} format={money} formatAxis={(minor) => formatCompact(minor / 100)} tone="success" />
-              : <Unavailable />}
-          </SectionPanel>
-        </div>
-      )}
+      {orders !== undefined && <SectionPanel id="cr-revenue-chart" title="crChartRevenueTitle" desc="crRevenueCombinedDesc" actions={<span className="cr-period-label">{t.crPeriodDays(days)}</span>}>
+        {orders ? <><div className="cr-revenue-summary"><div><span><i />{t.crChartRevenueTitle} · {orders.currency}</span><strong>{money(seriesTotal(period(orders.revenueMinor)))}</strong></div><div><span><i />{t.crChartOrdersTitle}</span><strong>{formatCount(seriesTotal(period(orders.orders)))}</strong></div></div><BarChart points={period(orders.revenueMinor)} secondary={{ points: period(orders.orders), title: t.crChartOrdersTitle }} title={t.crChartRevenueTitle} empty={t.crChartRevenueEmpty} format={money} formatAxis={minor => formatCompact(minor / 100)} /></> : <Unavailable />}
+      </SectionPanel>}
 
       {(orders !== undefined || hasAudience) && (
-        <div className="cr-grid">
+        <div className="cr-grid cr-status-audience-grid">
           {orders !== undefined && (
             <SectionPanel id="cr-status-chart" title="crChartStatusTitle" desc="crChartStatusDesc">
-              {orders ? <Breakdown items={statusItems} empty={t.crChartStatusEmpty} /> : <Unavailable />}
+              {orders ? <DonutChart items={statusItems} title={t.crChartStatusTitle} empty={t.crChartStatusEmpty} /> : <Unavailable />}
             </SectionPanel>
           )}
-          {hasAudience && (
+          {data.sales !== undefined && <TopProducts products={data.sales === null || (!orders && !subscribers && !messages) ? null : rankProducts(data.sales, period(orders?.orders ?? subscribers ?? messages ?? []))} days={days} />}
+        </div>
+      )}
+      {data.recentOrders !== undefined && <RecentOrders orders={data.recentOrders} />}
+      {hasAudience && (
             <SectionPanel id="cr-audience-chart" title="crChartAudienceTitle" desc="crChartAudienceDesc">
               <div className="cr-chart-stack">
                 {subscribers !== undefined && (
                   <div>
                     <h3 className="cr-chart-heading">{t.crChartSignups}</h3>
-                    {subscribers ? <BarChart points={subscribers} title={t.crChartSignups} empty={t.crChartSignupsEmpty} format={formatCount} formatAxis={formatCompact} tone="info" /> : <Unavailable />}
+                    {subscribers ? <BarChart points={period(subscribers)} title={t.crChartSignups} empty={t.crChartSignupsEmpty} format={formatCount} formatAxis={formatCompact} tone="info" /> : <Unavailable />}
                   </div>
                 )}
                 {messages !== undefined && (
                   <div>
                     <h3 className="cr-chart-heading">{t.crChartMessages}</h3>
-                    {messages ? <BarChart points={messages} title={t.crChartMessages} empty={t.crChartMessagesEmpty} format={formatCount} formatAxis={formatCompact} tone="warning" /> : <Unavailable />}
+                    {messages ? <BarChart points={period(messages)} title={t.crChartMessages} empty={t.crChartMessagesEmpty} format={formatCount} formatAxis={formatCompact} tone="warning" /> : <Unavailable />}
                   </div>
                 )}
               </div>
             </SectionPanel>
-          )}
-        </div>
       )}
 
       {(health.length > 0 || data.activity !== undefined) && (

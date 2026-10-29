@@ -30,6 +30,7 @@ export default async function EditProductPage({ params, searchParams }: Props) {
     <ProductEditor
       data={product}
       canManage={can(viewer.role, "manage_catalog")}
+      canCustomizeAddress={viewer.role === "web_dev"}
       notice={query.created === "1" ? "crsProductCreated" : null}
     />
   );

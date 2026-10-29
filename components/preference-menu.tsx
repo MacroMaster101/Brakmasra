@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { ChevronDown } from "lucide-react";
+import { Check, ChevronDown } from "lucide-react";
 import {
   useEffect,
   useId,
@@ -16,6 +16,7 @@ type PreferenceOption = {
   label: string;
   flag?: string;
   description?: string;
+  code?: string;
 };
 
 export function PreferenceMenu({
@@ -26,6 +27,7 @@ export function PreferenceMenu({
   placement = "down",
   icon,
   className = "",
+  iconOnly = false,
 }: {
   label: string;
   value: string;
@@ -34,6 +36,7 @@ export function PreferenceMenu({
   placement?: "down" | "up";
   icon?: ReactNode;
   className?: string;
+  iconOnly?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const container = useRef<HTMLDivElement>(null);
@@ -53,7 +56,7 @@ export function PreferenceMenu({
       const anchor = trigger.current.getBoundingClientRect();
       const width = popup.current.offsetWidth;
       const edge = 16;
-      const desiredLeft = anchor.right - width;
+      const desiredLeft = iconOnly ? anchor.left : anchor.right - width;
       const availableRight =
         document.documentElement.clientWidth - width - edge;
       const safeLeft = Math.max(edge, Math.min(desiredLeft, availableRight));
@@ -71,7 +74,7 @@ export function PreferenceMenu({
       observer.disconnect();
       window.removeEventListener("resize", position);
     };
-  }, [open, selectedIndex]);
+  }, [open, selectedIndex, iconOnly]);
   useEffect(() => {
     if (!trigger.current) return;
     const observer = new ResizeObserver(([entry]) => {
@@ -99,7 +102,7 @@ export function PreferenceMenu({
   return (
     <div
       ref={container}
-      className={`preference-menu preference-${placement} ${className}`}
+      className={`preference-menu preference-${placement}${iconOnly ? " preference-icon-only" : ""} ${className}`}
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false);
       }}
@@ -188,7 +191,8 @@ export function PreferenceMenu({
             {item.flag && (
               <Image src={item.flag} alt="" width={20} height={15} />
             )}
-            <span>{item.label}</span>
+            <span className="preference-option-copy">{item.code && <strong>{item.code}</strong>}<span>{item.label}</span></span>
+            {iconOnly && item.value === value && <Check className="preference-selected-check" size={16} aria-hidden="true" />}
           </button>
         ))}
       </div>

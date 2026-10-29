@@ -9,9 +9,10 @@ import type { TextKey } from "@/lib/i18n";
 import type { AdminProduct } from "@/lib/store-admin";
 
 /** Product details and stock, then its photos once the product exists. */
-export function ProductEditor({ data, canManage, notice }: {
+export function ProductEditor({ data, canManage, canCustomizeAddress = false, notice }: {
   data: SectionData<AdminProduct | null>;
   canManage: boolean;
+  canCustomizeAddress?: boolean;
   notice: TextKey | null;
 }) {
   return (
@@ -26,8 +27,8 @@ export function ProductEditor({ data, canManage, notice }: {
               desc={product ? "crsEditProductDesc" : "crsNewProductDesc"}
             >
               <Notice text={notice} />
-              {/* Remount after each save so the form shows what was stored. */}
-              <ProductForm key={product?.updatedAt ?? "new"} product={product} canManage={canManage} />
+              {/* Stable identity keeps unsaved work in other sections during a save. */}
+              <ProductForm key={product?.id ?? "new"} product={product} canManage={canManage} canCustomizeAddress={canCustomizeAddress} />
             </SectionPanel>
             {product
               ? <ProductPhotos productId={product.id} images={product.images} canManage={canManage} />

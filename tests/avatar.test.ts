@@ -100,6 +100,12 @@ describe("member photo", () => {
     expect(plain).toMatchObject({ avatarSource: null, avatarUrl: null });
   });
 
+  it("reads the password flag only from server-written app_metadata", async () => {
+    const google = googleIdentity({});
+    expect((await memberFor({ identities: google, user_metadata: { password_set: true } })).hasPassword).toBe(false);
+    expect((await memberFor({ identities: google, app_metadata: { password_set: true } })).hasPassword).toBe(true);
+  });
+
   it("ignores photo links members can set themselves", async () => {
     const member = await memberFor({
       user_metadata: { avatar_url: "https://lh3.googleusercontent.com/a/x" },

@@ -10,8 +10,10 @@ import {
 const COOKIE = "brakmasra_recovery";
 const options = { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax" as const, path: "/" };
 
+// A dedicated key, never the Supabase secret: a database key must not double
+// as a cookie-signing key. Unset or short, recovery fails closed.
 function signingSecret() {
-  return process.env.RECOVERY_SIGNING_SECRET || process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+  return process.env.RECOVERY_SIGNING_SECRET;
 }
 
 export async function grantPasswordRecovery(session: RecoverySession) {

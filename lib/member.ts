@@ -75,7 +75,9 @@ export function memberFromUser(user: User): Member {
     initials: initialsOf(name, email),
     phone: text(metadata.phone),
     phoneCountry: text(metadata.phone_country),
-    hasPassword: providers.includes("email") || metadata.password_set === true,
+    // app_metadata, not user_metadata: members could clear their own flag to
+    // skip the current-password check.
+    hasPassword: providers.includes("email") || user.app_metadata?.password_set === true,
     providers,
     createdAt: user.created_at ?? null,
     role: parseRole(user.app_metadata?.role),

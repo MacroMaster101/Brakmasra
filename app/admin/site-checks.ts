@@ -16,6 +16,7 @@ export function siteChecks(): SiteCheck[] {
     },
     { label: "crCheckServiceClient", value: controlRoomConfigured(), kind: "configured" },
     { label: "crCheckCron", value: Boolean(process.env.CRON_SECRET), kind: "configured" },
+    { label: "crCheckRecoverySecret", value: (process.env.RECOVERY_SIGNING_SECRET?.length ?? 0) >= 32, kind: "configured" },
     { label: "crCheckAuth", value: authEnabled, kind: "switch" },
     { label: "crCheckLaunchMode", value: launchMode, kind: "switch" },
     { label: "crCheckCommerce", value: commerceEnabled, kind: "switch" },

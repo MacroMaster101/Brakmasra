@@ -2,13 +2,13 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   getClaims: vi.fn(), verifyOtp: vi.fn(), updateUser: vi.fn(),
-  grant: vi.fn(), has: vi.fn(), clear: vi.fn(),
+  grant: vi.fn(), has: vi.fn(), clear: vi.fn(), rateLimit: vi.fn(),
 }));
 vi.mock("@/lib/features", () => ({ authEnabled: true, authDemoMode: false }));
 vi.mock("next/headers", () => ({ headers: async () => new Headers() }));
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
 vi.mock("next/navigation", () => ({ redirect: (url: string) => { throw new Error(`REDIRECT:${url}`); } }));
-vi.mock("@/lib/rate-limit", () => ({ rateLimit: async () => ({ allowed: true }) }));
+vi.mock("@/lib/rate-limit", () => ({ rateLimit: mocks.rateLimit }));
 vi.mock("@/lib/supabase-auth", () => ({ createAuthClient: async () => ({ auth: mocks }) }));
 vi.mock("@/lib/recovery-session", () => ({
   grantPasswordRecovery: mocks.grant, hasPasswordRecovery: mocks.has, clearPasswordRecovery: mocks.clear,
@@ -37,6 +37,7 @@ beforeEach(() => {
   mocks.updateUser.mockResolvedValue({ error: null });
   mocks.grant.mockResolvedValue(true);
   mocks.has.mockResolvedValue(false);
+  mocks.rateLimit.mockResolvedValue({ allowed: true });
 });
 
 describe("recovery action authorization", () => {
@@ -63,5 +64,13 @@ describe("recovery action authorization", () => {
     mocks.getClaims.mockResolvedValueOnce({ data: { claims: null } });
     expect((await verifyResetCodeAction(idle, codeForm())).status).toBe("error");
     expect(mocks.grant).not.toHaveBeenCalled();
+  });
+  it("caps code guesses per address across every client", async () => {
+    mocks.rateLimit.mockImplementation(async (key: string) => ({ allowed: !key.startsWith("auth:reset-verify-address:") }));
+    expect((await verifyResetCodeAction(idle, codeForm())).status).toBe("error");
+    expect(mocks.verifyOtp).not.toHaveBeenCalled();
+    // Keyed by the address alone, so a new IP does not get a fresh budget.
+    const keys = mocks.rateLimit.mock.calls.map(([key]) => key as string);
+    expect(keys.find((key) => key.startsWith("auth:reset-verify-address:"))).toMatch(/^auth:reset-verify-address:[\da-f]{24}$/);
   });
 });

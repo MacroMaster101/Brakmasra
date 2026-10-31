@@ -158,6 +158,8 @@ export async function saveProductAction(
   await audit(viewer, id ? "product.update" : "product.create", "product", productId, { slug: input.slug, status: input.status });
   refreshStore();
   revalidatePath("/admin/products");
+  // With photos waiting, the browser uploads them before opening the product.
+  if (!id && formData.get("deferRedirect") === "1") return { status: "success", message: "Product saved.", productId };
   if (!id) redirect(`/admin/products/${productId}?created=1`);
   return { status: "success", message: "Product saved." };
 }

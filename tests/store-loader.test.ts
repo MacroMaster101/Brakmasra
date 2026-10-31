@@ -17,6 +17,11 @@ describe("merchant catalogue changes", () => {
   it("does not resurrect bundled products during a database failure", async () => {
     mocks.result.error = { code:"connection" }; expect(await getCatalog()).toEqual([]);
   });
+  it("shows exactly the photos saved for a product, so a removed photo stays removed", async () => {
+    const [starter] = products;
+    mocks.result.data = [{ id: starter.id, slug: starter.slug, name: starter.name, description: "", currency: "LKR", price_minor: 1000, status: "active", product_variants: [], product_images: [{ url: `/images/products/${starter.slug}.webp`, alt_text: "Shirt", position: 0 }] }];
+    expect((await getCatalog())[0].images).toEqual([`/images/products/${starter.slug}.webp`]);
+  });
   it("uses starter products only when the database is not configured", async () => {
     mocks.client.mockReturnValue(null); expect(await getCatalog()).toEqual(products);
   });

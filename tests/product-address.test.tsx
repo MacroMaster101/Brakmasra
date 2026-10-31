@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 import { translations } from "@/lib/i18n";
 import { automaticProductSlug, suffixedProductSlug, productAddressPolicy } from "@/lib/product-address";
 
+vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn() }) }));
 vi.mock("@/app/admin/store-actions", () => ({ deleteProductAction: vi.fn(), saveProductAction: vi.fn(), saveProductSectionAction: vi.fn() }));
 vi.mock("@/components/language-provider", () => ({ useLanguage: () => ({ t: translations.en }) }));
 vi.mock("@/components/currency-provider", () => ({ useCurrency: () => ({ usdRate: .003 }) }));

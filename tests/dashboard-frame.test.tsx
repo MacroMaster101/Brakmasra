@@ -34,6 +34,12 @@ describe("dashboard navigation and identity", () => {
    expect(html).toContain(t.crUnreadMessages(3)); expect(html).toContain("/admin/products/new");
    expect(html).toContain("dashboard-nav-section"); expect(html).toContain("BRAKMASRA");
  });
+ it("sends the BRAKMASRA title to the website home page", () => {
+   const html = frame("owner");
+   for (const brand of ["dashboard-sidebar-brand", "dashboard-mobile-brand"]) {
+     expect(html.match(new RegExp(`<a[^>]*${brand}[^>]*>`))?.[0]).toContain('href="/"');
+   }
+ });
  it("does not expose developer tools or catalog create shortcuts in the staff sidebar", () => {
    const html = frame("staff");
    expect(html).not.toContain('href="/admin/site"'); expect(html).not.toContain('href="/admin/content"');

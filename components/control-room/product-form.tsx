@@ -7,11 +7,14 @@ import { formatMoney } from "@/lib/cart";
 import { convertCurrencyMinor, parseCurrency, type StoreCurrency } from "@/lib/currency";
 import { useCurrency } from "@/components/currency-provider";
 import { alternateSalePrice, salePriceMinor, type SaleDiscountKind } from "@/lib/product-pricing";
+import { useRouter } from "next/navigation";
 import { useMemo, useRef, useState } from "react";
 
 import { deleteProductAction, saveProductAction, saveProductSectionAction } from "@/app/admin/store-actions";
 import { productStatusLabels } from "@/components/control-room/products";
+import { PendingPhotos, type PendingPhoto } from "@/components/control-room/pending-photos";
 import { DeleteForm, Field, SaveBar, Toggle, useCrForm } from "@/components/control-room/store-shared";
+import { saveProductWithPhotos } from "@/lib/product-photo-upload";
 import { OptionPicker } from "@/components/control-room/option-picker";
 import { Resettable } from "@/components/control-room/resettable";
 import { useLanguage } from "@/components/language-provider";
@@ -52,7 +55,13 @@ export function ProductForm({ product, canManage, canCustomizeAddress = false }:
 
 function ProductFields({ product, canManage, canCustomizeAddress, section, reset }: { product: AdminProduct | null; canManage: boolean; canCustomizeAddress: boolean; section?: ProductSection; reset: () => void }) {
   const { t } = useLanguage();
-  const { state, formAction, pending, onSubmit } = useCrForm(section ? saveProductSectionAction : saveProductAction);
+  const router = useRouter();
+  const [photos, setPhotos] = useState<PendingPhoto[]>([]);
+  const { state, formAction, pending, onSubmit } = useCrForm(section
+    ? saveProductSectionAction
+    : product
+      ? saveProductAction
+      : (previous, data) => saveProductWithPhotos(previous, data, photos.map(({ file }) => file), router.push));
 
   const { usdRate } = useCurrency();
   const [currency, setCurrency] = useState<StoreCurrency>(parseCurrency(product?.currency));
@@ -252,6 +261,7 @@ function ProductFields({ product, canManage, canCustomizeAddress, section, reset
 
           </div></fieldset>)}
 
+        {!product && <PendingPhotos photos={photos} onChange={setPhotos} disabled={!canManage || pending} />}
         <SaveBar pending={pending} state={state} canManage={canManage} label={product ? "crSaveSection" : "crsCreateProduct"} onReset={reset} />
       </form>
 

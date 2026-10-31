@@ -99,6 +99,10 @@ describe("role-aware product addresses", () => {
     await expect(store.saveProductAction(idle, newProduct({ slugMode: "custom", regenerateSlug: "on" }))).rejects.toThrow(`REDIRECT:/admin/products/${id}`);
     expect(mocks.rpc).toHaveBeenCalledWith("admin_save_product", expect.objectContaining({ p_product: expect.objectContaining({ slug: "new-tee" }) }));
   });
+  it("returns the new product instead of redirecting when photos are waiting to upload", async () => {
+    mocks.viewer.mockResolvedValue({ id, role: "owner" });
+    expect(await store.saveProductAction(idle, newProduct({ deferRedirect: "1" }))).toEqual({ status: "success", message: "Product saved.", productId: id });
+  });
   it("adds a suffix after an automatic address collision", async () => {
     mocks.viewer.mockResolvedValue({ id, role: "owner" });
     mocks.rpc.mockResolvedValueOnce({ data: null, error: { code: "23505" } });

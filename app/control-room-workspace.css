@@ -594,3 +594,4 @@ html[data-theme="dark"] .dashboard-main { color-scheme: dark; }
 .dashboard-language-picker .preference-selected-check { margin-left: auto; color: var(--text-secondary); flex-shrink: 0; }
 
 .dashboard-language-picker .preference-option-copy > span { color: var(--text); font-size: 14px; line-height: 1.4; font-weight: 500; }
+.dashboard-main .crs-photo-error { margin: 0; color: var(--accent-bright); font-size: .88rem; }

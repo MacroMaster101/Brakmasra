@@ -41,7 +41,7 @@ export default async function ControlRoomOverviewPage() {
       allowed("view_newsletter", () => subscriberActivity(now)),
       allowed("view_messages", () => messageActivity(now)),
       allowed("manage_catalog", catalogHealth),
-      allowed("manage_site", listContentEntries),
+      allowed("manage_content", listContentEntries),
       allowed("manage_site", () => recentAuditLogs(6)),
       allowed("view_orders", listOrders),
       allowed("view_orders", () => productSalesActivity(now)),

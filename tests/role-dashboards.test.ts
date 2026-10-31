@@ -83,15 +83,17 @@ describe("Control Room overview for each role", () => {
     }
   });
 
-  it("Owner sees the store, audience, team and catalog health, but no site tools", async () => {
+  it("Owner sees the store, audience, team, catalog health and website content, but no site tools", async () => {
     const html = await overviewHtml("owner");
     expect(loaders.catalogHealth).toHaveBeenCalled();
     expect(loaders.listTeam).toHaveBeenCalled();
-    expect(loaders.listContentEntries).not.toHaveBeenCalled();
+    expect(loaders.listContentEntries).toHaveBeenCalled();
     expect(loaders.recentAuditLogs).not.toHaveBeenCalled();
     expect(html).toContain(t.crHealthNoPhotos);
     expect(html).toContain(t.crsNewProduct);
-    for (const hidden of [t.crHealthContentDrafts, t.crActivityTitle, 'href="/admin/content"', 'href="/admin/site"']) expect(html).not.toContain(hidden);
+    expect(html).toContain(t.crHealthContentDrafts);
+    expect(html).toContain('href="/admin/content"');
+    for (const hidden of [t.crActivityTitle, 'href="/admin/site"']) expect(html).not.toContain(hidden);
   });
 
   it("Staff only read orders, messages and the catalog: no subscribers, team, health or editing", async () => {
@@ -139,12 +141,13 @@ describe("Every admin page against every role", () => {
     });
   }
 
-  it("only Web Dev can open the site tools, and only Owner and Web Dev can edit the catalog", () => {
+  it("only Web Dev can open the site tools, and only Owner and Web Dev can edit the catalog and website content", () => {
     const open = (role: MemberRole) => pages.filter(({ permission }) => can(role, permission)).map(({ route }) => route);
     expect(open("staff")).not.toContain("/admin/products/new");
     expect(open("staff")).not.toContain("/admin/team");
+    expect(open("staff")).not.toContain("/admin/content");
     expect(open("owner")).not.toContain("/admin/site");
-    expect(open("owner")).not.toContain("/admin/content");
+    expect(open("owner")).toContain("/admin/content");
     expect(open("web_dev")).toEqual(pages.map(({ route }) => route));
   });
 });

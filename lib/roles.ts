@@ -41,6 +41,7 @@ export const PERMISSIONS = [
   "view_newsletter",   // read drop-alert subscribers
   "manage_newsletter", // export and remove subscribers
   "manage_team",       // change other people's roles
+  "manage_content",    // edit and publish website text and journal posts in both languages
   "manage_site",       // site-wide settings and developer tools
 ] as const;
 export type Permission = (typeof PERMISSIONS)[number];

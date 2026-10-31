@@ -21,7 +21,7 @@ describe("Control Room sections", () => {
   it("shows each role only the sections it may use", () => {
     const shop = ["products", "collections", "discounts", "orders", "messages"];
     expect(controlRoomSections("web_dev")).toEqual(["overview", ...shop, "subscribers", "team", "content", "site"]);
-    expect(controlRoomSections("owner")).toEqual(["overview", ...shop, "subscribers", "team"]);
+    expect(controlRoomSections("owner")).toEqual(["overview", ...shop, "subscribers", "team", "content"]);
     expect(controlRoomSections("staff")).toEqual(["overview", ...shop]);
   });
 
@@ -148,6 +148,7 @@ describe("Control Room server code", () => {
       ["app/admin/discounts/[id]/page.tsx", "view_catalog"],
       ["app/admin/orders/[publicId]/page.tsx", "view_orders"],
       ["app/admin/site/page.tsx", "manage_site"],
+      ["app/admin/content/page.tsx", "manage_content"],
     ];
     for (const [file, permission] of pages) {
       expect(read(file), file).toContain(`await requireControlRoom("${permission}"`);

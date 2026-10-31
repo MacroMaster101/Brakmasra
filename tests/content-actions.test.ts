@@ -49,7 +49,7 @@ describe("content server actions", () => {
   it("rejects unauthorized users before accessing the service database", async () => {
     mocks.viewer.mockResolvedValue(null);
     expect((await saveContentAction(idle, form())).status).toBe("error"); expect(mocks.db).not.toHaveBeenCalled();
-    expect(mocks.viewer).toHaveBeenCalledWith("manage_site");
+    expect(mocks.viewer).toHaveBeenCalledWith("manage_content");
   });
   it("does not write in demo mode, with an invalid key, or over the rate limit", async () => {
     mocks.demo = true; expect((await saveContentAction(idle, form())).status).toBe("error");

@@ -36,6 +36,9 @@ describe("member roles", () => {
   it("gives Web Dev full access and narrows it by role", () => {
     expect(can("web_dev", "manage_site")).toBe(true);
     expect(can("owner", "manage_site")).toBe(false);
+    expect(can("owner", "manage_content")).toBe(true);
+    expect(can("staff", "manage_content")).toBe(false);
+    expect(can("supporter", "manage_content")).toBe(false);
     expect(can("owner", "manage_team")).toBe(true);
     expect(can("staff", "manage_team")).toBe(false);
     expect(can("staff", "view_orders")).toBe(true);

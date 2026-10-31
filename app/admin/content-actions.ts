@@ -10,7 +10,7 @@ import { authDemoMode } from "@/lib/features";
 import { getSupabaseServerClient } from "@/lib/supabase";
 
 export async function saveContentAction(_state: ControlRoomActionState, form: FormData): Promise<ControlRoomActionState> {
-  const viewer = await viewerWith("manage_site");
+  const viewer = await viewerWith("manage_content");
   if (!viewer) return { status: "error", message: "This action is not available." };
   if (authDemoMode) return { status: "error", message: "Preview mode. Changes are not saved." };
   const key = contentKeySchema.safeParse(formText(form.get("key")));

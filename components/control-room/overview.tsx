@@ -71,6 +71,7 @@ function accessItems(role: MemberRole): TextKey[] {
   if (can(role, "manage_catalog")) items.push("crAccessCatalog");
   if (can(role, "view_newsletter")) items.push("crAccessNewsletter");
   if (can(role, "manage_team")) items.push(role === "web_dev" ? "crAccessTeamWebDev" : "crAccessTeamOwner");
+  if (can(role, "manage_content")) items.push("crAccessContent");
   if (can(role, "manage_site")) items.push("crAccessSite");
   return items;
 }
@@ -339,7 +340,7 @@ function QuickActions({ role }: { role: MemberRole }) {
   const { t } = useLanguage();
   const links: { href: string; label: string }[] = [];
   if (can(role, "manage_catalog")) links.push({ href: "/admin/products/new", label: t.crsNewProduct }, { href: "/admin/collections/new", label: t.crsNewCollection });
-  if (can(role, "manage_site")) links.push({ href: "/admin/content", label: t.crTabContent });
+  if (can(role, "manage_content")) links.push({ href: "/admin/content", label: t.crTabContent });
   if (can(role, "view_orders")) links.push({ href: "/admin/orders", label: t.crTabOrders });
   if (can(role, "view_messages")) links.push({ href: "/admin/messages?status=new", label: t.crTabMessages });
 

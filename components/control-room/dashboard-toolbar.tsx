@@ -21,7 +21,7 @@ export function DashboardToolbar({ member, unread }: { member: MemberSummary; un
   return <header className="dashboard-topbar">
     <button className="dashboard-icon dashboard-collapse" type="button" onClick={shell.toggle} aria-label={shell.compact ? t.crExpandSidebar : t.crCollapseSidebar} aria-expanded={!shell.compact} aria-controls="dashboard-sidebar"><Collapse size={20} /></button>
     <button ref={menuButton} className="dashboard-icon dashboard-mobile-toggle" type="button" onClick={shell.openMobile} aria-label={t.crNavMenu} aria-haspopup="dialog" aria-expanded={shell.mobileOpen}><Menu size={22} /></button>
-    <Link href="/admin" className="dashboard-mobile-brand">BRAKMASRA</Link>
+    <Link href="/" className="dashboard-mobile-brand" aria-label={`BRAKMASRA ${t.navHome}`}>BRAKMASRA</Link>
     <h1 className="dashboard-context">{t[dashboardLabels[section] ?? "crTabOverview"]}</h1>
     <DashboardSearch role={member.role} />
     <div className="dashboard-tools">

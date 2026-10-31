@@ -43,15 +43,7 @@ const cachedActiveProducts = unstable_cache(loadActiveProducts, ["store-active-p
 export const getCatalog = cache(async (): Promise<Product[]> => {
   try {
     const products = await cachedActiveProducts();
-    return products !== null ? products.map((product) => {
-      // Add the campaign photograph only to the unchanged, bundled launch art.
-      // Photos uploaded by the merchant keep their selected order.
-      const original = `/images/products/${product.slug}.webp`;
-      const starter = starterProducts.find((item) => item.slug === product.slug);
-      return starter && product.images[0] === original
-        ? { ...product, images: [starter.images[0], ...product.images] }
-        : product;
-    }) : starterProducts;
+    return products ?? starterProducts;
   } catch {
     return [];
   }

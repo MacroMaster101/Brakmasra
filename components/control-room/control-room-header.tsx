@@ -113,7 +113,7 @@ function Identity({ name, role }: { name: string; role: MemberRole }) {
 
 function SidebarBrand({ compact = false, onNavigate }: { compact?: boolean; onNavigate?: () => void }) {
   const { t } = useLanguage();
-  return <Link className="dashboard-sidebar-brand" href="/admin" onClick={onNavigate} aria-label={`BRAKMASRA ${t.crTitle}`}>{compact ? <span className="dashboard-brand-monogram">B.</span> : <span>BRAKMASRA<small>{t.crTitle}</small></span>}</Link>;
+  return <Link className="dashboard-sidebar-brand" href="/" onClick={onNavigate} aria-label={`BRAKMASRA ${t.navHome}`}>{compact ? <span className="dashboard-brand-monogram">B.</span> : <span>BRAKMASRA<small>{t.crTitle}</small></span>}</Link>;
 }
 
 export function ControlRoomHeader({ name, role, sections }: ControlRoomHeaderProps) {

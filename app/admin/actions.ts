@@ -23,6 +23,8 @@ export type FoundAccount = AccountSummary & { choices: RoleChoice[] };
 export type ControlRoomActionState = {
   status: "idle" | "error" | "success";
   message: string;
+  /** A product created with photos waiting, so the browser can upload them to it. */
+  productId?: string;
   /** The account the team form is working on, with the roles the viewer may give it. */
   account?: FoundAccount;
 };

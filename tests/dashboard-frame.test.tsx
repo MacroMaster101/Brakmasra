@@ -23,7 +23,7 @@ describe("dashboard navigation and identity", () => {
    const owner = dashboardDestinations("owner").map(item => item.href);
    const staff = dashboardDestinations("staff").map(item => item.href);
    expect(developer).toContain("/admin/site"); expect(developer).toContain("/admin/content");
-   expect(owner).toContain("/admin/products/new"); expect(owner).not.toContain("/admin/site");
+   expect(owner).toContain("/admin/products/new"); expect(owner).toContain("/admin/content"); expect(owner).not.toContain("/admin/site");
    expect(staff).toContain("/admin/products"); expect(staff).not.toContain("/admin/products/new"); expect(staff).not.toContain("/admin/team");
    expect(dashboardDestinations("supporter")).toEqual([]);
  });
